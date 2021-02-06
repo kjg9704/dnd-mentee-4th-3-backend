@@ -14,19 +14,20 @@ import java.util.Set;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "user")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "userId", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "auth")
+    @Column(name = "thirdPartyID")
     private String auth;
 
     @Builder
