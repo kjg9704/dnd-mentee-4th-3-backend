@@ -10,13 +10,15 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import dnd.jackpot.region.entity.ERegion;
+import dnd.jackpot.stack.entity.EstackProgrammer;
 //import dnd.jackpot.user.User;
 import lombok.*;
 
 
 @Entity
 @Table(name="project_post")
-@Getter
+@Getter @Setter
 public class Project {
 	
 	@Id
@@ -24,7 +26,7 @@ public class Project {
 	private int id;
 	
 //	@NotBlank
-//	private String title;
+	private String title;
 	
 //	@NotBlank
 //	private String contact;
@@ -37,12 +39,14 @@ public class Project {
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 	
-//	@UpdateTimestamp
-//	private LocalDateTime updatedAt;
+	@UpdateTimestamp
+	private LocalDateTime updatedAt;
 	
 //	private int recruiting;
 //	private int applicant;
-//	private String region;
+	
+	@Enumerated(EnumType.STRING)
+	private ERegion region;
 //	
 //	private int duration;
 //	
@@ -61,15 +65,18 @@ public class Project {
 //	
 //	private int recruitmentPeriod;
 //	
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
-//	private final List<ProjectStack> stacks = new ArrayList<>();
-//	
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
-//	private final List<ProjectWrite> write = new ArrayList<>();
-//	
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
-////	private final List<ProjectKeep> keeps = new ArrayList<>();
-////	
+//	projectStack에 넣음
+//	private ProjectStack stack;
+	@Enumerated(EnumType.STRING)
+	@ElementCollection(targetClass = EstackProgrammer.class)
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch=FetchType.EAGER, mappedBy="project")//
+	private final List<ProjectStack> stacks = new ArrayList<>();
+	
+//	public void add(ProjectStack stack) {
+//		stack.setProject(this);
+//		this.stacks.add(stack);
+//	}
+	
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
 //	private final List<ProjectComment> comments = new ArrayList<>();
 //	
@@ -81,9 +88,11 @@ public class Project {
 //		return project;
 //	}
 //	test code -> without user
-	public static Project of(String shortdesc) {
+	public static Project of(String shortdesc, String title, ERegion region) {
 		Project project = new Project();
+		project.title = title;
 		project.shortDesc = shortdesc;
+		project.region = region;
 		return project;
 	}
 	public void update(String title, String shortDesc) {
