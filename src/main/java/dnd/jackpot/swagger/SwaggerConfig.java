@@ -21,18 +21,12 @@ public class SwaggerConfig {
 		apiInfo.title("API 서버 문서");
 		apiInfo.description("API 서버 문서 입니다.");
 		
-//		Docket docket = new Docket(DocumentationType.SWAGGER_2);
-//		docket.apiInfo(apiInfo.build());
-////		ApiSelectorBuilder apis = docket.select().apis(RequestHandlerSelectors.basePackage("dnd.jackpot.controller"));
-//		ApiSelectorBuilder  = docket.select().apis(RequestHandlerSelectors.basePackage("dnd.jackpot.project.controller"));
-//		apis.paths(PathSelectors.ant("/**"));
 
+		Docket docket = new Docket(DocumentationType.SWAGGER_2);
+		docket.apiInfo(apiInfo.build());
+		ApiSelectorBuilder apis = docket.select().apis(RequestHandlerSelectors.basePackage("dnd.jackpot"));
+		apis.paths(PathSelectors.ant("/**"));
+		return apis.build();
 		
-//		홍지혜
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any())
-				.build();
 	}
 }
