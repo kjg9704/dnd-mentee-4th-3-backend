@@ -2,8 +2,12 @@ package dnd.jackpot.project.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +35,23 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ScrapRepository scrapRepo;
 
 	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
-		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto();
+		
+//		validateSearchDto(searchDto);
+//		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
+		Page<Project> pageProjects;
+//		if(searchDto.)
+		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
 		return FeedDtoList;
 	}
+//	private void validateSearchDto(ProjectSearchDto searchDto) {
+//		Integer pageSize = searchDto.getPageSize();
+//		Integer pageNumber = searchDto.getPageNumber();
+//		if(Objects.isNull(pageSize)||Objects.isNull(pageNumber)) {
+//			throw new CustomException(HttpStatus.BAD_REQUEST, "pageSize 또는 PageNumber Null입니다.")
+//		}if(pageSize<=0) {
+//			throw new CustomException(HttpStatus.BAD_REQUEST,"PAGE 1보다 작음" )
+//		}
+//	}
 	
 	@Override
 	@Transactional
@@ -68,11 +86,17 @@ public class ProjectServiceImpl implements ProjectService {
 				.userIndex(userIndex)
 				.build());
 	}
-
+	
 	@Override
-	public ProjectDto findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public ProjectDto delete (Long id) {
+		Project project = repo.findById(id).orElseThrow();
+		ProjectDto projectDto = new ProjectDto();
+		projectDto.setId(project.getId());
+		repo.delete(project);
+		return projectDto;
 	}
+
+	
 	
 }

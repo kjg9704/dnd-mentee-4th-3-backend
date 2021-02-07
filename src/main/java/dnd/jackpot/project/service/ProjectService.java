@@ -9,9 +9,13 @@ public interface ProjectService {
 	PagingDto<ProjectDto> findAll(ProjectSearchDto searchDto);
 	
 	ProjectDto findById(Long id);
+	
 	ProjectDto save(ProjectSaveDto saveDto);
+	
+	ProjectDto delete(Long id);
+	
 	void addScrap(int postId, long userIndex);
 	
-	ProjectDto findById(Long id);
+
 	
 }

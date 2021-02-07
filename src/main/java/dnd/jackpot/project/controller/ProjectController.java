@@ -40,11 +40,11 @@ public class ProjectController {
 	}
 	
 	
-////	@Secured("ROLE_USER")
-	@GetMapping("")
-	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
-		return service.findAll(searchDto);
-	}
+//////	@Secured("ROLE_USER")
+//	@GetMapping("")
+//	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
+//		return service.findAll(searchDto);
+//	}
 	
 //	@Secured("ROLE_USER")
 	@GetMapping("/{id}")
@@ -52,13 +52,13 @@ public class ProjectController {
 		return service.findById(id);
 	}
 	
-////	@Secured("ROLE_USER")
-//	@DeleteMapping("/{id}")
-//	public ProjectDto delete(@PathVariable("id") Long id) {
-//		return service.delete(id);
-//	}
+//	@Secured("ROLE_USER")
+	@DeleteMapping("/{id}")
+	public ProjectDto delete(@PathVariable("id") Long id) {
+		return service.delete(id);
+	}
 	
-////	@Secured("ROLE_USER")
+//////	@Secured("ROLE_USER")
 //	@PutMapping("/{id}")
 //	public ProjectDto modify(@PathVariable("id") Long id, ProjectModifyDto modifyDto) {
 //		return service.modify(id, modifyDto);
