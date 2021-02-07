@@ -1,12 +1,17 @@
 package dnd.jackpot.project.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import dnd.jackpot.project.service.ProjectService;
@@ -24,9 +29,16 @@ public class ProjectController {
 	
 //	@Secured("ROLE_USER")
 	@PostMapping("")
-	public ProjectDto save(ProjectSaveDto saveDto) {
+	public ProjectDto save(@RequestBody ProjectSaveDto saveDto) {
 		return service.save(saveDto);
 	}
+	
+	@PostMapping("/scrap/{projectindex}")
+	public ResponseEntity<?> addScrap(@PathVariable("projectindex") int projectIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		service.addScrap(projectIndex, user.getUserIndex());
+		return ResponseEntity.ok("success");
+	}
+	
 	
 ////	@Secured("ROLE_USER")
 	@GetMapping("")

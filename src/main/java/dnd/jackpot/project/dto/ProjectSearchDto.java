@@ -7,5 +7,4 @@ public class ProjectSearchDto {
 	private ERegion regionfilter;
 	private EstackProgrammer stack;
 	
-	
 }

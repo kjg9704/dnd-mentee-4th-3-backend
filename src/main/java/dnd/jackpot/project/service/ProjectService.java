@@ -8,7 +8,9 @@ import dnd.jackpot.project.dto.ProjectSearchDto;
 public interface ProjectService {
 	PagingDto<ProjectDto> findAll(ProjectSearchDto searchDto);
 	
+	ProjectDto findById(Long id);
 	ProjectDto save(ProjectSaveDto saveDto);
+	void addScrap(int postId, long userIndex);
 	
 	ProjectDto findById(Long id);
 	
