@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import dnd.jackpot.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.ProjectSearchDto;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,10 +29,10 @@ public class ProjectController {
 	}
 	
 ////	@Secured("ROLE_USER")
-//	@GetMapping("")
-//	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
-//		return service.findAll(searchDto);
-//	}
+	@GetMapping("")
+	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
+		return service.findAll(searchDto);
+	}
 	
 //	@Secured("ROLE_USER")
 	@GetMapping("/{id}")

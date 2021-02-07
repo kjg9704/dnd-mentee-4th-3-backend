@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
@@ -25,6 +27,11 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectRepository repo;
 	private final ProjectStackService projectStackService;
 
+	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
+		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto();
+		return FeedDtoList;
+	}
+	
 	@Override
 	@Transactional
 	public ProjectDto save(ProjectSaveDto saveDto) {
