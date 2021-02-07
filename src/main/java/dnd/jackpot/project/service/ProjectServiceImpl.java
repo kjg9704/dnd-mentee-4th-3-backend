@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-import dnd.jackpot.project.dto.Scrap;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
+import dnd.jackpot.project.entity.Scrap;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.stack.entity.EstackProgrammer;

@@ -1,4 +1,4 @@
-package dnd.jackpot.project.dto;
+package dnd.jackpot.project.entity;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

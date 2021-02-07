@@ -1,5 +1,7 @@
 package dnd.jackpot.security;
 
+import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,27 +52,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs",
-                "/configuration/ui",
-                "/swagger-resources/**",
-                "/configuration/security",
-                "/swagger-ui.html",
-                "/webjars/**", "/h2-console/**");
-    }
-	
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/v2/api-docs",
+				"/configuration/ui",
+				"/swagger-resources/**",
+				"/configuration/security",
+				"/swagger-ui.html",
+				"/webjars/**", "/h2-console/**");
+	}
+
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
-				// dont authenticate this particular request
-				.authorizeRequests().antMatchers("/signin", "/signup", "/kakaoLogin/**", "/naverLogin/**", "/googleLogin/**",  "/email/is-exist", "/swagger-resources/**","/h2-console/**", "/api/projects").permitAll().
-				// all other requests need to be authenticated
-				anyRequest().authenticated().and().
-				// make sure we use stateless session; session won't be used to
-				// store user's state.
-				exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		// dont authenticate this particular request
+		.authorizeRequests().antMatchers("/signin", "/signup", "/kakaoLogin/**", "/naverLogin/**", "/googleLogin/**",  "/email/is-exist", "/swagger-resources/**","/h2-console/**", "/api/projects").permitAll().
+		// all other requests need to be authenticated
+		anyRequest().authenticated().and().
+		// make sure we use stateless session; session won't be used to
+		// store user's state.
+		exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
+
+//	@Bean(initMethod="start",destroyMethod="stop")
+//	public org.h2.tools.Server h2WebConsoleServer () throws SQLException {
+//		return org.h2.tools.Server.createWebServer("-web","-webAllowOthers","-webDaemon","-webPort", "8080");
+//	}
 }

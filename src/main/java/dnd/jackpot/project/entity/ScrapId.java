@@ -1,4 +1,4 @@
-package dnd.jackpot.project.dto;
+package dnd.jackpot.project.entity;
 
 import java.io.Serializable;
 
