@@ -8,7 +8,7 @@ import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.stack.entity.EstackProgrammer;
 
-public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
+public interface ProjStackRepo extends JpaRepository<ProjectStack, Integer>{
 //	List<ProjectStack> findAllByProject(Project project);
 	
 //	ProjectStack findByProjAndStack(Project project, EstackProgrammer stack);

@@ -35,7 +35,7 @@ public class ProjectController {
 //	@Secured("ROLE_USER")
 	@GetMapping("/{id}")
 	public ProjectDto getOne(@PathVariable("id") Long id) {
-		return service.findByID(id);
+		return service.findById(id);
 	}
 	
 ////	@Secured("ROLE_USER")

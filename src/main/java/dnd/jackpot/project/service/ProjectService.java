@@ -8,4 +8,6 @@ public interface ProjectService {
 	
 	ProjectDto save(ProjectSaveDto saveDto);
 	
+	ProjectDto findById(Long id);
+	
 }

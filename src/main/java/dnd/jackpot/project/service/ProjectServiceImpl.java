@@ -44,5 +44,11 @@ public class ProjectServiceImpl implements ProjectService {
 		LocalDateTime createdDateTime = project.getCreatedAt();
 		return ProjectMapper.map(project, createdDateTime);//stackDtos
 	}
+	@Override
+	@Transactional(readOnly = true)
+	public ProjectDto findById(Long id) {
+		Project project = repo.findById(id).orElseThrow();
+		return toDto(project);
+	}
 	
 }
