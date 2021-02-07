@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.Scrap;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.project.repository.ProjectRepository;
+import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.stack.entity.EstackProgrammer;
 import dnd.jackpot.stack.entity.StackDto;
 //import dnd.jackpot.user.User;
@@ -24,6 +27,7 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	private final ProjectRepository repo;
 	private final ProjectStackService projectStackService;
+	private final ScrapRepository scrapRepo;
 
 	@Override
 	@Transactional
@@ -43,6 +47,20 @@ public class ProjectServiceImpl implements ProjectService {
 //		List<StackDto> stackDtos = ProjectStackService.getAllByProject(project);
 		LocalDateTime createdDateTime = project.getCreatedAt();
 		return ProjectMapper.map(project, createdDateTime);//stackDtos
+	}
+	
+	@Override
+	public void addScrap(int projectId, long userIndex) {
+		scrapRepo.save(Scrap.builder()
+				.postIndex(projectId)
+				.userIndex(userIndex)
+				.build());
+	}
+
+	@Override
+	public ProjectDto findById(Long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

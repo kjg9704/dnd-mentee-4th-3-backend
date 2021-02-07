@@ -202,7 +202,16 @@ public class UserController {
     }
     @ApiOperation(value = "이메일 중복확인")
     @GetMapping("/email/is-exist")
-    public Boolean isExistEmail(@RequestParam("email") @ApiParam(value = "이메일") String email){
-      return userService.isExistEmail(email);
+    public ResponseEntity<?> isExistEmail(@RequestParam("email") @ApiParam(value = "이메일") String email){
+    	Response response = new Response();
+    	if(userService.isExistEmail(email)) {
+    		response.setMessage("이미 가입한 회원입니다");
+    		return ResponseEntity.ok(response); 
+    	}
+    	else {
+    		response.setMessage("가입하지않은 회원입니다");
+    		return ResponseEntity.ok(response); 
+    	}
+    	
     }
 }
