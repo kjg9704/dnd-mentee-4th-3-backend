@@ -15,11 +15,10 @@ import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-<<<<<<< HEAD
+
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.Scrap;
-=======
->>>>>>> refs/remotes/upstream/master
+
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
@@ -39,15 +38,15 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectStackService projectStackService;
 	private final ScrapRepository scrapRepo;
 
-	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
+//	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
 		
 //		validateSearchDto(searchDto);
 //		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
-		Page<Project> pageProjects;
-//		if(searchDto.)
-		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
-		return FeedDtoList;
-	}
+//		Page<Project> pageProjects;
+////		if(searchDto.)
+//		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
+//		return FeedDtoList;
+//	}
 //	private void validateSearchDto(ProjectSearchDto searchDto) {
 //		Integer pageSize = searchDto.getPageSize();
 //		Integer pageNumber = searchDto.getPageNumber();
