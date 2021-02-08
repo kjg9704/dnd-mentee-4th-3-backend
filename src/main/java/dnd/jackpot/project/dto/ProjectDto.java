@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 public class ProjectDto {
-	private int id = 0;
+	private Long id = 0L;
 	private String shortDesc="";
 	private List<StackDto> stacks = new ArrayList<>();
 //	private UserDto author =new AuthorDto();//이 부분확인 해보기 User로 할지 writeProject로 이용할지

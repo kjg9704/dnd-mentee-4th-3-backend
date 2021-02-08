@@ -20,16 +20,18 @@ import dnd.jackpot.user.User;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.ProjectSearchDto;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
 public class ProjectController {
 	private final ProjectService service;
-	private final CommentService commentService;
 	
 //	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
@@ -53,7 +55,7 @@ public class ProjectController {
 	}
 	
 	
-////	@Secured("ROLE_USER")
+//////	@Secured("ROLE_USER")
 //	@GetMapping("")
 //	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
 //		return service.findAll(searchDto);
@@ -65,15 +67,15 @@ public class ProjectController {
 		return service.findById(id);
 	}
 	
-////	@Secured("ROLE_USER")
-//	@DeleteMapping("/{id}")
-//	public ProjectDto delete(@PathVariable("id") Long id) {
-//		return service.delete(id);
-//	}
+//	@Secured("ROLE_USER")
+	@DeleteMapping("/{id}")
+	public ProjectDto delete(@PathVariable("id") Long id) {
+		return service.delete(id);
+	}
 	
-////	@Secured("ROLE_USER")
-//	@PutMapping("/{id}")
-//	public ProjectDto modify(@PathVariable("id") Long id, ProjectModifyDto modifyDto) {
-//		return service.modify(id, modifyDto);
-//	}
+//////	@Secured("ROLE_USER")
+	@PutMapping("/{id}")
+	public ProjectDto modify(@PathVariable("id") Long id, ProjectModifyDto modifyDto) {
+		return service.modify(id, modifyDto);
+	}
 }

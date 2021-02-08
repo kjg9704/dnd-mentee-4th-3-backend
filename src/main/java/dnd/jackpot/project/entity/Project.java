@@ -23,7 +23,7 @@ public class Project {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 	
 //	@NotBlank
 	private String title;
@@ -95,7 +95,11 @@ public class Project {
 		project.region = region;
 		return project;
 	}
-	public void update(String title, String shortDesc) {
+	public void update(String title, String shortDesc, ERegion region) {
+//		Project project = new Project();
+		this.region = region;
+		this.title = title;
 		this.shortDesc = shortDesc;
+//		return project;
 	}
 }

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 public class ProjectStackDto {
-	private int id=0;
+	private Long id=0L;
 	EstackProgrammer stack;
 }
