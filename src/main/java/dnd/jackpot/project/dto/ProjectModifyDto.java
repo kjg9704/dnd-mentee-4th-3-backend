@@ -13,5 +13,5 @@ public class ProjectModifyDto {
 	private String shortdesc;
 	private ERegion region;
 	private List<String> stack; 
-	
+	private List<String> interest;
 }

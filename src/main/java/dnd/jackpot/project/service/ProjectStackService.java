@@ -2,16 +2,17 @@ package dnd.jackpot.project.service;
 
 import java.util.List;
 
+import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.stack.entity.EstackProgrammer;
 //import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.stack.entity.StackDto;
+
 
 public interface ProjectStackService {
 //	List<StackDto> getAllByFeed(EstackProgrammer stack);
 
-	List<StackDto> save(List<String> stacks, Project project);
+	List<ProjectStackDto> save(List<String> stacks, Project project);
 
 //	List<StackDto> getAllByProject(Project project);
 

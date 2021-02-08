@@ -1,11 +1,12 @@
-//package dnd.jackpot.stack.entity;
+//package dnd.jackpot.project.dto;
 //
+//import dnd.jackpot.project.entity.Einterest;
 //import lombok.AllArgsConstructor;
 //import lombok.Data;
 //import lombok.NoArgsConstructor;
 //
 //@Data @AllArgsConstructor @NoArgsConstructor
-//public class StackDto {
+//public class InterestDto {
 //	private Long id=0L;
-//	private EstackProgrammer stack;
+//	private Einterest interest;
 //}

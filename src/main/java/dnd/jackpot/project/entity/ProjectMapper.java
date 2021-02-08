@@ -7,7 +7,7 @@ import java.util.Objects;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-import dnd.jackpot.stack.entity.StackDto;
+import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.user.User;
 
 public class ProjectMapper {
@@ -20,7 +20,7 @@ public class ProjectMapper {
 //		if(Objects.nonNull(stackDtos)){
 //			pdto.setStacks(stackDtos);
 //		}
-		StackDto sdto = new StackDto();
+//		ProjectStackDto sdto = new ProjectStackDto();
 //		pdto.setId(project.getId());
 //		pdto.setAuthor(authorDto);
 //		pdto.setShortDesc(shortDesc);

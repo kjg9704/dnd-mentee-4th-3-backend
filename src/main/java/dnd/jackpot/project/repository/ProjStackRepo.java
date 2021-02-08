@@ -8,19 +8,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.entity.Project;
+import dnd.jackpot.project.entity.ProjectInterest;
 import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.stack.entity.EstackProgrammer;
 
 public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
-	List<ProjectStack> findAllByProject(Project project);
+	List<ProjectInterest> findAllByProject(Project project);
 	
 //	ProjectStack findByProjAndStack(Project project, EstackProgrammer stack);
-	@Transactional
-	@Modifying
-	List<ProjectStack> deleteAllByProject(Project project);
+//	@Transactional
+//	@Modifying
+//	List<ProjectInterest> deleteAllByProject(Project project);
 
 	@Transactional
 	@Modifying
 //	@Query("DELETE m from ProjectStack m where m.project = :project")
-	List<ProjectStack> removeByProject(ProjectStack project);
+	List<ProjectInterest> removeByProject(ProjectInterest project);
 }
