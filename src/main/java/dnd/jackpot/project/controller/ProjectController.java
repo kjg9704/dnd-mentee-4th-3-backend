@@ -32,6 +32,7 @@ import dnd.jackpot.project.dto.ProjectSearchDto;
 @RequestMapping("/api/projects")
 public class ProjectController {
 	private final ProjectService service;
+	private final CommentService commentService;
 	
 //	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
@@ -55,7 +56,7 @@ public class ProjectController {
 	}
 	
 	
-//////	@Secured("ROLE_USER")
+////////	@Secured("ROLE_USER")
 //	@GetMapping("")
 //	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
 //		return service.findAll(searchDto);

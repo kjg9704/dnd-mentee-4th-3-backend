@@ -10,8 +10,6 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import dnd.jackpot.region.entity.ERegion;
-import dnd.jackpot.stack.entity.EstackProgrammer;
 //import dnd.jackpot.user.User;
 import lombok.*;
 
@@ -69,13 +67,13 @@ public class Project {
 //	private ProjectStack stack;
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = EstackProgrammer.class)
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch=FetchType.EAGER, mappedBy="project")//
+	@OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectStack> stacks = new ArrayList<>();
 	
-//	public void add(ProjectStack stack) {
-//		stack.setProject(this);
-//		this.stacks.add(stack);
-//	}
+	@Enumerated(EnumType.STRING)
+	@ElementCollection(targetClass = Einterest.class)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<ProjectInterest> interest = new ArrayList<>();
 	
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
 //	private final List<ProjectComment> comments = new ArrayList<>();

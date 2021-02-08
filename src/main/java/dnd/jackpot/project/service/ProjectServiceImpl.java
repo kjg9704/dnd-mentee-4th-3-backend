@@ -24,8 +24,7 @@ import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.project.entity.Scrap;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
-import dnd.jackpot.stack.entity.EstackProgrammer;
-import dnd.jackpot.stack.entity.StackDto;
+
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -35,14 +34,15 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	private final ProjectRepository repo;
 	private final ProjectStackService projectStackService;
+	private final ProjectInterestService projectInterestService;
 	private final ScrapRepository scrapRepo;
 
 //	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
-		
+//		
 //		validateSearchDto(searchDto);
 //		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
 //		Page<Project> pageProjects;
-////		if(searchDto.)
+//		if(searchDto.)
 //		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
 //		return FeedDtoList;
 //	}
@@ -65,6 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = ProjectMapper.map(saveDto);
 //		ProjectStack projStack = ProjectStack.of(project, saveDto.getStacks())
 		projectStackService.save(saveDto.getStacks(),project);
+		projectInterestService.save(saveDto.getInterest(),project);
 		repo.save(project);
 		return toDto(project);//with comments 필요한지..
 	}
@@ -107,6 +108,10 @@ public class ProjectServiceImpl implements ProjectService {
 		if(Objects.nonNull(modifyDto.getStack())) {
 			projectStackService.removeByProject(project);
 			projectStackService.save(modifyDto.getStack(), project);
+		}
+		if(Objects.nonNull(modifyDto.getInterest())) {
+			projectInterestService.removeByProject(project);
+			projectInterestService.save(modifyDto.getInterest(), project);
 		}
 		repo.save(project);
 		return toDto(project);

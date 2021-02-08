@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dnd.jackpot.project.dto.ProjectStackDto;
+import dnd.jackpot.project.entity.EstackProgrammer;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.stack.entity.EstackProgrammer;
-import dnd.jackpot.stack.entity.StackDto;
+
+//import dnd.jackpot.stack.entity.StackDto;
 import lombok.RequiredArgsConstructor;
 
 import dnd.jackpot.project.repository.ProjStackRepo;
@@ -39,13 +41,13 @@ public class ProjectStackServiceImpl implements ProjectStackService {
 	
 	@Override
 	@Transactional
-	public List <StackDto> save(List<String> stacks, Project project){
-		List<StackDto> dtos = new ArrayList<>();
+	public List <ProjectStackDto> save(List<String> stacks, Project project){
+		List<ProjectStackDto> dtos = new ArrayList<>();
 		for(String stack : stacks) {
 			EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
 			ProjectStack projectStack = ProjectStack.of(project, stackProgram);
 			repo.save(projectStack);
-			dtos.add(new StackDto(projectStack.getId(),projectStack.getStack()));
+			dtos.add(new ProjectStackDto(projectStack.getId(),projectStack.getStack()));
 		}
 		return dtos;
 	}
