@@ -17,7 +17,6 @@ import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 
 import dnd.jackpot.project.dto.ProjectSearchDto;
-import dnd.jackpot.project.dto.Scrap;
 
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
@@ -101,6 +100,7 @@ public class ProjectServiceImpl implements ProjectService {
 		return projectDto;
 	}
 	
+	@Override
 	public ProjectDto modify(Long id, ProjectModifyDto modifyDto) {
 		Project project = repo.findById(id).orElseThrow();
 		project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion());
