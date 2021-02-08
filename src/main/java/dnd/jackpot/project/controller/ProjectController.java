@@ -56,7 +56,7 @@ public class ProjectController {
 	}
 	
 	
-//////	@Secured("ROLE_USER")
+////////	@Secured("ROLE_USER")
 //	@GetMapping("")
 //	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
 //		return service.findAll(searchDto);

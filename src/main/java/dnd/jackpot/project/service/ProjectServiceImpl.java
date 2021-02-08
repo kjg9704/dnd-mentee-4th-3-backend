@@ -38,11 +38,11 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ScrapRepository scrapRepo;
 
 //	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
-		
+//		
 //		validateSearchDto(searchDto);
 //		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
 //		Page<Project> pageProjects;
-////		if(searchDto.)
+//		if(searchDto.)
 //		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
 //		return FeedDtoList;
 //	}
