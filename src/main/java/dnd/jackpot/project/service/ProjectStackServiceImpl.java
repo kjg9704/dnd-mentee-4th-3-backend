@@ -16,12 +16,14 @@ import dnd.jackpot.stack.entity.StackDto;
 import lombok.RequiredArgsConstructor;
 
 import dnd.jackpot.project.repository.ProjStackRepo;
+import dnd.jackpot.project.repository.ProjectRepository;
 //import dnd.jackpot.stack.service.StackService;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectStackServiceImpl implements ProjectStackService {
 	private final ProjStackRepo repo;
+	private final ProjectRepository projRepo;
 	//private final StackService stackService;
 	
 //	@Override 
@@ -40,7 +42,6 @@ public class ProjectStackServiceImpl implements ProjectStackService {
 	public List <StackDto> save(List<String> stacks, Project project){
 		List<StackDto> dtos = new ArrayList<>();
 		for(String stack : stacks) {
-//			EstackProgrammer stackProgram = stackService.save(stack);
 			EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
 			ProjectStack projectStack = ProjectStack.of(project, stackProgram);
 			repo.save(projectStack);
@@ -48,4 +49,12 @@ public class ProjectStackServiceImpl implements ProjectStackService {
 		}
 		return dtos;
 	}
+
+	@Override
+	@Transactional
+	public void removeByProject(Project project){
+		project.getStacks().clear();
+		projRepo.save(project);
+	}
+	
 }

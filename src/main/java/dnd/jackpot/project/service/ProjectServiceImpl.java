@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.Scrap;
@@ -96,7 +97,17 @@ public class ProjectServiceImpl implements ProjectService {
 		repo.delete(project);
 		return projectDto;
 	}
-
 	
+	public ProjectDto modify(Long id, ProjectModifyDto modifyDto) {
+		Project project = repo.findById(id).orElseThrow();
+		project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion());
+		if(Objects.nonNull(modifyDto.getStack())) {
+			projectStackService.removeByProject(project);
+			projectStackService.save(modifyDto.getStack(), project);
+		}
+		repo.save(project);
+		return toDto(project);
+		
+	}
 	
 }

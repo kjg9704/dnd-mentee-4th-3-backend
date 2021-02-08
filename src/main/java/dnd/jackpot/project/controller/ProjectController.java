@@ -18,6 +18,7 @@ import dnd.jackpot.project.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 
@@ -59,8 +60,8 @@ public class ProjectController {
 	}
 	
 //////	@Secured("ROLE_USER")
-//	@PutMapping("/{id}")
-//	public ProjectDto modify(@PathVariable("id") Long id, ProjectModifyDto modifyDto) {
-//		return service.modify(id, modifyDto);
-//	}
+	@PutMapping("/{id}")
+	public ProjectDto modify(@PathVariable("id") Long id, ProjectModifyDto modifyDto) {
+		return service.modify(id, modifyDto);
+	}
 }
