@@ -1,6 +1,7 @@
 package dnd.jackpot.project.dto;
 
-import dnd.jackpot.stack.entity.EstackProgrammer;
+
+import dnd.jackpot.project.entity.EstackProgrammer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

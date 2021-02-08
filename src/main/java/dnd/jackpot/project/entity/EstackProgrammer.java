@@ -1,4 +1,4 @@
-package dnd.jackpot.stack.entity;
+package dnd.jackpot.project.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;

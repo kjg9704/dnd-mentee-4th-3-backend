@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectInterest;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.stack.entity.EstackProgrammer;
+
 
 public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
 	List<ProjectInterest> findAllByProject(Project project);

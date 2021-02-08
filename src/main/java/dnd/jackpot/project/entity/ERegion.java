@@ -1,4 +1,4 @@
-package dnd.jackpot.region.entity;
+package dnd.jackpot.project.entity;
 
 
 

@@ -2,8 +2,7 @@ package dnd.jackpot.project.dto;
 
 import java.util.List;
 
-import dnd.jackpot.region.entity.ERegion;
-import dnd.jackpot.stack.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.ERegion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

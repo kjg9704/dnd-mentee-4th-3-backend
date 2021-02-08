@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.dto.ProjectStackDto;
+import dnd.jackpot.project.entity.EstackProgrammer;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.stack.entity.EstackProgrammer;
+
 //import dnd.jackpot.stack.entity.StackDto;
 import lombok.RequiredArgsConstructor;
 

@@ -1,7 +1,7 @@
 package dnd.jackpot.project.dto;
 
-import dnd.jackpot.region.entity.ERegion;
-import dnd.jackpot.stack.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.EstackProgrammer;
 
 public class ProjectSearchDto {
 	private ERegion regionfilter;

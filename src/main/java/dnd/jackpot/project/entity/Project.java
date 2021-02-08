@@ -10,8 +10,6 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import dnd.jackpot.region.entity.ERegion;
-import dnd.jackpot.stack.entity.EstackProgrammer;
 //import dnd.jackpot.user.User;
 import lombok.*;
 

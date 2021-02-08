@@ -24,7 +24,6 @@ import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.project.entity.Scrap;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
-import dnd.jackpot.stack.entity.EstackProgrammer;
 
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import java.util.List;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.stack.entity.EstackProgrammer;
+
 //import dnd.jackpot.project.entity.ProjectStack;
 
 

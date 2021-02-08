@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
-import dnd.jackpot.region.entity.ERegion;
-import dnd.jackpot.stack.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
