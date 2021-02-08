@@ -14,9 +14,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import dnd.jackpot.project.service.CommentService;
 import dnd.jackpot.project.service.ProjectService;
+import dnd.jackpot.user.User;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import dnd.jackpot.project.dto.PagingDto;
+import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
@@ -29,14 +34,23 @@ public class ProjectController {
 	private final ProjectService service;
 	
 //	@Secured("ROLE_USER")
+	@ApiOperation(value = "게시글 작성")
 	@PostMapping("")
-	public ProjectDto save(@RequestBody ProjectSaveDto saveDto) {
+	public ProjectDto save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto) {
 		return service.save(saveDto);
 	}
 	
+	@ApiOperation(value = "스크랩 처리")
 	@PostMapping("/scrap/{projectindex}")
-	public ResponseEntity<?> addScrap(@PathVariable("projectindex") int projectIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+	public ResponseEntity<?> addScrap(@ApiParam(value = "게시글id만 path로 넘겨주시면 됩니다!! user정보는 토큰에서 가져옴") @PathVariable("projectindex") int projectIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		service.addScrap(projectIndex, user.getUserIndex());
+		return ResponseEntity.ok("success");
+	}
+	
+	@ApiOperation(value = "게시글 댓글달기")
+	@PostMapping("/comment")
+	public ResponseEntity<?> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto commentDto, @AuthenticationPrincipal User user) {
+		commentService.save(commentDto, user.getUserIndex());
 		return ResponseEntity.ok("success");
 	}
 	

@@ -81,6 +81,10 @@ public class User implements UserDetails {
         this.career = career;
         this.date = date;
     }
+    
+    public List<UserStacks> getStacks(){
+    	return stacks;
+    }
 
     // 사용자의 권한을 콜렉션 형태로 반환
     // 단, 클래스 자료형은 GrantedAuthority를 구현해야함

@@ -61,7 +61,7 @@ public class UserController {
 
 	@ApiOperation(value = "로그인")
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+	public ResponseEntity<?> createAuthenticationToken(@ApiParam(value = "이메일, 패스워드, 로그인타입")@RequestBody JwtRequest authenticationRequest) throws Exception {
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 		final UserDetails userDetails = userService.loadUserByEmailAndLogintype(authenticationRequest.getEmail(), authenticationRequest.getLogintype());
 		final String token = jwtTokenUtil.generateToken(userDetails);
@@ -70,7 +70,7 @@ public class UserController {
 	
 	@ApiOperation(value = "카카오 로그인 검증")
 	@GetMapping(value = "/kakaoLogin/{kakaoAccessToken}")
-	public ResponseEntity<?> kakaoLoginRequest(@PathVariable("kakaoAccessToken") String kakaoAccessToken){
+	public ResponseEntity<?> kakaoLoginRequest(@ApiParam(value = "path로 kakaoAccessToken 전달")@PathVariable("kakaoAccessToken") String kakaoAccessToken){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + kakaoAccessToken);
@@ -99,7 +99,7 @@ public class UserController {
 	
 	@ApiOperation(value = "네이버 로그인 검증")
 	@GetMapping(value = "/naverLogin")
-	public ResponseEntity<?> naverLoginRequest(String naverAccessToken){
+	public ResponseEntity<?> naverLoginRequest(@ApiParam(value = "Query로 naverAccessToken 전달") String naverAccessToken){
         String header = "Bearer " + naverAccessToken; // Bearer 다음에 공백 추가
         System.out.println("------ 헤더확인");
         System.out.println(header);
@@ -145,7 +145,7 @@ public class UserController {
 	
 	@ApiOperation(value = "구글 로그인 검증")
 	@GetMapping(value = "/googleLogin")
-	public ResponseEntity<?> googleLoginRequest(String googleAccessToken){
+	public ResponseEntity<?> googleLoginRequest(@ApiParam(value = "Query로 googleAccessToken 전달") String googleAccessToken){
 		RestTemplate rt = new RestTemplate();
         System.out.println("Authorization"+ "Bearer " + googleAccessToken);
         String response = rt.getForEntity("https://oauth2.googleapis.com/tokeninfo?id_token=" + googleAccessToken, String.class).toString();
@@ -172,6 +172,7 @@ public class UserController {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
 	}
+	@ApiOperation(value = "회원탈퇴 (parameter 없이 header에 토큰값만 있으면됨)")
 	@DeleteMapping("/withdraw")
 	public ResponseEntity<?> withDraw(@AuthenticationPrincipal dnd.jackpot.user.User user) {
 		Response response = new Response();
@@ -189,7 +190,7 @@ public class UserController {
 	
     @ApiOperation(value = "회원가입")
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @ApiParam(value = "가입 유저 정보") UserDto infoDto) {
+    public ResponseEntity<?> signup(@RequestBody @ApiParam(value = "가입 유저 정보 \n auto = ROLE_USER, logintype = normal or socialLogintype(google, kakao, naver)") UserDto infoDto) {
         Response response = new Response();
         try {
             userService.save(infoDto);

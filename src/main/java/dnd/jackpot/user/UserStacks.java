@@ -17,7 +17,7 @@ public class UserStacks {
     @Column(nullable = false)
 	private String stack;
 	
-	@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "userindex", nullable = false, updatable = false)
     private User user;
 	
