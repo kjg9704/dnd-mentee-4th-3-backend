@@ -37,16 +37,19 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectInterestService projectInterestService;
 	private final ScrapRepository scrapRepo;
 
-//	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
-//		
+	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
+//		페이지 구현시 필요
 //		validateSearchDto(searchDto);
+		
 //		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
 //		Page<Project> pageProjects;
-//		if(searchDto.)
-//		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
-//		return FeedDtoList;
-//	}
-//	private void validateSearchDto(ProjectSearchDto searchDto) {
+		if(Objects.nonNull(searchDto.getRegionFilter())) {
+			
+		}else if(Objects.nonNull(searchDto.getStackFilter()t))
+		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
+		return FeedDtoList;
+	}
+	private void validateSearchDto(ProjectSearchDto searchDto) {
 //		Integer pageSize = searchDto.getPageSize();
 //		Integer pageNumber = searchDto.getPageNumber();
 //		if(Objects.isNull(pageSize)||Objects.isNull(pageNumber)) {
@@ -54,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
 //		}if(pageSize<=0) {
 //			throw new CustomException(HttpStatus.BAD_REQUEST,"PAGE 1보다 작음" )
 //		}
-//	}
+	}
 	
 	@Override
 	@Transactional
