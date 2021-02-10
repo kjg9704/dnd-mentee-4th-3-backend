@@ -2,6 +2,8 @@ package dnd.jackpot.user;
 
 import javax.persistence.Entity;
 
+import com.sun.istack.NotNull;
+
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -14,11 +16,12 @@ public class UserStacks {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
     
-    @Column(nullable = false)
+    @NotNull
 	private String stack;
 	
+    @NotNull
     @ManyToOne
-    @JoinColumn(name = "userindex", nullable = false, updatable = false)
+    @JoinColumn(name = "userindex", updatable = true)
     private User user;
 	
 	@Builder

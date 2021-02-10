@@ -22,11 +22,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +41,6 @@ import org.springframework.web.client.RestTemplate;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.response.BasicResponse;
 import dnd.jackpot.response.ErrorResponse;
 import dnd.jackpot.response.Response;
@@ -48,11 +49,8 @@ import dnd.jackpot.security.JwtResponse;
 import dnd.jackpot.security.JwtTokenUtil;
 import dnd.jackpot.security.JwtUserDetailsService;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ExampleProperty;
 
 @Api(description = "로그인/회원가입 컨트롤러")
 @RestController
@@ -100,20 +98,21 @@ public class UserController {
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(response.getBody());
 		String id = jsonObject.get("id").toString();
 		UserDetails userDetails;
+		id = id.substring(1, id.length()-1);
 		String token = "";
 		try {
 			userDetails = userService.loadUserByEmailAndLogintype(id, "kakao");
 			token = jwtTokenUtil.generateToken(userDetails);
 		} catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.CONTINUE)
-					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "100"));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
 		}
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
 	@ApiOperation(value = "네이버 로그인 검증")
 	@GetMapping(value = "/naverLogin")
-	public ResponseEntity<?> naverLoginRequest(@ApiParam(value = "Query로 naverAccessToken 전달") String naverAccessToken){
+	public ResponseEntity<?> naverLoginRequest(@RequestParam(value="token") @ApiParam(value = "Query로 naverAccessToken 전달") String naverAccessToken){
 		String header = "Bearer " + naverAccessToken; // Bearer 다음에 공백 추가
 		System.out.println("------ 헤더확인");
 		System.out.println(header);
@@ -139,42 +138,58 @@ public class UserController {
 			br.close();
 			System.out.println(response.toString());
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("토큰 인증 실패", "500"));
+			
 		}
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(response.toString());
 		JsonObject res = (JsonObject) jsonObject.get("response");
+		if(res == null) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("토큰 인증 실패", "500"));
+		}
 		String id = res.get("id").toString();
 		UserDetails userDetails;
+		System.out.println("----------");
+		System.out.println(id);
+		id = id.substring(1, id.length()-1);
 		String token = "";
 		try {
 			userDetails = userService.loadUserByEmailAndLogintype(id, "naver");
 			token = jwtTokenUtil.generateToken(userDetails);
+			System.out.println(token);
 		} catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.CONTINUE)
-					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "100"));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
 		}
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
 	@ApiOperation(value = "구글 로그인 검증")
 	@GetMapping(value = "/googleLogin")
-	public ResponseEntity<?> googleLoginRequest(@ApiParam(value = "Query로 googleAccessToken 전달") String googleAccessToken){
+	public ResponseEntity<?> googleLoginRequest(@RequestParam(value="token")@ApiParam(value = "Query로 googleAccessToken 전달") String googleAccessToken){
 		RestTemplate rt = new RestTemplate();
 		System.out.println("Authorization"+ "Bearer " + googleAccessToken);
-		String response = rt.getForEntity("https://oauth2.googleapis.com/tokeninfo?id_token=" + googleAccessToken, String.class).toString();
+		String response = "";
+		try {
+			response = rt.getForEntity("https://oauth2.googleapis.com/tokeninfo?id_token=" + googleAccessToken, String.class).getBody().toString();
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("토큰 인증 실패", "500"));
+		}
+		System.out.println(response);
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(response);
 		String id = jsonObject.get("sub").toString();
+		System.out.println(id);
 		UserDetails userDetails;
+		id = id.substring(1, id.length()-1);
 		String token = "";
 		try {
 			userDetails = userService.loadUserByEmailAndLogintype(id, "google");
 			token = jwtTokenUtil.generateToken(userDetails);
 		} catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.CONTINUE)
-					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "100"));
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
 		}
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
@@ -205,7 +220,7 @@ public class UserController {
 
 	@ApiOperation(value = "회원가입")
 	@PostMapping("/signup")
-	public ResponseEntity<? extends BasicResponse> signup(@RequestBody @ApiParam(value = "가입 유저 정보 \n auto = ROLE_USER, logintype = normal or socialLogintype(google, kakao, naver)") UserDto infoDto) {
+	public ResponseEntity<? extends BasicResponse> signup(@RequestBody @ApiParam(value = "가입 유저 정보 \n auth = ROLE_USER, logintype = normal or socialLogintype(google, kakao, naver)") UserDto infoDto) {
 		try {
 			userService.save(infoDto);
 		}catch(Exception e) {
@@ -214,6 +229,53 @@ public class UserController {
 		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
+	
+	@ApiOperation(value = "프로필 수정")
+	@PutMapping("/update-profile")
+	public ResponseEntity<? extends BasicResponse> updateProfile(@RequestBody @ApiParam(value = "") UserModifyDto infoDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			userService.modifyUser(infoDto, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("업데이트 실패", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
+	@ApiOperation(value = "비밀번호 모를때 이메일 인증 후 변경")
+	@PutMapping("/password-modify")
+	public ResponseEntity<? extends BasicResponse> passwordModify(@RequestParam(value="email") @ApiParam(value = "유저 이메일") String email, @RequestParam(value="password") @ApiParam(value = "새로운 비밀번호") String password) {
+		try {
+			userService.modifyPassword(email, password);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("failed", "404"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
+	@ApiOperation(value = "유저 비밀번호 변경(비밀번호만 넘겨주면됨) 토큰은필수입니다")
+	@PutMapping("/password-change")
+	public ResponseEntity<? extends BasicResponse> normalPasswordModify(@RequestParam(value="password") @ApiParam(value = "기존 비밀번호") String existingPassword, 
+																		@RequestParam(value="newpassword") @ApiParam(value = "새 비밀번호") String newPassword,
+																		@AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			String dbPassword = user.getPassword();
+			if (passwordEncoder.matches(existingPassword, dbPassword)) {
+				userService.modifyPassword(newPassword, user);
+			} else {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body(new ErrorResponse("failed", "404"));
+			}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("failed", "404"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
+	
 	@ApiOperation(value = "이메일 중복확인")
 	@GetMapping("/email/is-exist")
 	public ResponseEntity<?> isExistEmail(@RequestParam("email") @ApiParam(value = "이메일") String email){
@@ -223,9 +285,21 @@ public class UserController {
 			return ResponseEntity.ok(response); 
 		}
 		else {
-			response.setMessage("가입하지않은 회원입니다");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("사용가능", "404"));
+		}
+	}
+	@ApiOperation(value = "닉네임 중복확인")
+	@GetMapping("/name/is-exist")
+	public ResponseEntity<?> isExistName(@RequestParam("name") @ApiParam(value = "닉네임") String name){
+		Response response = new Response();
+		if(userService.isExistName(name)) {
+			response.setMessage("이미 존재하는 이메일 입니다");
 			return ResponseEntity.ok(response); 
 		}
-
+		else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("사용가능", "404"));
+		}
 	}
 }

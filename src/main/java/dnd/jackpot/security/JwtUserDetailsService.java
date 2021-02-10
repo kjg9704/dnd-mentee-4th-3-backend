@@ -2,6 +2,7 @@ package dnd.jackpot.security;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +13,7 @@ import dnd.jackpot.user.DeletedUser;
 import dnd.jackpot.user.DeletedUserRepository;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
+import dnd.jackpot.user.UserModifyDto;
 import dnd.jackpot.user.UserRepository;
 
 import java.time.LocalDate;
@@ -59,12 +61,24 @@ public class JwtUserDetailsService implements UserDetailsService {
 				.logintype(infoDto.getLoginType())
 				.career(infoDto.getCareer())
 				.date(date.toString())
+				.privacy(infoDto.isPrivacy())
 				.password(infoDto.getPassword()).build());
 		for(int i = 0; i < infoDto.getStacks().size(); i++) {
 			user.addStacks(infoDto.getStacks().get(i));
 		}
 		return user.getUserIndex();
 	}
+	
+	@Transactional
+	public Long modifyUser(UserModifyDto infoDto, User user) {
+			user.update(infoDto);
+			User persistenceUser = userRepository.save(user);
+			for(int i = 0; i < infoDto.getStacks().size(); i++) {
+				persistenceUser.addStacks(infoDto.getStacks().get(i));
+			}
+		return persistenceUser.getUserIndex();
+	}
+	
 	@Transactional
 	public void deletedSave(String email, String loginType) {
 		DeletedUser user = deletedUserRepository.save(DeletedUser.builder()
@@ -72,12 +86,32 @@ public class JwtUserDetailsService implements UserDetailsService {
 				.loginType(loginType)
 				.build());
 	}
+	
+	public void modifyPassword(String email, String password) {
+		User user = (User) loadUserByEmailAndLogintype(email, "normal");
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		user.setPassword(encoder.encode(password));
+		userRepository.save(user);
+	}
+	
+	public void modifyPassword(String password, User user) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		user.setPassword(encoder.encode(password));
+		userRepository.save(user);
+	}
+	
 	public Boolean isExistEmail(String email) {
 	    return userRepository.existsByEmail(email);
 	  }
+	
+	public Boolean isExistName(String name) {
+	    return userRepository.existsByName(name);
+	  }
+	
 	public String getLoginType(User user) {
 		return 	user.getLoginType();
 	}
+	
 	@Transactional
 	public void deleteUser(String email, String loginType) {
 		userRepository.deleteByEmailAndLogintype(email, loginType);

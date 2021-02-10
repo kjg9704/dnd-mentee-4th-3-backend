@@ -21,6 +21,7 @@ import dnd.jackpot.response.CommonResponse;
 import dnd.jackpot.response.ErrorResponse;
 import dnd.jackpot.response.Response;
 import dnd.jackpot.user.User;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 
+@Api(description = "프로젝트 게시글 관련 api")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/projects")
