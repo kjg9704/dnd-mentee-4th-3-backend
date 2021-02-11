@@ -7,7 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -43,7 +45,7 @@ public class User implements UserDetails {
     @Column(name = "auth")
     private String auth;
     
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
     
     @Column(name = "region")
@@ -51,6 +53,9 @@ public class User implements UserDetails {
     
     @Column(name = "job")
     private String job;
+    
+    @Column(name = "privacy")
+    private boolean privacy;
     
     @OneToMany(targetEntity = UserStacks.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserStacks> stacks = new ArrayList<>();
@@ -61,16 +66,18 @@ public class User implements UserDetails {
     @Column(name = "date")
     private String date;
     
+    @Column(name = "previousUpdate")
+    private String previousUpdate;
+    
     public void addStacks(String stack) {
-    	System.out.println("------얜 메소드내부임!");
-    	System.out.println(stack);
     	this.stacks.add(UserStacks.builder()
     			.stack(stack)
     			.user(this) 
     			.build());
     }
+    
     @Builder
-    public User(String email, String password, String auth, String name, String region,String logintype, String job, String career, String date) {
+    public User(String email, String password, String auth, String name, String region,String logintype, String job, String career, String date, boolean privacy) {
     	this.email = email;
         this.logintype = logintype;
         this.password = password;
@@ -80,8 +87,21 @@ public class User implements UserDetails {
         this.job = job;
         this.career = career;
         this.date = date;
+        this.privacy = privacy;
     }
     
+    @Transactional
+     public void update(UserModifyDto infoDto) {
+    	 LocalDate date = LocalDate.now();
+    	 this.career = infoDto.getCareer();
+    	 this.job = infoDto.getJob();
+    	 this.name = infoDto.getName();
+    	 this.region = infoDto.getRegion();
+    	 this.privacy = infoDto.isPrivacy();
+    	 this.previousUpdate = date.toString();
+    	 this.stacks.clear();
+     }
+     
     public List<UserStacks> getStacks(){
     	return stacks;
     }
