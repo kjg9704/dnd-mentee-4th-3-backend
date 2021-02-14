@@ -21,4 +21,6 @@ public class ProjectDto {
 	private String createdDateTime;
 	private ERegion region;
 	private String recruitmentPeriod;	
+	private String online;
+	private String duration;
 }

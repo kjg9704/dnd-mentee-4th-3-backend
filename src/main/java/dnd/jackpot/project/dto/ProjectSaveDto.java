@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 public class ProjectSaveDto {
     private String title;
 	private String shortDesc;
-//	private ERegion region;
+	private String online;
 	private String region;
+	private String duration;
 	private List<String> stacks;//디자이너 더하기->디자이너 개발자 테이블 만드는것 고려
 	private List<String> interest;
+	private List<String> position;
 }
