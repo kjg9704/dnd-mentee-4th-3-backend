@@ -15,15 +15,14 @@ import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-
-
+import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.project.entity.Scrap;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
-
+import dnd.jackpot.response.Response;
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -37,19 +36,22 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ScrapRepository scrapRepo;
 
 //	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
+////		페이지 구현시 필요
+////		validateSearchDto(searchDto);
 //		
-//		validateSearchDto(searchDto);
-//		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
-//		Page<Project> pageProjects;
-//		if(searchDto.)
-//		List<ProjectDto> FeedDtoList = ProjectMapperService.toDto(pageProjects.getContent());
-//		return FeedDtoList;
+////		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
+////		Page<Project> pageProjects;
+//		if(Objects.nonNull(searchDto.getRegionFilter())) {
+//			
+//		}else if(Objects.nonNull(searchDto.getStackFilter()t))
+//		List<ProjectDto> ProjectDtoList = ProjectMapperService.toDto(pageProjects.getContent());
+//		return ProjectDtoList;
 //	}
 //	private void validateSearchDto(ProjectSearchDto searchDto) {
 //		Integer pageSize = searchDto.getPageSize();
 //		Integer pageNumber = searchDto.getPageNumber();
 //		if(Objects.isNull(pageSize)||Objects.isNull(pageNumber)) {
-//			throw new CustomException(HttpStatus.BAD_REQUEST, "pageSize 또는 PageNumber Null입니다.")
+//			throw new responseEntity(HttpStatus.BAD_REQUEST, "pageSize 또는 PageNumber Null입니다.")
 //		}if(pageSize<=0) {
 //			throw new CustomException(HttpStatus.BAD_REQUEST,"PAGE 1보다 작음" )
 //		}
@@ -60,7 +62,7 @@ public class ProjectServiceImpl implements ProjectService {
 	public ProjectDto save(ProjectSaveDto saveDto) {
 //		User author = securityService.getLoggedUser();
 //		나중에 이부분 바꾸기
-		String title;
+		
 		Project project = ProjectMapper.map(saveDto);
 //		ProjectStack projStack = ProjectStack.of(project, saveDto.getStacks())
 		projectStackService.save(saveDto.getStacks(),project);
