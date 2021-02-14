@@ -78,11 +78,11 @@ public class ProjectController {
 	
 	
 //////	@Secured("ROLE_USER")
-	@GetMapping("")
-	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
-		return service.findAll(searchDto);
-	}
-	
+//	@GetMapping("")
+//	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
+//		return service.findAll(searchDto);
+//	}
+//	
 //	@Secured("ROLE_USER")
 	@GetMapping("/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {

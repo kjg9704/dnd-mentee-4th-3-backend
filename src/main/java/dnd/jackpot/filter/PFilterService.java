@@ -2,6 +2,10 @@ package dnd.jackpot.filter;
 
 import java.util.List;
 
+import dnd.jackpot.project.dto.PagingDto;
+import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectSearchDto;
+
 public interface PFilterService {
-	List<PFilterDto> getAll(PFilterSearchDto searchDto);
+	PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto);
 }

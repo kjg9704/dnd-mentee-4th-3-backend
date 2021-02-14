@@ -15,6 +15,7 @@ public class ProjectMapper {
 	public static ProjectDto map(Project project, LocalDateTime time) {//,List<StackDto> stackDtos
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
+		pdto.setTitle(project.getTitle());
 		pdto.setShortDesc(project.getShortDesc());
 		pdto.setRegion(project.getRegion());
 //		if(Objects.nonNull(stackDtos)){
@@ -30,7 +31,8 @@ public class ProjectMapper {
 		return pdto;
 	}
 	public static Project map(ProjectSaveDto saveDto) {//User author 추가하기
-		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), saveDto.getRegion());//add author later on
+		ERegion region = ERegion.valueOf(saveDto.getRegion());
+		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region);//add author later on
 	}
 	
 }
