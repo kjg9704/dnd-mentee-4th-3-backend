@@ -8,4 +8,5 @@ import dnd.jackpot.project.entity.Project;
 public interface ProjectPositionService {
 	List<ProjectPositionDto> save(List<String> position, Project project);
 	void removeByProject(Project project);
+	List<String> getAllByProject(Project project);
 }

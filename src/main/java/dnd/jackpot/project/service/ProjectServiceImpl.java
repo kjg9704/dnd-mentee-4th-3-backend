@@ -1,6 +1,7 @@
 package dnd.jackpot.project.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
+import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
@@ -75,9 +77,11 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	private ProjectDto toDto(Project project) {
 //		ProjectStack stack = projectStackService.getAllByProject(project);
-//		List<StackDto> stackDtos = ProjectStackService.getAllByProject(project);
+		List<String> stack = projectStackService.getAllByProject(project);
+		List<String> interest = projectInterestService.getAllByProject(project);
+		List<String> position = projectPositionService.getAllByProject(project);
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime);//stackDtos
+		return ProjectMapper.map(project, createdDateTime, stack);//stackDtos
 	}
 	@Override
 	@Transactional(readOnly = true)

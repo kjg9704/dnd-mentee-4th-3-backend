@@ -3,7 +3,7 @@ package dnd.jackpot.project.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -11,6 +11,7 @@ import dnd.jackpot.project.dto.ProjectInterestDto;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectInterest;
+import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.project.repository.ProjInterestRepo;
 import dnd.jackpot.project.repository.ProjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,17 @@ public class ProjectInterestServiceImpl implements ProjectInterestService  {
 			dtos.add(new ProjectInterestDto(projectInterest.getId(),projectInterest.getInterest()));
 		}
 		return dtos;
+	}
+	
+	@Override 
+	@Transactional(readOnly=true)
+	public List<String> getAllByProject(Project project){
+		List<ProjectInterest> interests = repo.findAllByProject(project);
+		List<String>Sinterest = new ArrayList<>();
+		for(ProjectInterest interest: interests) {
+			Sinterest.add(interest.getInterest().toString());
+		}
+		return Sinterest;
 	}
 	
 	@Override

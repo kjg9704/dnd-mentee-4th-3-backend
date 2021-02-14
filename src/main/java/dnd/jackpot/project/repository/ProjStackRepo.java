@@ -13,7 +13,7 @@ import dnd.jackpot.project.entity.ProjectStack;
 
 
 public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
-	List<ProjectInterest> findAllByProject(Project project);
+	List<ProjectStack> findAllByProject(Project project);
 	
 //	ProjectStack findByProjAndStack(Project project, EstackProgrammer stack);
 //	@Transactional
@@ -23,5 +23,5 @@ public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
 	@Transactional
 	@Modifying
 //	@Query("DELETE m from ProjectStack m where m.project = :project")
-	List<ProjectInterest> removeByProject(ProjectInterest project);
+	List<ProjectStack> removeByProject(ProjectInterest project);
 }
