@@ -14,6 +14,7 @@ public class PagingMapper {
 		dto.setPageNumber(pageProjects.getNumber());
 		dto.setPageSize(pageProjects.getSize());
 		dto.setTotalPages(pageProjects.getTotalPages());
+		dto.setContents(projectDtos);
 		//last,first,content 나중에 추가
 		return dto;
 	}

@@ -51,7 +51,7 @@ public class ProjectController {
 		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
-	
+
 	@ApiOperation(value = "스크랩 처리")
 	@PostMapping("/scrap/{projectindex}")
 	public ResponseEntity<?> addScrap(@ApiParam(value = "게시글id만 path로 넘겨주시면 됩니다!! user정보는 토큰에서 가져옴") @PathVariable("projectindex") int projectIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
@@ -108,7 +108,7 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
-//////	@Secured("ROLE_USER")
+///	@Secured("ROLE_USER")
 	@PutMapping("/{id}")
 	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") Long id,  @RequestBody ProjectModifyDto modifyDto) {
 		try {

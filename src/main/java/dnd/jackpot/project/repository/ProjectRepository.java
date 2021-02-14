@@ -29,8 +29,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 //	List<Project> findByRegionInAndColumnInAndStackIn(@Param("region")List<ERegion> regions, 
 //			@Param("stack")List<EstackProgrammer>stack, @Param("interest") List<Einterest> interest);
 	
-	Page<Project> findByRegionInAndInterestInAndStacksIn(List<ERegion>region, List<Einterest>interests, List<EstackProgrammer>stacks, Pageable pageable);
+	Page<Project> findByRegionInAndInterestInAndStacksIn(List<ERegion>region, List<String>interests, List<String>stacks, Pageable pageable);
 
-
+	Page<Project> findByRegionIn(List<ERegion> region, Pageable pageable);
 }
 

@@ -58,7 +58,8 @@ public class PFilterServiceImpl implements PFilterService {
 //		RprojectList.retainAll(IprojectList);
 		validateSearchDto(searchDto);
 		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC,"createdAt");
-		pageProjects = repo.findByRegionInAndInterestInAndStacksIn(searchDto.getRegionFilter(), searchDto.getInterestFilter(), searchDto.getStackFilter(),pageable);
+//		pageProjects = repo.findByRegionInAndInterestInAndStacksIn(searchDto.getRegionFilter(), searchDto.getInterestFilter(), searchDto.getStackFilter(),pageable);
+		pageProjects = repo.findByRegionIn(searchDto.getRegionFilter(), pageable);
 		List<ProjectDto> projectDtoList = projectMapperService.toDto(pageProjects.getContent());
 		return PagingMapper.map(pageProjects, projectDtoList);
 		
