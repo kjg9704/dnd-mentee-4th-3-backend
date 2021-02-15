@@ -12,12 +12,15 @@ import dnd.jackpot.user.User;
 
 public class ProjectMapper {
 	
-	public static ProjectDto map(Project project, LocalDateTime time) {//,List<StackDto> stackDtos
+	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack) {//,List<StackDto> stackDtos
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
 		pdto.setTitle(project.getTitle());
 		pdto.setShortDesc(project.getShortDesc());
 		pdto.setRegion(project.getRegion());
+		pdto.setOnline(project.getOnline());
+		pdto.setDuration(project.getDuration());
+		pdto.setStacks(stack);
 //		if(Objects.nonNull(stackDtos)){
 //			pdto.setStacks(stackDtos);
 //		}
@@ -30,9 +33,10 @@ public class ProjectMapper {
 //		}
 		return pdto;
 	}
+	
 	public static Project map(ProjectSaveDto saveDto) {//User author 추가하기
 		ERegion region = ERegion.valueOf(saveDto.getRegion());
-		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region);//add author later on
+		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region, saveDto.getOnline(),saveDto.getDuration());//add author later on
 	}
 	
 }

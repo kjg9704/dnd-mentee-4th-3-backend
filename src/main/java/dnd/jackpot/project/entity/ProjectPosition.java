@@ -14,25 +14,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter @Entity
-@Table(name = "interest_project" )
-public class ProjectInterest {
-	
+@Table(name="position_project")
+public class ProjectPosition {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name="FK_interest_project")
+	@JoinColumn(name="FK_position_project")
 	private Project project;
 	
 	@Enumerated(EnumType.STRING)
-	private Einterest interest;
+	private Eposition position;
 	
-	public static ProjectInterest of(Project project, Einterest interest) {
-		ProjectInterest projInterest = new ProjectInterest();
-		projInterest.project = project;
-		projInterest.interest = interest;
-		return projInterest;
+	public static ProjectPosition of(Project project, Eposition position) {
+		ProjectPosition projPosition = new ProjectPosition();
+		projPosition.project = project;
+		projPosition.position= position;
+		return projPosition;
 	}
-	
 }

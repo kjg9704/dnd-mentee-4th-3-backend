@@ -1,6 +1,7 @@
 package dnd.jackpot.project.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +17,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
+import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
@@ -33,6 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectRepository repo;
 	private final ProjectStackService projectStackService;
 	private final ProjectInterestService projectInterestService;
+	private final ProjectPositionService projectPositionService;
 	private final ScrapRepository scrapRepo;
 
 //	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
@@ -67,15 +70,18 @@ public class ProjectServiceImpl implements ProjectService {
 //		ProjectStack projStack = ProjectStack.of(project, saveDto.getStacks())
 		projectStackService.save(saveDto.getStacks(),project);
 		projectInterestService.save(saveDto.getInterest(),project);
+		projectPositionService.save(saveDto.getPosition(),project);
 		repo.save(project);
 		return toDto(project);//with comments 필요한지..
 	}
 	
 	private ProjectDto toDto(Project project) {
 //		ProjectStack stack = projectStackService.getAllByProject(project);
-//		List<StackDto> stackDtos = ProjectStackService.getAllByProject(project);
+		List<String> stack = projectStackService.getAllByProject(project);
+		List<String> interest = projectInterestService.getAllByProject(project);
+		List<String> position = projectPositionService.getAllByProject(project);
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime);//stackDtos
+		return ProjectMapper.map(project, createdDateTime, stack);//stackDtos
 	}
 	@Override
 	@Transactional(readOnly = true)
@@ -105,7 +111,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectDto modify(Long id, ProjectModifyDto modifyDto) {
 		Project project = repo.findById(id).orElseThrow();
-		project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion());
+		project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion(),modifyDto.get);
 		if(Objects.nonNull(modifyDto.getStack())) {
 			projectStackService.removeByProject(project);
 			projectStackService.save(modifyDto.getStack(), project);

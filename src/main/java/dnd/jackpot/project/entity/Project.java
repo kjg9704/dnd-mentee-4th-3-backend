@@ -34,6 +34,7 @@ public class Project {
 //	@JoinColumn
 //	private User author;
 	
+	
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 	
@@ -49,18 +50,11 @@ public class Project {
 //	private int duration;
 //	
 	private String shortDesc;
-	
-////	topic과 차별성 고려
-//	private String purpose;
-//	
-////	필요할지 생각해보기
-//	private boolean privacy;
-//	
-//	private int clicks;
-//	
-////	목적이랑 차별성 생각해보기
-//	private String topic; 
-//	
+
+	private String online;
+
+	private String duration;
+
 //	private int recruitmentPeriod;
 //	
 //	projectStack에 넣음
@@ -75,6 +69,10 @@ public class Project {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectInterest> interest = new ArrayList<>();
 	
+	@Enumerated(EnumType.STRING)
+	@ElementCollection(targetClass = Eposition.class)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<ProjectPosition> position = new ArrayList<>();
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
 //	private final List<ProjectComment> comments = new ArrayList<>();
 //	
@@ -86,17 +84,21 @@ public class Project {
 //		return project;
 //	}
 //	test code -> without user
-	public static Project of(String shortdesc, String title, ERegion region) {
+	public static Project of(String shortdesc, String title, ERegion region, String online, String duration) {
 		Project project = new Project();
 		project.title = title;
 		project.shortDesc = shortdesc;
 		project.region = region;
+		project.duration = duration;
+		project.online = online;
 		return project;
 	}
-	public void update(String title, String shortDesc, ERegion region) {
+	public void update(String title, String shortDesc, ERegion region, String online, String duration) {
 //		Project project = new Project();
 		this.region = region;
 		this.title = title;
+		this.duration = duration;
+		this.online = online;
 		this.shortDesc = shortDesc;
 //		return project;
 	}

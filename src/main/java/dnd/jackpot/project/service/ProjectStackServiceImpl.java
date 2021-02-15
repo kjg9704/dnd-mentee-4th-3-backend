@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.EstackProgrammer;
 import dnd.jackpot.project.entity.Project;
+import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectStack;
 
 //import dnd.jackpot.stack.entity.StackDto;
@@ -28,15 +29,21 @@ public class ProjectStackServiceImpl implements ProjectStackService {
 	private final ProjectRepository projRepo;
 	//private final StackService stackService;
 	
-//	@Override 
-//	@Transactional(readOnly=true)
-//	public List<StackDto> getAllByProject(Project project){
-//		List<String> stacks = repo.findAllByProject(project);
-//		return stacks.stream().map((ProjectStack)->{
-//			StackDto dto = new StackDto();
-//			dto.setId(Projectstack.getId());
-//		}
-//	}
+	@Override 
+	@Transactional(readOnly=true)
+	public List<String> getAllByProject(Project project){
+		List<ProjectStack> stacks = repo.findAllByProject(project);
+		List<String>Sstack = new ArrayList<>();
+		for(ProjectStack stack: stacks) {
+			Sstack.add(stack.getStack().toString());
+		}
+		return Sstack;
+	}
+	
+	public ProjectStackDto toDto(ProjectStack stack) {
+		return ProjectMapper.mapStack(stack);
+	}
+
 	
 	
 	@Override
