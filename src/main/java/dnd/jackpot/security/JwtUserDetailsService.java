@@ -34,6 +34,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 		return userRepository.findByEmailAndLogintype(email, loginType)
 				.orElseThrow(() -> new UsernameNotFoundException((email)));
 	}
+	
+	public User loadUserByUserIndex(long id) {
+		return userRepository.findById(id).orElseThrow();
+	}
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		 // 시큐리티에서 지정한 서비스이기 때문에 이 메소드를 필수로 구현해야하나 우리는 email중복이 가능하고 (email + logintype) 으로 회원을 특정하기때문에 필요없음.

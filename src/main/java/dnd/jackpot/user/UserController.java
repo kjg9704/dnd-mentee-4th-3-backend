@@ -6,8 +6,13 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,7 +46,9 @@ import org.springframework.web.client.RestTemplate;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.response.BasicResponse;
+import dnd.jackpot.response.CommonResponse;
 import dnd.jackpot.response.ErrorResponse;
 import dnd.jackpot.response.Response;
 import dnd.jackpot.security.JwtRequest;
@@ -96,9 +103,9 @@ public class UserController {
 				);
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(response.getBody());
+		System.out.println(response.getBody());
 		String id = jsonObject.get("id").toString();
 		UserDetails userDetails;
-		id = id.substring(1, id.length()-1);
 		String token = "";
 		try {
 			userDetails = userService.loadUserByEmailAndLogintype(id, "kakao");
@@ -294,7 +301,7 @@ public class UserController {
 	public ResponseEntity<?> isExistName(@RequestParam("name") @ApiParam(value = "닉네임") String name){
 		Response response = new Response();
 		if(userService.isExistName(name)) {
-			response.setMessage("이미 존재하는 이메일 입니다");
+			response.setMessage("이미 존재하는 닉네임 입니다");
 			return ResponseEntity.ok(response); 
 		}
 		else {
@@ -302,4 +309,60 @@ public class UserController {
 					.body(new ErrorResponse("사용가능", "404"));
 		}
 	}
+	
+	@ApiOperation(value = "프로필 정보 가져오기")
+	@GetMapping("/myprofile")
+	public ResponseEntity<? extends BasicResponse> persons(@AuthenticationPrincipal dnd.jackpot.user.User user){
+		List<UserStacks> values;
+		List<String> stacks;
+		UserDto.Response userDto;
+		try {
+			values = user.getStacks();
+			stacks = new ArrayList<String>();
+			userDto = new UserDto.Response(user.getName(), user.getRegion(), user.getJob(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth());
+			for(UserStacks st : values) {
+				stacks.add(st.getStack());
+			}
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("failed", "404"));
+		}
+		return ResponseEntity.ok().body(new CommonResponse<UserDto.Response>(userDto));
+	}
+	
+	@ApiOperation(value = "프로필 정보 가져오기")
+	@GetMapping("/user/{id}")
+	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
+		List<UserStacks> values;
+		List<String> stacks;
+		UserDto.Response userDto;
+		try {
+			dnd.jackpot.user.User user = userService.loadUserByUserIndex(id);
+			values = user.getStacks();
+			stacks = new ArrayList<String>();
+			userDto = new UserDto.Response(user.getName(), user.getRegion(), user.getJob(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth());
+			for(UserStacks st : values) {
+				stacks.add(st.getStack());
+			}
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("failed", "404"));
+		}
+		return ResponseEntity.ok().body(new CommonResponse<UserDto.Response>(userDto));
+	}
+	
+//	@ApiOperation(value = "유저 목록 가져오기")
+//	@GetMapping("/getUsers")
+//	public HttpEntity<PagedResources<User>> persons(Pageable pageable, PagedResourcesAssembler assembler){
+//		Response response = new Response();
+//		if(userService.isExistName(name)) {
+//			response.setMessage("이미 존재하는 이메일 입니다");
+//			return ResponseEntity.ok(response); 
+//		}
+//		else {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new ErrorResponse("사용가능", "404"));
+//		}
+//	}
+	
 }
