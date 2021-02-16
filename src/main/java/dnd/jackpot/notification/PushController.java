@@ -36,12 +36,12 @@ public class PushController {
     public String sendToToken() throws FirebaseMessagingException {
 
         // This registration token comes from the client FCM SDKs.
-        String registrationToken = "epFTefKQQ82LNPAyVoJnKP:APA91bGrZ_4pjP3ewy6gST8hTrGnLB32fxpZr2925ZUXLX1ZjfGtZxDHAsI-VHDwHB_Yv9l1za2N1sNRTdVUBSowWT38VgsVM1OlQhWrurDjlbvL-Ky2iuZp8Y4B7DXTP9A39CAyuhKX";
+        String registrationToken = "eFziRRR3ReiBW1uKsLL1J9:APA91bFiESXEIWHkWxc353JVf8FLLta_UkPQ-_tOGi3cnsMKyFEMUXcqiOoYDpVSiWLN9LM4oL1oRzr1j5_NZiXiS5ftUJrHtBHQ-EKJycfs_px4irogbLAdH5s_42uSTLQBl3GJ0xOy";
 
         // See documentation on defining a message payload.
         Message message = Message.builder()
-                .putData("title", "뜨냐?")
-                .putData("content", "뜨냐고씨:발")
+                .putData("title", "경창님")
+                .putData("content", "뜨시나요??")
                 .setToken(registrationToken)
                 .build();
 
@@ -65,11 +65,11 @@ public class PushController {
     public void send() {
         // 1. create message body
         JSONObject jsonValue = new JSONObject();
-        jsonValue.put("title", "메시지를 보낼거야2");
-        jsonValue.put("content", "너에게로2");
+        jsonValue.put("title", "경창님");
+        jsonValue.put("content", "뜨시나요??");
 
         JSONObject jsonData = new JSONObject();
-        jsonData.put("token", "epFTefKQQ82LNPAyVoJnKP:APA91bGrZ_4pjP3ewy6gST8hTrGnLB32fxpZr2925ZUXLX1ZjfGtZxDHAsI-VHDwHB_Yv9l1za2N1sNRTdVUBSowWT38VgsVM1OlQhWrurDjlbvL-Ky2iuZp8Y4B7DXTP9A39CAyuhKX");
+        jsonData.put("token", "eFziRRR3ReiBW1uKsLL1J9:APA91bFiESXEIWHkWxc353JVf8FLLta_UkPQ-_tOGi3cnsMKyFEMUXcqiOoYDpVSiWLN9LM4oL1oRzr1j5_NZiXiS5ftUJrHtBHQ-EKJycfs_px4irogbLAdH5s_42uSTLQBl3GJ0xOy");
         jsonData.put("data", jsonValue);
 
         JSONObject jsonMessage = new JSONObject();
@@ -81,7 +81,7 @@ public class PushController {
             Request request = new Request.Builder()
                     .addHeader("Authorization", "Bearer " + getAccessToken())
                     .addHeader("Content-Type", "application/json; UTF-8")
-                    .url("https://fcm.googleapis.com/v1/projects/jackpot-d5f0e/messages:send")
+                    .url("https://fcm.googleapis.com/v1/projects/jackpot-1611239774705/messages:send")
                     .post(RequestBody.create(jsonMessage.toString(), MediaType.parse("application/json")))
                     .build();
             Response response = okHttpClient.newCall(request).execute();
@@ -144,7 +144,7 @@ public class PushController {
     }
     
     private static String getAccessToken() throws IOException {
-        ClassPathResource resource = new ClassPathResource("firebase/jackpot-d5f0e-firebase-adminsdk-46a97-cc8373fa78.json");
+        ClassPathResource resource = new ClassPathResource("firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json");
         GoogleCredential googleCredential = GoogleCredential
                 .fromStream(new FileInputStream(resource.getFile()))
                 .createScoped(Arrays.asList(SCOPES));

@@ -17,8 +17,10 @@ public interface ProjectService {
 	
 	ProjectDto modify(Long id, ProjectModifyDto modifyDto);
 	
-	void addScrap(int postId, long userIndex);
+	void addScrap(long postId, User user);
 	
-
+	void addParticipant(long requestId);
+	
+	void participantRequest(long projectId, User user);
 	
 }

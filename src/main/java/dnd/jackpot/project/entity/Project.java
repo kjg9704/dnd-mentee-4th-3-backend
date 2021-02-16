@@ -30,7 +30,6 @@ public class Project {
 //	@NotBlank
 //	private String contact;
 
-//	나중에 USER API나오면 연동
 	
 	@ManyToOne
 	private User author;
@@ -74,6 +73,13 @@ public class Project {
 	@ElementCollection(targetClass = Eposition.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectPosition> position = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<Scrap> scrap = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<ProjectParticipant> participant = new ArrayList<>();
+	
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
 //	private final List<ProjectComment> comments = new ArrayList<>();
 //	

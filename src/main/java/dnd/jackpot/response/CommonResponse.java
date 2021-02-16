@@ -1,5 +1,7 @@
 package dnd.jackpot.response;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +13,9 @@ public class CommonResponse<T> extends BasicResponse {
 	public CommonResponse(T result) {
 		this.message = "success";
 		this.result = result;
+	}
+	public CommonResponse(List<T> result) {
+		this.message = "success";
+		this.result = (T) result;
 	}
 }

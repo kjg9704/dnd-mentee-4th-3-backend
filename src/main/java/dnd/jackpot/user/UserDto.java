@@ -35,6 +35,10 @@ public class UserDto {
 	  private String loginType;
 	  private String career;
 	  private String auth;
+	  
+	  private List<Long> projectId = new ArrayList<>();
+	  private List<Long> participantProject = new ArrayList<>();
+	  private List<Long> participantRequest = new ArrayList<>();
   }
   
 }

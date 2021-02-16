@@ -21,7 +21,9 @@ public class ProjectMapper {
 		pdto.setOnline(project.getOnline());
 		pdto.setDuration(project.getDuration());
 		pdto.setStacks(stack);
-		pdto.setAuthor(project.getAuthor());
+		pdto.setScrapUsers(project.getScrap().size());
+		pdto.setUserIndex(project.getAuthor().getUserIndex());
+		pdto.setCreatedDateTime(project.getCreatedAt().toString());
 //		if(Objects.nonNull(stackDtos)){
 //			pdto.setStacks(stackDtos);
 //		}

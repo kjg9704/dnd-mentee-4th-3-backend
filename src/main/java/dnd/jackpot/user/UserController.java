@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -47,10 +48,15 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.TopicManagementResponse;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.entity.Scrap;
+import dnd.jackpot.project.repository.ScrapRepository;
+import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.response.BasicResponse;
 import dnd.jackpot.response.CommonResponse;
 import dnd.jackpot.response.ErrorResponse;
@@ -69,6 +75,8 @@ import io.swagger.annotations.ApiParam;
 public class UserController {
 
 	private final JwtUserDetailsService userService;
+	private final ScrapRepository scrapRepo;
+	private final ProjectService projectService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -94,11 +102,11 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "카카오 로그인 검증")
-	@GetMapping(value = "/kakaoLogin/{kakaoAccessToken}")
-	public ResponseEntity<?> kakaoLoginRequest(@ApiParam(value = "path로 kakaoAccessToken 전달")@PathVariable("kakaoAccessToken") String kakaoAccessToken){
+	@PostMapping(value = "/kakaoLogin")
+	public ResponseEntity<?> kakaoLoginRequest(@ApiParam(value = "JSON 형식으로 ")@RequestBody SnsRequestDto request){
 		RestTemplate rt = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + kakaoAccessToken);
+		headers.add("Authorization", "Bearer " + request.getSnsToken());
 		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 		HttpEntity<MultiValueMap<String, String>> kakaoRequest =
 				new HttpEntity<>(headers);
@@ -112,11 +120,14 @@ public class UserController {
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(response.getBody());
 		System.out.println(response.getBody());
 		String id = jsonObject.get("id").toString();
-		UserDetails userDetails;
+		
 		String token = "";
 		try {
-			userDetails = userService.loadUserByEmailAndLogintype(id, "kakao");
+			dnd.jackpot.user.User userDetails = (dnd.jackpot.user.User) userService.loadUserByEmailAndLogintype(id, "kakao");
 			token = jwtTokenUtil.generateToken(userDetails);
+			if(!request.getRegistrationToken().equals(userDetails.getRegistrationToken())) {
+				userService.modifyRegistrationToken(request.getRegistrationToken(), userDetails);
+			}
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
@@ -125,9 +136,9 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "네이버 로그인 검증")
-	@GetMapping(value = "/naverLogin")
-	public ResponseEntity<?> naverLoginRequest(@RequestParam(value="token") @ApiParam(value = "Query로 naverAccessToken 전달") String naverAccessToken){
-		String header = "Bearer " + naverAccessToken; // Bearer 다음에 공백 추가
+	@PostMapping(value = "/naverLogin")
+	public ResponseEntity<?> naverLoginRequest(@ApiParam(value = "JSON 형식") @RequestBody SnsRequestDto request){
+		String header = "Bearer " + request.getSnsToken(); // Bearer 다음에 공백 추가
 		System.out.println("------ 헤더확인");
 		System.out.println(header);
 		StringBuffer response = new StringBuffer();
@@ -162,14 +173,14 @@ public class UserController {
 					.body(new ErrorResponse("토큰 인증 실패", "500"));
 		}
 		String id = res.get("id").toString();
-		UserDetails userDetails;
-		System.out.println("----------");
-		System.out.println(id);
 		id = id.substring(1, id.length()-1);
 		String token = "";
 		try {
-			userDetails = userService.loadUserByEmailAndLogintype(id, "naver");
+			dnd.jackpot.user.User userDetails = (dnd.jackpot.user.User) userService.loadUserByEmailAndLogintype(id, "naver");
 			token = jwtTokenUtil.generateToken(userDetails);
+			if(!request.getRegistrationToken().equals(userDetails.getRegistrationToken())) {
+				userService.modifyRegistrationToken(request.getRegistrationToken(), userDetails);
+			}
 			System.out.println(token);
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -179,13 +190,13 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "구글 로그인 검증")
-	@GetMapping(value = "/googleLogin")
-	public ResponseEntity<?> googleLoginRequest(@RequestParam(value="token")@ApiParam(value = "Query로 googleAccessToken 전달") String googleAccessToken){
+	@PostMapping(value = "/googleLogin")
+	public ResponseEntity<?> googleLoginRequest(@ApiParam(value = "JSON 형식") @RequestBody SnsRequestDto request){
 		RestTemplate rt = new RestTemplate();
-		System.out.println("Authorization"+ "Bearer " + googleAccessToken);
+		System.out.println("Authorization"+ "Bearer " + request.getSnsToken());
 		String response = "";
 		try {
-			response = rt.getForEntity("https://oauth2.googleapis.com/tokeninfo?id_token=" + googleAccessToken, String.class).getBody().toString();
+			response = rt.getForEntity("https://oauth2.googleapis.com/tokeninfo?id_token=" + request.getSnsToken(), String.class).getBody().toString();
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("토큰 인증 실패", "500"));
@@ -195,12 +206,14 @@ public class UserController {
 		JsonObject jsonObject = (JsonObject) jsonParser.parse(response);
 		String id = jsonObject.get("sub").toString();
 		System.out.println(id);
-		UserDetails userDetails;
 		id = id.substring(1, id.length()-1);
 		String token = "";
 		try {
-			userDetails = userService.loadUserByEmailAndLogintype(id, "google");
+			dnd.jackpot.user.User userDetails = (dnd.jackpot.user.User) userService.loadUserByEmailAndLogintype(id, "google");
 			token = jwtTokenUtil.generateToken(userDetails);
+			if(!request.getRegistrationToken().equals(userDetails.getRegistrationToken())) {
+				userService.modifyRegistrationToken(request.getRegistrationToken(), userDetails);
+			}
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
@@ -408,16 +421,21 @@ public class UserController {
     	return ResponseEntity.ok().body(new Response("success"));
     }
     
-    @GetMapping("/myscrap")
-    public ResponseEntity<? extends BasicResponse> getMyScrap(@AuthenticationPrincipal dnd.jackpot.user.User user){
-    	try {
-    		
-    	}catch (Exception e) {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("faied", "500"));
-    	}
-    	return ResponseEntity.ok().body(new Response("success"));
-    }
+    @ApiOperation(value = "유저 스크랩 목록 조회")
+	@GetMapping("/myscrap")
+	public ResponseEntity<?> getMyScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		List<ProjectDto> projectList = new ArrayList<>();
+		try {
+			List<Scrap> objlist = scrapRepo.findAllByUser(user);
+			for(Scrap list : objlist) {
+				projectList.add(projectService.findById(list.getProject().getId()));
+			}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩 실패", "500"));
+		}
+			return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectList));
+	}
 	
 	
 //	@ApiOperation(value = "유저 목록 가져오기")

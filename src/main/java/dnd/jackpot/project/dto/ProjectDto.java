@@ -24,6 +24,8 @@ public class ProjectDto {
 	private String recruitmentPeriod;
 	private String online;
 	private String duration;
-	private User author;
+	private long userIndex;
+	private int scrapUsers;
+
 	
 }
