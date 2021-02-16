@@ -25,6 +25,7 @@ import dnd.jackpot.project.entity.Scrap;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.response.Response;
+import dnd.jackpot.user.User;
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -62,11 +63,8 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public ProjectDto save(ProjectSaveDto saveDto) {
-//		User author = securityService.getLoggedUser();
-//		나중에 이부분 바꾸기
-		
-		Project project = ProjectMapper.map(saveDto);
+	public ProjectDto save(ProjectSaveDto saveDto, User user) {
+		Project project = ProjectMapper.map(saveDto, user);
 //		ProjectStack projStack = ProjectStack.of(project, saveDto.getStacks())
 		projectStackService.save(saveDto.getStacks(),project);
 		projectInterestService.save(saveDto.getInterest(),project);

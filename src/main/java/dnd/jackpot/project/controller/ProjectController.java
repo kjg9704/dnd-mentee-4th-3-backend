@@ -2,6 +2,8 @@ package dnd.jackpot.project.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.firebase.messaging.FirebaseMessagingException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -42,9 +44,9 @@ public class ProjectController {
 //	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("")
-	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto) {
+	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		try {
-			service.save(saveDto);
+			service.save(saveDto, user);
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("게시글 작성 실패", "500"));
@@ -66,13 +68,14 @@ public class ProjectController {
 	
 	@ApiOperation(value = "게시글 댓글달기")
 	@PostMapping("/comment")
-	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto commentDto, @AuthenticationPrincipal User user) {
-		try {
+	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+	//	try {
 			commentService.save(commentDto, user.getUserIndex());
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("댓글 추가 실패", "500"));
-		}
+			commentService.sendPush(service.findById(commentDto.getProjectId()).getAuthor().getRegistrationToken());
+	//	}catch(Exception e) {
+	//		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	//				.body(new ErrorResponse("댓글 추가 실패", "500"));
+	//	}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	

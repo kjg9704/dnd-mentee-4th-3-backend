@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.TopicManagementResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -77,8 +81,11 @@ public class UserController {
 		String token;
 		try {
 			authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-			final UserDetails userDetails = userService.loadUserByEmailAndLogintype(authenticationRequest.getEmail(), authenticationRequest.getLogintype());
+			final dnd.jackpot.user.User userDetails = (dnd.jackpot.user.User) userService.loadUserByEmailAndLogintype(authenticationRequest.getEmail(), authenticationRequest.getLogintype());		
 			token = jwtTokenUtil.generateToken(userDetails);
+			if(!authenticationRequest.getRegistrationToken().equals(userDetails.getRegistrationToken())) {
+				userService.modifyRegistrationToken(authenticationRequest.getRegistrationToken(), userDetails);
+			}
 		} catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다."));
@@ -350,6 +357,68 @@ public class UserController {
 		}
 		return ResponseEntity.ok().body(new CommonResponse<UserDto.Response>(userDto));
 	}
+	
+	@PostMapping("/user/addsubscribe/{interest}")
+	public ResponseEntity<? extends BasicResponse> interestSubscribe(@PathVariable("interest") String interest, @AuthenticationPrincipal dnd.jackpot.user.User user) throws FirebaseMessagingException{
+		
+		try {
+			List<String> registrationTokens = Arrays.asList(
+	    			user.getRegistrationToken()
+	    		);
+	    		TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(
+	    		    registrationTokens, interest);
+	    		System.out.println(response.getSuccessCount() + " tokens were subscribed successfully");
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
+	@PostMapping("/user/deletesubscribe/{interest}")
+	public ResponseEntity<? extends BasicResponse> interestUnSubscribe(@PathVariable("interest") String interest, @AuthenticationPrincipal dnd.jackpot.user.User user) throws FirebaseMessagingException{
+    	try {
+    		List<String> registrationTokens = Arrays.asList(
+        			user.getRegistrationToken()
+        		);
+        	TopicManagementResponse response = FirebaseMessaging.getInstance().unsubscribeFromTopic(
+        	    registrationTokens, interest);
+        	System.out.println(response.getSuccessCount() + " tokens were unsubscribed successfully");
+    	}catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("faied", "500"));
+    	}
+    	return ResponseEntity.ok().body(new Response("success"));
+    }
+    
+    @PostMapping("/sendtosubscribe/{interest}")
+	public ResponseEntity<? extends BasicResponse> sendToSubscribe(@PathVariable("interest") String interest) throws FirebaseMessagingException{
+    	try {
+    		Message message = Message.builder()
+    	    	    .putData("title", "JackPot 알림")
+    	    	    .putData("content", interest + "에 새로운 게시글이 작성되었습니다")
+    	    	    .setTopic(interest)
+    	    	    .build();
+    	    	String response = FirebaseMessaging.getInstance().send(message);
+    	    	System.out.println("Successfully sent message: " + response);
+    	}catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("faied", "500"));
+    	}
+    	return ResponseEntity.ok().body(new Response("success"));
+    }
+    
+    @GetMapping("/myscrap")
+    public ResponseEntity<? extends BasicResponse> getMyScrap(@AuthenticationPrincipal dnd.jackpot.user.User user){
+    	try {
+    		
+    	}catch (Exception e) {
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("faied", "500"));
+    	}
+    	return ResponseEntity.ok().body(new Response("success"));
+    }
+	
 	
 //	@ApiOperation(value = "유저 목록 가져오기")
 //	@GetMapping("/getUsers")

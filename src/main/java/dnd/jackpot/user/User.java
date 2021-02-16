@@ -69,6 +69,9 @@ public class User implements UserDetails {
     @Column(name = "previousUpdate")
     private String previousUpdate;
     
+    @Column(name = "registrationToken")
+    private String registrationToken;
+    
     public void addStacks(String stack) {
     	this.stacks.add(UserStacks.builder()
     			.stack(stack)

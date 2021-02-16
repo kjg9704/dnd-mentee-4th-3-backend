@@ -21,6 +21,7 @@ public class ProjectMapper {
 		pdto.setOnline(project.getOnline());
 		pdto.setDuration(project.getDuration());
 		pdto.setStacks(stack);
+		pdto.setAuthor(project.getAuthor());
 //		if(Objects.nonNull(stackDtos)){
 //			pdto.setStacks(stackDtos);
 //		}
@@ -34,9 +35,9 @@ public class ProjectMapper {
 		return pdto;
 	}
 	
-	public static Project map(ProjectSaveDto saveDto) {//User author 추가하기
+	public static Project map(ProjectSaveDto saveDto, User user) {//User author 추가하기
 		ERegion region = ERegion.valueOf(saveDto.getRegion());
-		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region, saveDto.getOnline(),saveDto.getDuration());//add author later on
+		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region, saveDto.getOnline(),saveDto.getDuration(), user);//add author later on
 	}
 	
 }

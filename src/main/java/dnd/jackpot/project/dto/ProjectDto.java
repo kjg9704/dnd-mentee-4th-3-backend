@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -20,8 +21,9 @@ public class ProjectDto {
 	private String title = "";
 	private String createdDateTime;
 	private ERegion region;
-	private String recruitmentPeriod;	
+	private String recruitmentPeriod;
 	private String online;
 	private String duration;
+	private User author;
 	
 }
