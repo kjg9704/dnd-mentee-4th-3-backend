@@ -5,8 +5,9 @@ package dnd.jackpot.project.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+
+import org.jetbrains.annotations.NotNull;
 
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.ESortType;
@@ -23,7 +24,7 @@ public class ProjectSearchDto {
 	private ESortType sortType;
 	@NotNull
 	private Integer pageNumber;
-	@Size(min=1)
+	//@Size(min=1)
 	private Integer pageSize;
 	
 }

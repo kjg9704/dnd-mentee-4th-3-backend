@@ -40,9 +40,9 @@ public class ProjectStackServiceImpl implements ProjectStackService {
 		return Sstack;
 	}
 	
-	public ProjectStackDto toDto(ProjectStack stack) {
-		return ProjectMapper.mapStack(stack);
-	}
+//	public ProjectStackDto toDto(ProjectStack stack) {
+//		return ProjectMapper.mapStack(stack);
+//	}
 
 	
 	

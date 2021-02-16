@@ -109,7 +109,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	public ProjectDto modify(Long id, ProjectModifyDto modifyDto) {
 		Project project = repo.findById(id).orElseThrow();
-		project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion(),modifyDto.get);
+		//project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion(),modifyDto.getStack());
 		if(Objects.nonNull(modifyDto.getStack())) {
 			projectStackService.removeByProject(project);
 			projectStackService.save(modifyDto.getStack(), project);
