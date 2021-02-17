@@ -12,7 +12,7 @@ import dnd.jackpot.user.User;
 
 public class ProjectMapper {
 	
-	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack) {//,List<StackDto> stackDtos
+	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> interest, List<String> position) {//,List<StackDto> stackDtos
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
 		pdto.setTitle(project.getTitle());
@@ -21,6 +21,8 @@ public class ProjectMapper {
 		pdto.setOnline(project.getOnline());
 		pdto.setDuration(project.getDuration());
 		pdto.setStacks(stack);
+		pdto.setPosition(position);
+		pdto.setInterests(interest);
 		pdto.setScrapUsers(project.getScrap().size());
 		pdto.setUserIndex(project.getAuthor().getUserIndex());
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
