@@ -62,11 +62,12 @@ public class Project {
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = EstackProgrammer.class)
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch=FetchType.LAZY, mappedBy="project")
-	private final List<ProjectStack> stacks = new ArrayList<>();
+	private final List<ProjectStack> stack = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = Einterest.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+//	@JoinTable(name = "interest_project", joinColumns = @Joincolumn(name=""))
 	private final List<ProjectInterest> interest = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)

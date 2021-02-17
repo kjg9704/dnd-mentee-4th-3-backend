@@ -62,7 +62,7 @@ public class ProjectStackServiceImpl implements ProjectStackService {
 	@Override
 	@Transactional
 	public void removeByProject(Project project){
-		project.getStacks().clear();
+		project.getStack().clear();
 		projRepo.save(project);
 	}
 	

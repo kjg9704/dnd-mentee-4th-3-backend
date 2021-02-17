@@ -11,8 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
@@ -23,14 +25,17 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 //	프로젝트가 잘 업로드 및 불러오나 보기위해 일단 
 	Page<Project> findAll(Pageable pageable);
 
-//	@Query("SELECT p FROM project p WHERE (:region is null or p.region=region) and"
-//			+ "(:stack is null or p.stack = stakc) and "
-//			+ "(:interest is null or p.interest = interest)")
-//	List<Project> findByRegionInAndColumnInAndStackIn(@Param("region")List<ERegion> regions, 
-//			@Param("stack")List<EstackProgrammer>stack, @Param("interest") List<Einterest> interest);
+	@Transactional(readOnly=true)
+	@Query("SELECT p FROM Project p "
+			+ "JOIN p.stack s "
+			+ "JOIN p.interest i "
+			+ "WHERE ((:region is null) OR (p.region in :region)) "
+			+ "AND ((:interest is null) OR (i.interest in :interest)) "
+			+ "AND ((:stack is null) OR (s.stack in :stack))")
+	Page<Project> findByRegionInAndInterestInAndStackIn(@Param("region")List<ERegion> region, 
+			@Param("interest")List<Einterest> interest, @Param("stack")List<EstackProgrammer>stack, Pageable pageable);
 	
-	Page<Project> findByRegionInAndInterestInAndStacksIn(List<ERegion>region, List<String>interests, List<String>stacks, Pageable pageable);
 
-	Page<Project> findByRegionIn(List<ERegion> region, Pageable pageable);
+	List<Project> findAllByRegionIn(List<ERegion> region);
 }
 

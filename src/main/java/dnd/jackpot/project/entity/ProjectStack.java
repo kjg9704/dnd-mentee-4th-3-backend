@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.Id;
 
@@ -24,7 +25,7 @@ public class ProjectStack {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "FK_stack_project")
+	@JoinColumn(name = "project")
 	private Project project;
 	
 	
