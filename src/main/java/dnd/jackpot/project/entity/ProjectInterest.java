@@ -22,7 +22,7 @@ public class ProjectInterest {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name="FK_interest_project")
+	@JoinColumn(name="project")
 	private Project project;
 	
 	@Enumerated(EnumType.STRING)

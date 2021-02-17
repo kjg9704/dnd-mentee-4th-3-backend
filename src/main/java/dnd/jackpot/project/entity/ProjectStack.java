@@ -24,7 +24,7 @@ public class ProjectStack {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "FK_stack_project")
+	@JoinColumn(name = "project")
 	private Project project;
 	
 	
