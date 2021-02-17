@@ -10,6 +10,7 @@ import javax.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import dnd.jackpot.user.User;
 //import dnd.jackpot.user.User;
 import lombok.*;
 
@@ -29,10 +30,9 @@ public class Project {
 //	@NotBlank
 //	private String contact;
 
-//	나중에 USER API나오면 연동
-//	@ManyToOne
-//	@JoinColumn
-//	private User author;
+	
+	@ManyToOne
+	private User author;
 	
 	
 	@CreationTimestamp
@@ -74,6 +74,13 @@ public class Project {
 	@ElementCollection(targetClass = Eposition.class)
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectPosition> position = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<Scrap> scrap = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<ProjectParticipant> participant = new ArrayList<>();
+	
 //	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
 //	private final List<ProjectComment> comments = new ArrayList<>();
 //	
@@ -85,13 +92,14 @@ public class Project {
 //		return project;
 //	}
 //	test code -> without user
-	public static Project of(String shortdesc, String title, ERegion region, String online, String duration) {
+	public static Project of(String shortdesc, String title, ERegion region, String online, String duration, User author) {
 		Project project = new Project();
 		project.title = title;
 		project.shortDesc = shortdesc;
 		project.region = region;
 		project.duration = duration;
 		project.online = online;
+		project.author = author;
 		return project;
 	}
 	public void update(String title, String shortDesc, ERegion region, String online, String duration) {

@@ -10,6 +10,9 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+
+import org.jetbrains.annotations.NotNull;
+
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.ESortType;
 import dnd.jackpot.project.entity.Einterest;

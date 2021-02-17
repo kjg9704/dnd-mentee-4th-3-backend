@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.user.DeletedUser;
 import dnd.jackpot.user.DeletedUserRepository;
 import dnd.jackpot.user.User;
@@ -25,6 +26,7 @@ import javax.transaction.Transactional;
 public class JwtUserDetailsService implements UserDetailsService {
 	private final UserRepository userRepository;
 	private final DeletedUserRepository deletedUserRepository;
+	private final ScrapRepository scrapRepository;
 
 
 	public UserDetails loadUserByEmailAndLogintype(String email, String loginType) throws UsernameNotFoundException {
@@ -104,6 +106,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 		userRepository.save(user);
 	}
 	
+	public void modifyRegistrationToken(String token, User user) {
+		user.setRegistrationToken(token);
+		userRepository.save(user);
+	}
+	
 	public Boolean isExistEmail(String email) {
 	    return userRepository.existsByEmail(email);
 	  }
@@ -115,6 +122,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public String getLoginType(User user) {
 		return 	user.getLoginType();
 	}
+	
+//	public String getMyScrap(User user) {
+//		scrapRepository.findAllById(new ScrapID())
+//		return 	user.getLoginType();
+//	}
 	
 	@Transactional
 	public void deleteUser(String email, String loginType) {

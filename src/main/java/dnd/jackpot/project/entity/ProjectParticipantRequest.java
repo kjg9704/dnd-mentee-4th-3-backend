@@ -1,6 +1,5 @@
 package dnd.jackpot.project.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,40 +10,43 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import dnd.jackpot.user.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @Table(
-		name="scrap",
+		name="ProjectParticipantRequest",
 		uniqueConstraints={
 			@UniqueConstraint(
-				columnNames={"project_id","user_user_index"}
+				columnNames={"project_id","userindex"}
 			)
 		}
 	)
-public class Scrap {
-	
+@NoArgsConstructor
+public class ProjectParticipantRequest {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long scrapId;
+	private long id;
 	
 	@ManyToOne
-//	@JoinColumn(name = "project_post_id", updatable = true)
-	private Project project ;
-	
-	@ManyToOne
+	@JoinColumn(name = "userindex")
 	private User user;
 	
+	@ManyToOne
+	@JoinColumn(name = "project_id")
+	private Project project;
+	
+	@ManyToOne
+	@JoinColumn(name = "Author_id")
+	private User author;
+	
 	@Builder
-	public Scrap(Project project, User user) {
+	public ProjectParticipantRequest(Project project, User user, User author) {
 		this.project = project;
 		this.user = user;
+		this.author = author;
 	}
 }

@@ -29,13 +29,13 @@ public class Comment {
 	private String date;
 	
 	@JoinColumn(name ="project_id", referencedColumnName = "project_id")
-	private int projectId;
+	private long projectId;
 	 
 	@JoinColumn(name ="user_index", referencedColumnName = "user_index")
 	private long userIndex;
 	
 	@Builder
-	public Comment(String body, boolean privacy, String date, int projectId, long userIndex) {
+	public Comment(String body, boolean privacy, String date, long projectId, long userIndex) {
 		this.body = body;
 		this.privacy = privacy;
 		this.date = date;

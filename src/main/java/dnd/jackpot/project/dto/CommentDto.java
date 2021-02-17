@@ -11,5 +11,6 @@ public class CommentDto {
 	
 	private boolean privacy;
 	
-	private int projectId;
+	private long projectId;
+	
 }
