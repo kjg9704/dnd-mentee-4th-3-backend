@@ -27,11 +27,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 
 	@Transactional(readOnly=true)
 	@Query("SELECT p FROM Project p "
-//			+ "JOIN ProjectStack s "
-//			+ "JOIN ProjectInterest i "
-			+ "WHERE ((:region) is null OR p.region in :region) "
-			+ "AND((:interest) is NULL OR p.interest in :interest)"
-			+ "AND((:stack) is NULL OR p.stack in :stack)")
+			+ "JOIN p.stack s "
+			+ "JOIN p.interest i "
+			+ "WHERE ((p.region in :region) "
+			+ "AND(i.interest in :interest)"
+			+ "AND(s.stack in :stack))")
 	Page<Project> findByRegionInAndInterestInAndStackIn(@Param("region")List<ERegion> region, 
 			@Param("interest")List<Einterest> interest,@Param("stack")List<EstackProgrammer>stack, Pageable pageable);
 	

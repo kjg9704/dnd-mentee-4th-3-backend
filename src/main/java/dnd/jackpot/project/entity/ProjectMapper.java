@@ -37,7 +37,7 @@ public class ProjectMapper {
 		return pdto;
 	}
 	
-	public static Project map(ProjectSaveDto saveDto, User user) {//User author 추가하기
+	public static Project map(ProjectSaveDto saveDto, User user) {
 		ERegion region = ERegion.valueOf(saveDto.getRegion());
 		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region, saveDto.getOnline(),saveDto.getDuration(), user);//add author later on
 	}
