@@ -1,5 +1,6 @@
 package dnd.jackpot.filter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Component;
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
+import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.Einterest;
+import dnd.jackpot.project.entity.EstackProgrammer;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
@@ -26,40 +30,43 @@ public class PFilterServiceImpl implements PFilterService {
 	private final ProjectRepository repo;
 	private final ProjectMapperService projectMapperService;
 //	
-//	private List<Project> RprojectList;
-//	private List<Project> SprojectList;
-//	private List<Project> IprojectList;
+	private List<ERegion> RprojectList;
+	private List<EstackProgrammer> SprojectList;
+	private List<Einterest> IprojectList;
 	
 	
 	@Override 
 	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
 		Page<Project> pageProjects;
-//		if(Objects.nonNull(searchDto.getRegions())) {
-////			 = ProjectMapperService.toDto(pageProjects.getContent());
-////			repo.findAll()->
-//			RprojectList = repo.findByRegion(searchDto.getRegions());
-//		}else {
-//			RprojectList = repo.findAll();
-////			필터를 적용하지 않는경우 다 가져온다.
-////			RprojectDtoList = get
-//		}
-//		if(Objects.nonNull(searchDto.getStacks())) {
-////			 = ProjectMapperService.toDto(pageProjects.getContent());
-//			SprojectList = repo.findByStacks();
-//		}else {
-//			SprojectList = repo.findAll();
-//		}
-//		if(Objects.nonNull(searchDto.getInterests())) {
-//			IprojectList = repo.findByInterest();
-//		}else {
-//			IprojectList = repo.findAll();
-//		}
-//		RprojectList.retainAll(IprojectList);
-//		RprojectList.retainAll(IprojectList);
+
+		if(searchDto.getStackFilter() != null) {
+			SprojectList = new ArrayList<>();
+			List<String> s = searchDto.getStackFilter();
+			for(String stack : s) {
+				EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
+				SprojectList.add(stackProgram);
+			}
+		}
+		if(searchDto.getInterestFilter()!=null) {
+			IprojectList = new ArrayList<>();
+			for(String interest : searchDto.getInterestFilter()) {
+				Einterest interests = Einterest.valueOf(interest);
+				IprojectList.add(interests);
+			}
+		}
+		if(searchDto.getRegionFilter()!=null) {
+			RprojectList = new ArrayList<>();
+			for(String region : searchDto.getRegionFilter()) {
+				ERegion regions = ERegion.valueOf(region);
+				RprojectList.add(regions);
+			}
+		}
 		validateSearchDto(searchDto);
 		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC,"createdAt");
-//		pageProjects = repo.findByRegionInAndInterestInAndStacksIn(searchDto.getRegionFilter(), searchDto.getInterestFilter(), searchDto.getStackFilter(),pageable);
-//		pageProjects = repo.findByRegionIn(searchDto.getRegionFilter(), pageable);
+		pageProjects = repo.findByRegionInAndInterestInAndStackIn(RprojectList, IprojectList, SprojectList, pageable);
+		RprojectList=null;
+		IprojectList=null;
+		SprojectList=null;
 		List<ProjectDto> projectDtoList = projectMapperService.toDto(pageProjects.getContent());
 		return PagingMapper.map(pageProjects, projectDtoList);
 		

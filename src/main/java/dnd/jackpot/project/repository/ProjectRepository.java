@@ -29,21 +29,12 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 	@Query("SELECT p FROM Project p "
 			+ "JOIN p.stack s "
 			+ "JOIN p.interest i "
-			+ "WHERE ((p.region in :region) "
-			+ "AND(i.interest in :interest)"
-			+ "AND(s.stack in :stack))")
+			+ "WHERE ((:region is null) OR (p.region in :region)) "
+			+ "AND ((:interest is null) OR (i.interest in :interest)) "
+			+ "AND ((:stack is null) OR (s.stack in :stack))")
 	Page<Project> findByRegionInAndInterestInAndStackIn(@Param("region")List<ERegion> region, 
-			@Param("interest")List<Einterest> interest,@Param("stack")List<EstackProgrammer>stack, Pageable pageable);
+			@Param("interest")List<Einterest> interest, @Param("stack")List<EstackProgrammer>stack, Pageable pageable);
 	
-	
-//	@Transactional(readOnly = true)
-//	@Query("SELECT DISTINCT p FROM Project p WHERE (:region IS NULL OR p.region IN (:region)) AND"
-//			+ "(SELECT s FROM ProjectStack s WHERE(:stack IS NULL OR s.stack IN (:stack)) AND "
-//			+ "(SELECT i FROM ProjectInterest i WHERE(:interest IS NULL OR i.stack IN (:interest))")
-//	Page<Project> findByRegionInAndInterestInAndStackIn(@Param("region")List<ERegion> region, 
-//			@Param("interest")List<Einterest> interest,@Param("stack")List<EstackProgrammer>stack, Pageable pageable);
-//	//@Param("stack")
-////	Page<Project> findByRegionInAndInterestInAndStackIn(List<ERegion>region, List<Einterest>interests, List<EstackProgrammer>stack, Pageable pageable);
 
 	List<Project> findAllByRegionIn(List<ERegion> region);
 }
