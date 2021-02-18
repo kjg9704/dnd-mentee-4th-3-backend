@@ -88,7 +88,7 @@ public class ProjectServiceImpl implements ProjectService {
 		List<String> interest = projectInterestService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime, stack);//stackDtos
+		return ProjectMapper.map(project, createdDateTime, stack, interest, position);//stackDtos
 	}
 	@Override
 	@Transactional(readOnly = true)

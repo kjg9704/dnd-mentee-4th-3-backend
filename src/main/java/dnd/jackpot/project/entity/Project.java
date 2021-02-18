@@ -27,10 +27,6 @@ public class Project {
 //	@NotBlank
 	private String title;
 	
-//	@NotBlank
-//	private String contact;
-
-	
 	@ManyToOne
 	private User author;
 	
@@ -41,14 +37,10 @@ public class Project {
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
 	
-//	private int recruiting;
-//	private int applicant;
-	
+
 	@Enumerated(EnumType.STRING)
 	private ERegion region;
-//	
-//	private int duration;
-//	
+
 	private String shortDesc;
 
 	private String online;
