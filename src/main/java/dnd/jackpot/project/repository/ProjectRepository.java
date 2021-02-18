@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
-import dnd.jackpot.project.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
 
 public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpecificationExecutor<Project>{
@@ -33,7 +33,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 			+ "AND ((:interest is null) OR (i.interest in :interest)) "
 			+ "AND ((:stack is null) OR (s.stack in :stack))")
 	Page<Project> findByRegionInAndInterestInAndStackIn(@Param("region")List<ERegion> region, 
-			@Param("interest")List<Einterest> interest, @Param("stack")List<EstackProgrammer>stack, Pageable pageable);
+			@Param("interest")List<Einterest> interest, @Param("stack")List<Estack>stack, Pageable pageable);
 	
 
 	List<Project> findAllByRegionIn(List<ERegion> region);
