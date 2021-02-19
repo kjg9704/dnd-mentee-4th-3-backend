@@ -10,10 +10,11 @@ import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.user.User;
+import dnd.jackpot.user.UserDto;
 
 public class ProjectMapper {
 	
-	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> interest, List<String> position, List<CommentDto.getAll> commentDtos) {//,List<StackDto> stackDtos
+	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> interest, List<String> position, List<CommentDto.getAll> commentDtos, List<UserDto.simpleResponse>participantDtos) {//,List<StackDto> stackDtos
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
 		pdto.setTitle(project.getTitle());
@@ -29,6 +30,11 @@ public class ProjectMapper {
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
 
 		pdto.setParticipanting(project.getParticipant().size());
+		
+		if(Objects.nonNull(participantDtos)) {
+			pdto.setParticipants(participantDtos);
+			System.out.println(participantDtos);
+		}
 
 		if(Objects.nonNull(commentDtos)) {
 			pdto.setComments(commentDtos);

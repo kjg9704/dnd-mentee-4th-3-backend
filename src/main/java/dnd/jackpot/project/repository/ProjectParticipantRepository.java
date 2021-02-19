@@ -12,5 +12,5 @@ public interface ProjectParticipantRepository extends JpaRepository<ProjectParti
 
 	List<ProjectParticipant> findAllByUser(User user);
 
-	List<User> findAllByProject(Project project);
+	List<ProjectParticipant> findAllByProject(Project project);
 }
