@@ -63,11 +63,13 @@ public class JwtUserDetailsService implements UserDetailsService {
 				.auth(infoDto.getAuth())
 				.name(infoDto.getName())
 				.region(infoDto.getRegion())
-				.job(infoDto.getJob())
+				.position(infoDto.getPosition())
 				.logintype(infoDto.getLoginType())
 				.career(infoDto.getCareer())
 				.date(date.toString())
 				.privacy(infoDto.isPrivacy())
+				.emoticon(infoDto.getEmoticon())
+				.introduction(infoDto.getIntroduction())
 				.password(infoDto.getPassword()).build());
 		for(int i = 0; i < infoDto.getStacks().size(); i++) {
 			user.addStacks(infoDto.getStacks().get(i));
@@ -123,10 +125,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 		return 	user.getLoginType();
 	}
 	
-//	public String getMyScrap(User user) {
-//		scrapRepository.findAllById(new ScrapID())
-//		return 	user.getLoginType();
-//	}
 	
 	@Transactional
 	public void deleteUser(String email, String loginType) {

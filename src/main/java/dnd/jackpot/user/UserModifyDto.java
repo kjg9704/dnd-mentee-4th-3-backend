@@ -11,8 +11,10 @@ import lombok.Setter;
 public class UserModifyDto {
 	private String name;
 	private String region;
-	private String job;
+	private String position;
 	private List<String> stacks = new ArrayList<>();
 	private boolean privacy;
 	private String career;
+	private String emoticon;
+	private String introduction;
 }

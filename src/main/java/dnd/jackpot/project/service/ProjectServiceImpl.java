@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
+import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
@@ -165,6 +166,36 @@ public class ProjectServiceImpl implements ProjectService {
 		repo.save(project);
 		return toDto(project);
 
+	}
+
+	@Override
+	public List<ProjectDto> findAllByAuthor(User author) {
+		List<Project> pList = repo.findAllByAuthor(author);
+		List<ProjectDto> resultList = new ArrayList<>();
+		for(Project project : pList) {
+			resultList.add(toDto(project));
+		}
+		return resultList;
+	}
+
+	@Override
+	public List<ProjectDto> findAllByParticipant(User user) {
+		List<ProjectParticipant> pList = projectParticipantRepo.findAllByUser(user);
+		List<ProjectDto> resultList = new ArrayList<>();
+		for(ProjectParticipant participant : pList) {
+			resultList.add(findById(participant.getProject().getId()));
+		}
+		return resultList;
+	}
+
+	@Override
+	public List<ProjectParticipantRequestDto> findAllByRequestAuthor(User author) {
+		List<ProjectParticipantRequest> requestList = projectPraticipantRequsetRepo.findAllByAuthor(author);
+		List<ProjectParticipantRequestDto> resultList = new ArrayList<>();
+		for(ProjectParticipantRequest request : requestList) {
+			resultList.add(new ProjectParticipantRequestDto(request.getUser().getUserIndex(), request.getProject().getId(), request.getAuthor().getUserIndex()));
+		}
+		return resultList;
 	}
 
 

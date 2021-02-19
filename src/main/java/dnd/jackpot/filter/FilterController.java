@@ -11,6 +11,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.service.CommentService;
 import dnd.jackpot.project.service.ProjectService;
+import dnd.jackpot.user.UserDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,6 +22,11 @@ public class FilterController {
 	
 	@GetMapping("/projects")
 	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
+		return filterService.getAll(searchDto);
+	}
+	
+	@GetMapping("/users")
+	public PagingDto<UserDto.simpleResponse> getUsers(ProjectSearchDto searchDto){
 		return filterService.getAll(searchDto);
 	}
 	

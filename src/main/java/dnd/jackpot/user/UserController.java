@@ -54,7 +54,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
+import dnd.jackpot.project.entity.Project;
+import dnd.jackpot.project.entity.ProjectParticipant;
+import dnd.jackpot.project.entity.ProjectParticipantRequest;
 import dnd.jackpot.project.entity.Scrap;
+import dnd.jackpot.project.repository.ProjectParticipantRepository;
+import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
+import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.response.BasicResponse;
@@ -79,6 +86,10 @@ public class UserController {
 	private final ProjectService projectService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	private final ProjectParticipantRepository projectParticipantRepo;
+	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
+	private final ProjectRepository projectRepo;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -332,22 +343,25 @@ public class UserController {
 	
 	@ApiOperation(value = "프로필 정보 가져오기")
 	@GetMapping("/myprofile")
-	public ResponseEntity<? extends BasicResponse> persons(@AuthenticationPrincipal dnd.jackpot.user.User user){
+	public ResponseEntity<? extends BasicResponse> getMyProfile(@AuthenticationPrincipal dnd.jackpot.user.User user){
 		List<UserStacks> values;
 		List<String> stacks;
-		UserDto.Response userDto;
+		UserDto.profileResponse userDto;
 		try {
 			values = user.getStacks();
 			stacks = new ArrayList<String>();
-			userDto = new UserDto.Response(user.getName(), user.getRegion(), user.getJob(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth());
+			List<ProjectDto> projects = projectService.findAllByAuthor(user);
+			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
+			List<ProjectParticipantRequestDto> requestList = projectService.findAllByRequestAuthor(user);
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), projects, participantList , requestList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
 		}
-		return ResponseEntity.ok().body(new CommonResponse<UserDto.Response>(userDto));
+		return ResponseEntity.ok().body(new CommonResponse<UserDto.profileResponse>(userDto));
 	}
 	
 	@ApiOperation(value = "프로필 정보 가져오기")
@@ -355,20 +369,22 @@ public class UserController {
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		List<UserStacks> values;
 		List<String> stacks;
-		UserDto.Response userDto;
+		UserDto.otherResponse userDto;
 		try {
 			dnd.jackpot.user.User user = userService.loadUserByUserIndex(id);
 			values = user.getStacks();
 			stacks = new ArrayList<String>();
-			userDto = new UserDto.Response(user.getName(), user.getRegion(), user.getJob(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth());
+			List<ProjectDto> projects = projectService.findAllByAuthor(user);
+			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
+			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), projects, participantList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
 		}
-		return ResponseEntity.ok().body(new CommonResponse<UserDto.Response>(userDto));
+		return ResponseEntity.ok().body(new CommonResponse<UserDto.otherResponse>(userDto));
 	}
 	
 	@PostMapping("/user/addsubscribe/{interest}")

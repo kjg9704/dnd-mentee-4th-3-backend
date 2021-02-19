@@ -26,6 +26,7 @@ public class ProjectMapper {
 		pdto.setScrapUsers(project.getScrap().size());
 		pdto.setUserIndex(project.getAuthor().getUserIndex());
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
+		pdto.setParticipanting(project.getParticipant().size());
 //		if(Objects.nonNull(stackDtos)){
 //			pdto.setStacks(stackDtos);
 //		}
