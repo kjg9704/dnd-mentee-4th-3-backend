@@ -41,4 +41,9 @@ public class UserDto {
 //	  private List<Long> participantRequest = new ArrayList<>();
   }
   
+  
+  public static class infoProject{
+	  private String job;
+//	  private String emoticon;
+  }
 }

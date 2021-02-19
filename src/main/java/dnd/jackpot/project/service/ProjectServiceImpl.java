@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
@@ -46,6 +47,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private final JwtUserDetailsService userService;
 	private final ProjectParticipantRepository projectParticipantRepo;
 	private final ProjectParticipantRequestRepository projectPraticipantRequsetRepo;
+	private final CommentService commentService;
 
 	//	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
 	////		페이지 구현시 필요
@@ -87,8 +89,16 @@ public class ProjectServiceImpl implements ProjectService {
 		List<String> stack = projectStackService.getAllByProject(project);
 		List<String> interest = projectInterestService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
+		List <> projectParticipant = new ArrayList<>();
+		if(project.isMemberExist()) {
+			projectParticipant = participantService.getAllByProject(project);
+		}
+		List<CommentDto.getAll> comments = new ArrayList<>(); 
+		if(project.isCommentExist()) {
+			comments = commentService.getAllByProject(project);
+		}		
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime, stack, interest, position);//stackDtos
+		return ProjectMapper.map(project, createdDateTime, stack, interest, position, comments);
 	}
 	@Override
 	@Transactional(readOnly = true)

@@ -46,6 +46,8 @@ public class Project {
 	private String online;
 
 	private String duration;
+	
+	private boolean  commentExist = false;
 
 //	private int recruitmentPeriod;
 //	
@@ -68,22 +70,14 @@ public class Project {
 	private final List<ProjectPosition> position = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
+	private final List<Comment> comment = new ArrayList<>();
+	
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<Scrap> scrap = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectParticipant> participant = new ArrayList<>();
 	
-//	@OneToMany(fetch = FetchType.LAZY, mappedBy="")
-//	private final List<ProjectComment> comments = new ArrayList<>();
-//	
-//	
-//	public static Project of(String shortdesc, User author) {
-//		Project project = new Project();
-//		project.shortDesc = shortdesc;
-////		project.author = author;
-//		return project;
-//	}
-//	test code -> without user
 	public static Project of(String shortdesc, String title, ERegion region, String online, String duration, User author) {
 		Project project = new Project();
 		project.title = title;
@@ -95,12 +89,10 @@ public class Project {
 		return project;
 	}
 	public void update(String title, String shortDesc, ERegion region, String online, String duration) {
-//		Project project = new Project();
 		this.region = region;
 		this.title = title;
 		this.duration = duration;
 		this.online = online;
 		this.shortDesc = shortDesc;
-//		return project;
 	}
 }
