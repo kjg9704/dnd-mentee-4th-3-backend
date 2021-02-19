@@ -114,13 +114,8 @@ public class ProjectController {
 	}
 	
 	
-//////	@Secured("ROLE_USER")
-//	@GetMapping("")
-//	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
-//		return service.findAll(searchDto);
-//	}
-//	
-//	@Secured("ROLE_USER")
+
+	@ApiOperation(value = "게시물 하나보기(상세)")
 	@GetMapping("/api/projects/get/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		ProjectDto projectPost;
@@ -132,8 +127,8 @@ public class ProjectController {
 //		}
 		return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectPost));
 	}
-	
-//	@Secured("ROLE_USER")
+
+	@ApiOperation(value = "게시물 삭제")
 	@DeleteMapping("/api/projects/delete/{id}")
 	public ResponseEntity<? extends BasicResponse> delete(@PathVariable("id") Long id) {
 		try {
@@ -145,7 +140,7 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
-///	@Secured("ROLE_USER")
+	@ApiOperation(value = "게시물 업데이트")
 	@PutMapping("/api/projects/modify/{id}")
 	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") Long id,  @RequestBody ProjectModifyDto modifyDto) {
 		try {
