@@ -1,9 +1,8 @@
 package dnd.jackpot.user;
 
-import javax.persistence.Entity;
-
 import com.sun.istack.NotNull;
 
+import dnd.jackpot.project.entity.Estack;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,8 @@ public class UserStacks {
 	private Long id;
     
     @NotNull
-	private String stack;
+    @Enumerated(EnumType.STRING)
+	private Estack stack;
 	
     @NotNull
     @ManyToOne
@@ -29,7 +29,8 @@ public class UserStacks {
 	
 	@Builder
 	public UserStacks(String stack, User user) {
-		this.stack = stack;
+		Estack estack = Estack.valueOf(stack);
+		this.stack = estack;
 		this.user = user;
 	}
 }

@@ -21,6 +21,7 @@ import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.Comment;
+import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectParticipant;
@@ -109,7 +110,7 @@ public class ProjectServiceImpl implements ProjectService {
 		List<UserDto.simpleResponse> dtos = new ArrayList<>();
 		for(User participant : participants) {
 			Long id = participant.getUserIndex();
-			String region = participant.getRegion();
+			ERegion region = participant.getRegion();
 			String position = participant.getPosition();
 			String emoticon = participant.getEmoticon();
 			String career = participant.getCareer();

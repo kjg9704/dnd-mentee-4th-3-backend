@@ -27,6 +27,7 @@ import dnd.jackpot.project.repository.ProjStackRepo;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
 import dnd.jackpot.project.service.ProjectMapperService;
+import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto.profileResponse;
 import dnd.jackpot.user.UserDto.simpleResponse;
@@ -40,6 +41,7 @@ public class PFilterServiceImpl implements PFilterService {
 	private final ProjectRepository repo;
 	private final ProjectMapperService projectMapperService;
 	private final UserRepository userRepo;
+	private final JwtUserDetailsService userService;
 //	
 	private List<ERegion> RprojectList;
 	private List<Estack> SprojectList;
@@ -107,13 +109,13 @@ public class PFilterServiceImpl implements PFilterService {
 			}
 		}
 		
-		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize(),Direction.DESC,"createdAt");
+		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize());
 		pageUsers = userRepo.findAllByRegionInAndStackInAndPosition(RprojectList, SprojectList, userSearchDto.getPosition(), pageable);
 		RprojectList=null;
 		IprojectList=null;
 		SprojectList=null;
-		List<simpleResponse> userDtoList = projectMapperService.toDto(pageProjects.getContent());
-		return null;
+		List<simpleResponse> userDtoList = userService.userListMapper(pageUsers.getContent());
+		return PagingMapper.mapUser(pageUsers, userDtoList);
 	}
 	
 	private void validateSearchDto(ProjectSearchDto searchDto) {

@@ -55,6 +55,7 @@ import com.google.gson.JsonParser;
 
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
+import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectParticipant;
 import dnd.jackpot.project.entity.ProjectParticipantRequest;
@@ -345,11 +346,11 @@ public class UserController {
 	@GetMapping("/myprofile")
 	public ResponseEntity<? extends BasicResponse> getMyProfile(@AuthenticationPrincipal dnd.jackpot.user.User user){
 		List<UserStacks> values;
-		List<String> stacks;
+		List<Estack> stacks;
 		UserDto.profileResponse userDto;
 		try {
 			values = user.getStacks();
-			stacks = new ArrayList<String>();
+			stacks = new ArrayList<Estack>();
 			List<ProjectDto> projects = projectService.findAllByAuthor(user);
 			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
 			List<ProjectParticipantRequestDto> requestList = projectService.findAllByRequestAuthor(user);
@@ -368,12 +369,12 @@ public class UserController {
 	@GetMapping("/user/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		List<UserStacks> values;
-		List<String> stacks;
+		List<Estack> stacks;
 		UserDto.otherResponse userDto;
 		try {
 			dnd.jackpot.user.User user = userService.loadUserByUserIndex(id);
 			values = user.getStacks();
-			stacks = new ArrayList<String>();
+			stacks = new ArrayList<Estack>();
 			List<ProjectDto> projects = projectService.findAllByAuthor(user);
 			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
 			for(UserStacks st : values) {
@@ -453,19 +454,5 @@ public class UserController {
 			return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectList));
 	}
 	
-	
-//	@ApiOperation(value = "유저 목록 가져오기")
-//	@GetMapping("/getUsers")
-//	public HttpEntity<PagedResources<User>> persons(Pageable pageable, PagedResourcesAssembler assembler){
-//		Response response = new Response();
-//		if(userService.isExistName(name)) {
-//			response.setMessage("이미 존재하는 이메일 입니다");
-//			return ResponseEntity.ok(response); 
-//		}
-//		else {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body(new ErrorResponse("사용가능", "404"));
-//		}
-//	}
 	
 }

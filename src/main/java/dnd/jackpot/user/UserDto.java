@@ -5,6 +5,8 @@ import java.util.List;
 
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
+import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.Estack;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,9 +33,9 @@ public class UserDto {
   @AllArgsConstructor
   public static class profileResponse {
 	  private String name;
-	  private String region;
+	  private ERegion region;
 	  private String position;
-	  private List<String> stacks = new ArrayList<>();
+	  private List<Estack> stacks = new ArrayList<>();
 	  private boolean privacy;
 	  private String loginType;
 	  private String career;
@@ -50,9 +52,9 @@ public class UserDto {
   @AllArgsConstructor
   public static class otherResponse {
 	  private String name;
-	  private String region;
+	  private ERegion region;
 	  private String position;
-	  private List<String> stacks = new ArrayList<>();
+	  private List<Estack> stacks = new ArrayList<>();
 	  private boolean privacy;
 	  private String career;
 	  private String auth;
@@ -66,7 +68,7 @@ public class UserDto {
   @AllArgsConstructor
   public static class simpleResponse {
 	  private long userIndex;
-	  private String region;
+	  private ERegion region;
 	  private String position;
 	  private String career;
 	  private String emoticon;
