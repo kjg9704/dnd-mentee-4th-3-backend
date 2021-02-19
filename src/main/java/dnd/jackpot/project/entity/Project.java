@@ -50,6 +50,9 @@ public class Project {
 	private boolean  commentExist = false;
 	
 	private boolean memberExist = false;
+	
+	@Enumerated(EnumType.STRING)
+	private EprojectStatus status;
 
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = Estack.class)
