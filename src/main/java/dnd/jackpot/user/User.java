@@ -5,7 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import dnd.jackpot.notification.InterestSubscribe;
 import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
 
 import javax.persistence.*;
@@ -62,8 +64,13 @@ public class User implements UserDetails {
     
     @Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = Estack.class)
-    @OneToMany(targetEntity = UserStacks.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = UserStacks.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<UserStacks> stacks = new ArrayList<>();
+    
+    @Enumerated(EnumType.STRING)
+	@ElementCollection(targetClass = Einterest.class)
+    @OneToMany(targetEntity = InterestSubscribe.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<InterestSubscribe> subscribes = new ArrayList<>();
     
     @Column(name = "career")
     private String career;

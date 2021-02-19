@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -53,8 +56,10 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import dnd.jackpot.notification.InterestSubscribe;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
+import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectParticipant;
@@ -91,6 +96,7 @@ public class UserController {
 	private final ProjectParticipantRepository projectParticipantRepo;
 	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
 	private final ProjectRepository projectRepo;
+	private final UserRepository userRepo;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -259,6 +265,7 @@ public class UserController {
 
 	@ApiOperation(value = "회원가입")
 	@PostMapping("/signup")
+	@Transactional
 	public ResponseEntity<? extends BasicResponse> signup(@RequestBody @ApiParam(value = "가입 유저 정보 \n auth = ROLE_USER, logintype = normal or socialLogintype(google, kakao, naver)") UserDto infoDto) {
 		try {
 			userService.save(infoDto);
@@ -344,24 +351,33 @@ public class UserController {
 	
 	@ApiOperation(value = "프로필 정보 가져오기")
 	@GetMapping("/myprofile")
+	@Transactional
 	public ResponseEntity<? extends BasicResponse> getMyProfile(@AuthenticationPrincipal dnd.jackpot.user.User user){
 		List<UserStacks> values;
 		List<Estack> stacks;
+		List<Einterest> interests = new ArrayList<>();
+		List<InterestSubscribe> interValues;
 		UserDto.profileResponse userDto;
-		try {
-			values = user.getStacks();
+//		try {
 			stacks = new ArrayList<Estack>();
+			dnd.jackpot.user.User persistenceUser = userRepo.getOne(user.getUserIndex());
+			values = persistenceUser.getStacks();
 			List<ProjectDto> projects = projectService.findAllByAuthor(user);
 			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
 			List<ProjectParticipantRequestDto> requestList = projectService.findAllByRequestAuthor(user);
+			interValues = user.getSubscribes();
+			
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), projects, participantList , requestList);
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ErrorResponse("failed", "404"));
-		}
+			for(InterestSubscribe is : interValues) {
+				interests.add(is.getInterest());
+			}
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), interests, projects, participantList , requestList);
+//		}catch (Exception e) {
+	//		return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	//				.body(new ErrorResponse("failed", "404"));
+	//	}
 		return ResponseEntity.ok().body(new CommonResponse<UserDto.profileResponse>(userDto));
 	}
 	
