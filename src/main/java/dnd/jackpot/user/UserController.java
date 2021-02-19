@@ -358,7 +358,7 @@ public class UserController {
 		List<Einterest> interests = new ArrayList<>();
 		List<InterestSubscribe> interValues;
 		UserDto.profileResponse userDto;
-//		try {
+		try {
 			stacks = new ArrayList<Estack>();
 			dnd.jackpot.user.User persistenceUser = userRepo.getOne(user.getUserIndex());
 			values = persistenceUser.getStacks();
@@ -374,10 +374,10 @@ public class UserController {
 				interests.add(is.getInterest());
 			}
 			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), interests, projects, participantList , requestList);
-//		}catch (Exception e) {
-	//		return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	//				.body(new ErrorResponse("failed", "404"));
-	//	}
+		}catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("failed", "404"));
+		}
 		return ResponseEntity.ok().body(new CommonResponse<UserDto.profileResponse>(userDto));
 	}
 	
