@@ -28,6 +28,7 @@ public class ProjectDto {
 	private String duration;
 	private long userIndex;
 	private int scrapUsers;
+	private int participanting;
 
 	
 }

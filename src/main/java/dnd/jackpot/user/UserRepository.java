@@ -3,8 +3,13 @@ package dnd.jackpot.user;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.EstackProgrammer;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -14,5 +19,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByName(String email);
   void deleteByEmailAndLogintype(String email, String loginType);
   Optional<User> findByEmail(String email);
-  Page<User> findAll(Pageable pageable);
+  @Query("SELECT p FROM User p "
+			+ "JOIN p.stacks s "
+			+ "WHERE ((:region is null) OR (p.region in :region)) "
+			+ "AND ((:stack is null) OR (s.stack in :stack))"
+			+ "AND ((:position is null) OR (p.position = :position)) ")
+	Page<User> findAllByRegionInAndStackInAndPosition(@Param("region")List<ERegion> region,
+			@Param("stack")List<EstackProgrammer>stack, 
+			@Param("position") String position, Pageable pageable);
 }

@@ -51,8 +51,8 @@ public class User implements UserDetails {
     @Column(name = "region")
     private String region;
     
-    @Column(name = "job")
-    private String job;
+    @Column(name = "position")
+    private String position;
     
     @Column(name = "privacy")
     private boolean privacy;
@@ -72,6 +72,12 @@ public class User implements UserDetails {
     @Column(name = "registrationToken")
     private String registrationToken;
     
+    @Column(name = "emoticon")
+    private String emoticon;
+    
+    @Column(name = "introduction")
+    private String introduction;
+    
     public void addStacks(String stack) {
     	this.stacks.add(UserStacks.builder()
     			.stack(stack)
@@ -80,28 +86,32 @@ public class User implements UserDetails {
     }
     
     @Builder
-    public User(String email, String password, String auth, String name, String region,String logintype, String job, String career, String date, boolean privacy) {
+    public User(String email, String password, String auth, String name, String region,String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction) {
     	this.email = email;
         this.logintype = logintype;
         this.password = password;
         this.auth = auth;
         this.name = name;
         this.region = region;
-        this.job = job;
+        this.position = position;
         this.career = career;
         this.date = date;
         this.privacy = privacy;
+        this.emoticon = emoticon;
+        this.introduction = introduction;
     }
     
     @Transactional
      public void update(UserModifyDto infoDto) {
     	 LocalDate date = LocalDate.now();
     	 this.career = infoDto.getCareer();
-    	 this.job = infoDto.getJob();
+    	 this.position = infoDto.getPosition();
     	 this.name = infoDto.getName();
     	 this.region = infoDto.getRegion();
     	 this.privacy = infoDto.isPrivacy();
     	 this.previousUpdate = date.toString();
+    	 this.emoticon = infoDto.getEmoticon();
+    	 this.introduction = infoDto.getIntroduction();
     	 this.stacks.clear();
      }
      

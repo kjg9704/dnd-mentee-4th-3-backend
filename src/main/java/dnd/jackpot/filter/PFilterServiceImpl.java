@@ -22,6 +22,11 @@ import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
 import dnd.jackpot.project.service.ProjectMapperService;
+import dnd.jackpot.user.User;
+import dnd.jackpot.user.UserDto.profileResponse;
+import dnd.jackpot.user.UserDto.simpleResponse;
+import dnd.jackpot.user.UserRepository;
+import dnd.jackpot.user.UserSearchDto;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -29,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 public class PFilterServiceImpl implements PFilterService {
 	private final ProjectRepository repo;
 	private final ProjectMapperService projectMapperService;
+	private final UserRepository userRepo;
 //	
 	private List<ERegion> RprojectList;
 	private List<EstackProgrammer> SprojectList;
@@ -71,6 +77,37 @@ public class PFilterServiceImpl implements PFilterService {
 		return PagingMapper.map(pageProjects, projectDtoList);
 		
 	}
+	
+	@Override
+	public PagingDto<simpleResponse> getAllUsers(UserSearchDto userSearchDto) {
+	//	validateSearchDto(userSearchDto);
+		Page<User> pageUsers;
+		if(userSearchDto.getStackFilter() != null) {
+			SprojectList = new ArrayList<>();
+			List<String> s = userSearchDto.getStackFilter();
+			for(String stack : s) {
+				EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
+				SprojectList.add(stackProgram);
+			}
+		}
+		
+		if(userSearchDto.getRegionFilter()!=null) {
+			RprojectList = new ArrayList<>();
+			for(String region : userSearchDto.getRegionFilter()) {
+				ERegion regions = ERegion.valueOf(region);
+				RprojectList.add(regions);
+			}
+		}
+		
+		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize(),Direction.DESC,"createdAt");
+		pageUsers = userRepo.findAllByRegionInAndStackInAndPosition(RprojectList, SprojectList, userSearchDto.getPosition(), pageable);
+		RprojectList=null;
+		IprojectList=null;
+		SprojectList=null;
+		List<simpleResponse> userDtoList = projectMapperService.toDto(pageProjects.getContent());
+		return null;
+	}
+	
 	private void validateSearchDto(ProjectSearchDto searchDto) {
 		Integer pageSize = searchDto.getPageSize();
 		Integer pageNumber = searchDto.getPageNumber();
@@ -81,5 +118,6 @@ public class PFilterServiceImpl implements PFilterService {
 //			throw new CustomException(HttpStatus.BAD_REQUEST, "PageSize는 1이상이어야 합니다.")
 //		}
 	}
+	
 	
 }
