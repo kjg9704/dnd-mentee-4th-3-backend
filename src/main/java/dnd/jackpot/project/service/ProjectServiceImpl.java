@@ -16,9 +16,11 @@ import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
+import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
+import dnd.jackpot.project.entity.Comment;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectParticipant;
@@ -33,6 +35,7 @@ import dnd.jackpot.response.Response;
 import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
+import dnd.jackpot.user.UserDto.simpleResponse;
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -50,39 +53,16 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectParticipantRequestRepository projectPraticipantRequsetRepo;
 	private final CommentService commentService;
 
-	//	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
-	////		페이지 구현시 필요
-	////		validateSearchDto(searchDto);
-	//		
-	////		Pageable pageable = PageRequest.of(searchDto.getPageNumber(),searchDto.getPageSize(),Direction.DESC, "createdAt");
-	////		Page<Project> pageProjects;
-	//		if(Objects.nonNull(searchDto.getRegionFilter())) {
-	//			
-	//		}else if(Objects.nonNull(searchDto.getStackFilter()t))
-	//		List<ProjectDto> ProjectDtoList = ProjectMapperService.toDto(pageProjects.getContent());
-	//		return ProjectDtoList;
-	//	}
-	//	private void validateSearchDto(ProjectSearchDto searchDto) {
-	//		Integer pageSize = searchDto.getPageSize();
-	//		Integer pageNumber = searchDto.getPageNumber();
-	//		if(Objects.isNull(pageSize)||Objects.isNull(pageNumber)) {
-	//			throw new responseEntity(HttpStatus.BAD_REQUEST, "pageSize 또는 PageNumber Null입니다.")
-	//		}if(pageSize<=0) {
-	//			throw new CustomException(HttpStatus.BAD_REQUEST,"PAGE 1보다 작음" )
-	//		}
-	//	}
-
 	@Override
 	@Transactional
 	public ProjectDto save(ProjectSaveDto saveDto, User user) {
 		Project project = ProjectMapper.map(saveDto, user);
-		//		ProjectStack projStack = ProjectStack.of(project, saveDto.getStacks())
 		projectStackService.save(saveDto.getStacks(),project);
 		projectInterestService.save(saveDto.getInterest(),project);
 		projectPositionService.save(saveDto.getPosition(),project);
 		project.getParticipant().add(new ProjectParticipant(project, user));
 		repo.save(project);
-		return toDto(project);//with comments 필요한지..
+		return toDto(project);
 	}
 
 	private ProjectDto toDto(Project project) {
@@ -93,7 +73,7 @@ public class ProjectServiceImpl implements ProjectService {
 		
 		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
 		if(project.isMemberExist()) {
-//			projectParticipant = participantService.getAllByProject(project);
+			projectParticipant = getParticipant(project);
 		}
 		List<CommentDto.getAll> comments = new ArrayList<>(); 
 		if(project.isCommentExist()) {
@@ -122,6 +102,24 @@ public class ProjectServiceImpl implements ProjectService {
 		repo.save(project);
 	}
 
+	@Override
+	@Transactional
+	public List<simpleResponse> getParticipant(Project project) {
+		List<User> participants = projectParticipantRepo.findAllByProject(project);
+		List<UserDto.simpleResponse> dtos = new ArrayList<>();
+		for(User participant : participants) {
+			Long id = participant.getUserIndex();
+			String region = participant.getRegion();
+			String position = participant.getPosition();
+			String emoticon = participant.getEmoticon();
+			String career = participant.getCareer();
+			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, region, position, career, emoticon);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	
 	@Override
 	@Transactional
 	public void addParticipant(long requestId) {
@@ -163,6 +161,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
+	@Transactional
 	public ProjectDto modify(Long id, ProjectModifyDto modifyDto) {
 		Project project = repo.findById(id).orElseThrow();
 		//project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion(),modifyDto.getStack());
@@ -177,6 +176,24 @@ public class ProjectServiceImpl implements ProjectService {
 		repo.save(project);
 		return toDto(project);
 
+	}
+
+	@Override
+	public List<ProjectDto> findAllByAuthor(User Author) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ProjectDto> findAllByParticipant(User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ProjectParticipantRequestDto> findAllByRequestAuthor(User Author) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
