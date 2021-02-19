@@ -48,11 +48,9 @@ public class Project {
 	private String duration;
 	
 	private boolean  commentExist = false;
+	
+	private boolean memberExist = false;
 
-//	private int recruitmentPeriod;
-//	
-//	projectStack에 넣음
-//	private ProjectStack stack;
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = Estack.class)
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch=FetchType.LAZY, mappedBy="project")

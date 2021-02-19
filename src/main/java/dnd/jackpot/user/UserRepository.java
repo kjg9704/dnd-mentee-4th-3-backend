@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import dnd.jackpot.project.entity.ERegion;
-import dnd.jackpot.project.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.Estack;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "AND ((:stack is null) OR (s.stack in :stack))"
 			+ "AND ((:position is null) OR (p.position = :position)) ")
 	Page<User> findAllByRegionInAndStackInAndPosition(@Param("region")List<ERegion> region,
-			@Param("stack")List<EstackProgrammer>stack, 
+			@Param("stack")List<Estack>stack, 
 			@Param("position") String position, Pageable pageable);
 }

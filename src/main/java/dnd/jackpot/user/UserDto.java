@@ -72,9 +72,4 @@ public class UserDto {
 	  private String emoticon;
   }
   
-  
-  public static class infoProject{
-	  private String job;
-//	  private String emoticon;
-  }
 }

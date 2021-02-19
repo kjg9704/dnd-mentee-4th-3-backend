@@ -32,6 +32,7 @@ import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.response.Response;
 import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
+import dnd.jackpot.user.UserDto;
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -89,9 +90,10 @@ public class ProjectServiceImpl implements ProjectService {
 		List<String> stack = projectStackService.getAllByProject(project);
 		List<String> interest = projectInterestService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
-		List <> projectParticipant = new ArrayList<>();
+		
+		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
 		if(project.isMemberExist()) {
-			projectParticipant = participantService.getAllByProject(project);
+//			projectParticipant = participantService.getAllByProject(project);
 		}
 		List<CommentDto.getAll> comments = new ArrayList<>(); 
 		if(project.isCommentExist()) {
