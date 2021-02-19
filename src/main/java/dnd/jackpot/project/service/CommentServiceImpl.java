@@ -40,10 +40,6 @@ public class CommentServiceImpl implements CommentService {
 				.user(author)
 				.build());
 	}
-	@Override
-	public void sendPush(String registrationToken) throws FirebaseMessagingException {
-		pushService.sendToToken(registrationToken);
-	}
 	
 	@Override 
 	@Transactional(readOnly=true)

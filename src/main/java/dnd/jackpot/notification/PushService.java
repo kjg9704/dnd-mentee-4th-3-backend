@@ -6,7 +6,7 @@ public interface PushService {
 
 	public String sendCommentToToken(String registrationToken) throws FirebaseMessagingException;
 	
-	public String sendInterestToToken(String registrationToken) throws FirebaseMessagingException;
+	public String sendInterestSubscribe(String interest) throws FirebaseMessagingException;
 	
 	public String sendParticipantRequestToToken(String registrationToken) throws FirebaseMessagingException;
 	

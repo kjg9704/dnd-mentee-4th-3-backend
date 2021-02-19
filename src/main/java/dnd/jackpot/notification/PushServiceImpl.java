@@ -21,31 +21,52 @@ public class PushServiceImpl implements PushService {
                 .setToken(registrationToken)
                 .build();
 
-        // Send a message to the device corresponding to the provided
-        // registration token.
         String response = FirebaseMessaging.getInstance().send(message);
-        // Response is a message ID string.
         System.out.println("Successfully sent message: " + response);
 
         return response;
 	}
 
 	@Override
-	public String sendInterestToToken(String registrationToken) throws FirebaseMessagingException {
-		
-		return null;
+	public String sendInterestSubscribe(String interest) throws FirebaseMessagingException {
+
+    	Message message = Message.builder()
+    		.putData("title", "관심분야 게시글 알림")
+            .putData("content", "관심분야의 새로운 게시글이 등록되었습니다")
+    	    .setTopic(interest)
+    	    .build();
+
+    	String response = FirebaseMessaging.getInstance().send(message);
+    	System.out.println("Successfully sent message: " + response);
+    	return response;
 	}
 
 	@Override
 	public String sendParticipantRequestToToken(String registrationToken) throws FirebaseMessagingException {
-		
-		return null;
+		Message message = Message.builder()
+                .putData("title", "프로젝트 참가 신청")
+                .putData("content", "새로운 프로젝트 참가 신청이 있습니다")
+                .setToken(registrationToken)
+                .build();
+
+        String response = FirebaseMessaging.getInstance().send(message);
+        System.out.println("Successfully sent message: " + response);
+
+        return response;
 	}
 
 	@Override
 	public String sendParticipantAcceptToToken(String registrationToken) throws FirebaseMessagingException {
-		
-		return null;
+		Message message = Message.builder()
+                .putData("title", "프로젝트 참가 수락")
+                .putData("content", "프로젝트 참가 요청이 수락되었습니다")
+                .setToken(registrationToken)
+                .build();
+
+        String response = FirebaseMessaging.getInstance().send(message);
+        System.out.println("Successfully sent message: " + response);
+
+        return response;
 	}
 	
 }

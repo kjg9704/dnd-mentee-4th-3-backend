@@ -31,11 +31,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import dnd.jackpot.project.dto.PagingDto;
+import dnd.jackpot.notification.PushService;
 import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.entity.Scrap;
+import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ScrapRepository;
 
@@ -47,6 +49,8 @@ public class ProjectController {
 	private final CommentService commentService;
 	private final ScrapRepository scrapRepo;
 	private final ProjectRepository projectRepo;
+	private final PushService pushService;
+	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
 
 //	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
@@ -54,6 +58,7 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		try {
 			service.save(saveDto, user);
+	//		pushService.sendInterestSubscribe(saveDto.getInterest());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("게시글 작성 실패", "500"));
@@ -78,7 +83,7 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 //		try {
 			commentService.save(commentDto, user);
-//			commentService.sendPush(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
 //		}catch(Exception e) {
 //			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 //					.body(new ErrorResponse("댓글 추가 실패", "500"));
@@ -92,7 +97,7 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> participantRequest(@ApiParam(value = "") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 		try {
 			service.participantRequest(projectId, user);
-//			commentService.sendPush(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+			pushService.sendParticipantRequestToToken(projectRepo.findById(projectId).orElseThrow().getAuthor().getRegistrationToken());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
@@ -105,7 +110,7 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> participantAccept(@ApiParam(value = "") @PathVariable("requestid") long requestId, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 		try {
 			service.addParticipant(requestId);
-//			commentService.sendPush(user.getRegistrationToken());
+			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));

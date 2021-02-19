@@ -6,6 +6,7 @@ import java.util.List;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,6 +44,7 @@ public class UserDto {
 	  private String emoticon;
 	  private String introduction;
 	  
+	  private List<Einterest> subscribes = new ArrayList<>();
 	  private List<ProjectDto> myprojects = new ArrayList<>();
 	  private List<ProjectDto> participantProject = new ArrayList<>();
 	  private List<ProjectParticipantRequestDto> participantRequest = new ArrayList<>();

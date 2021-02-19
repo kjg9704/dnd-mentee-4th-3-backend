@@ -11,7 +11,6 @@ import dnd.jackpot.user.User;
 
 public interface CommentService {
 
-	void sendPush(String registrationToken) throws FirebaseMessagingException;
 //	List<String> getAllByProject(Project project);
 
 	void save(CommentDto.save commentDto, User user);
