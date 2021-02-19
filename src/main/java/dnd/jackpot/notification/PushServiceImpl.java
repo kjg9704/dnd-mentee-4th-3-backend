@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class PushServiceImpl implements PushService {
 
 	@Override
-	public String sendToToken(String registrationToken) throws FirebaseMessagingException {
+	public String sendCommentToToken(String registrationToken) throws FirebaseMessagingException {
 		Message message = Message.builder()
                 .putData("title", "게시글 댓글 알림")
                 .putData("content", "회원님의 게시글에 댓글이 작성되었습니다")
@@ -28,6 +28,24 @@ public class PushServiceImpl implements PushService {
         System.out.println("Successfully sent message: " + response);
 
         return response;
+	}
+
+	@Override
+	public String sendInterestToToken(String registrationToken) throws FirebaseMessagingException {
+		
+		return null;
+	}
+
+	@Override
+	public String sendParticipantRequestToToken(String registrationToken) throws FirebaseMessagingException {
+		
+		return null;
+	}
+
+	@Override
+	public String sendParticipantAcceptToToken(String registrationToken) throws FirebaseMessagingException {
+		
+		return null;
 	}
 	
 }

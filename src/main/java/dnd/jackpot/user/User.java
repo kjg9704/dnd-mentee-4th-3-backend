@@ -5,6 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.Estack;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -48,8 +50,9 @@ public class User implements UserDetails {
     @Column(name = "name", unique = true)
     private String name;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "region")
-    private String region;
+    private ERegion region;
     
     @Column(name = "position")
     private String position;
@@ -57,6 +60,8 @@ public class User implements UserDetails {
     @Column(name = "privacy")
     private boolean privacy;
     
+    @Enumerated(EnumType.STRING)
+	@ElementCollection(targetClass = Estack.class)
     @OneToMany(targetEntity = UserStacks.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserStacks> stacks = new ArrayList<>();
     
@@ -86,7 +91,7 @@ public class User implements UserDetails {
     }
     
     @Builder
-    public User(String email, String password, String auth, String name, String region,String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction) {
+    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction) {
     	this.email = email;
         this.logintype = logintype;
         this.password = password;
@@ -103,11 +108,12 @@ public class User implements UserDetails {
     
     @Transactional
      public void update(UserModifyDto infoDto) {
+    	ERegion region = ERegion.valueOf(infoDto.getRegion());
     	 LocalDate date = LocalDate.now();
     	 this.career = infoDto.getCareer();
     	 this.position = infoDto.getPosition();
     	 this.name = infoDto.getName();
-    	 this.region = infoDto.getRegion();
+    	 this.region = region;
     	 this.privacy = infoDto.isPrivacy();
     	 this.previousUpdate = date.toString();
     	 this.emoticon = infoDto.getEmoticon();
