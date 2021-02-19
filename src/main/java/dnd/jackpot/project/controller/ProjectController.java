@@ -75,16 +75,17 @@ public class ProjectController {
 	
 	@ApiOperation(value = "게시글 댓글달기")
 	@PostMapping("/comment")
-	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-		try {
-			commentService.save(commentDto, user.getUserIndex());
-			commentService.sendPush(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("댓글 추가 실패", "500"));
-		}
+	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+//		try {
+			commentService.save(commentDto, user);
+//			commentService.sendPush(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//					.body(new ErrorResponse("댓글 추가 실패", "500"));
+//		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
+	
 	
 	@ApiOperation(value = "프로젝트 참가 요청")
 	@PostMapping("/participant/{projectid}")
@@ -113,26 +114,21 @@ public class ProjectController {
 	}
 	
 	
-//////	@Secured("ROLE_USER")
-//	@GetMapping("")
-//	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
-//		return service.findAll(searchDto);
-//	}
-//	
-//	@Secured("ROLE_USER")
+
+	@ApiOperation(value = "게시물 하나보기(상세)")
 	@GetMapping("/api/projects/get/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		ProjectDto projectPost;
-		try {
+//		try {
 			projectPost = service.findById(id);
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-		}
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+//		}
 		return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectPost));
 	}
-	
-//	@Secured("ROLE_USER")
+
+	@ApiOperation(value = "게시물 삭제")
 	@DeleteMapping("/api/projects/delete/{id}")
 	public ResponseEntity<? extends BasicResponse> delete(@PathVariable("id") Long id) {
 		try {
@@ -144,7 +140,7 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
-///	@Secured("ROLE_USER")
+	@ApiOperation(value = "게시물 업데이트")
 	@PutMapping("/api/projects/modify/{id}")
 	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") Long id,  @RequestBody ProjectModifyDto modifyDto) {
 		try {

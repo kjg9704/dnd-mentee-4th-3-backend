@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -17,8 +18,12 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
-import dnd.jackpot.project.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
+import dnd.jackpot.project.entity.ProjectInterest;
+import dnd.jackpot.project.entity.ProjectStack;
+import dnd.jackpot.project.repository.ProjInterestRepo;
+import dnd.jackpot.project.repository.ProjStackRepo;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
 import dnd.jackpot.project.service.ProjectMapperService;
@@ -37,8 +42,10 @@ public class PFilterServiceImpl implements PFilterService {
 	private final UserRepository userRepo;
 //	
 	private List<ERegion> RprojectList;
-	private List<EstackProgrammer> SprojectList;
-	private List<Einterest> IprojectList;
+	private List<Estack> SprojectList;
+	private List<Einterest> Iprojec	private final ProjStackRepo stackrepo;
+	private final ProjInterestRepo interestrepo;
+tList;
 	
 	
 	@Override 
@@ -49,7 +56,7 @@ public class PFilterServiceImpl implements PFilterService {
 			SprojectList = new ArrayList<>();
 			List<String> s = searchDto.getStackFilter();
 			for(String stack : s) {
-				EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
+				Estack stackProgram = Estack.valueOf(stack);
 				SprojectList.add(stackProgram);
 			}
 		}

@@ -12,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
-import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
@@ -32,6 +32,7 @@ import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.response.Response;
 import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
+import dnd.jackpot.user.UserDto;
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -47,6 +48,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private final JwtUserDetailsService userService;
 	private final ProjectParticipantRepository projectParticipantRepo;
 	private final ProjectParticipantRequestRepository projectPraticipantRequsetRepo;
+	private final CommentService commentService;
 
 	//	public PagingDto<ProjectDto> findAll (ProjectSearchDto searchDto){
 	////		페이지 구현시 필요
@@ -88,8 +90,17 @@ public class ProjectServiceImpl implements ProjectService {
 		List<String> stack = projectStackService.getAllByProject(project);
 		List<String> interest = projectInterestService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
+		
+		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
+		if(project.isMemberExist()) {
+//			projectParticipant = participantService.getAllByProject(project);
+		}
+		List<CommentDto.getAll> comments = new ArrayList<>(); 
+		if(project.isCommentExist()) {
+			comments = commentService.getAllByProject(project);
+		}		
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime, stack, interest, position);//stackDtos
+		return ProjectMapper.map(project, createdDateTime, stack, interest, position, comments);
 	}
 	@Override
 	@Transactional(readOnly = true)
@@ -166,36 +177,6 @@ public class ProjectServiceImpl implements ProjectService {
 		repo.save(project);
 		return toDto(project);
 
-	}
-
-	@Override
-	public List<ProjectDto> findAllByAuthor(User author) {
-		List<Project> pList = repo.findAllByAuthor(author);
-		List<ProjectDto> resultList = new ArrayList<>();
-		for(Project project : pList) {
-			resultList.add(toDto(project));
-		}
-		return resultList;
-	}
-
-	@Override
-	public List<ProjectDto> findAllByParticipant(User user) {
-		List<ProjectParticipant> pList = projectParticipantRepo.findAllByUser(user);
-		List<ProjectDto> resultList = new ArrayList<>();
-		for(ProjectParticipant participant : pList) {
-			resultList.add(findById(participant.getProject().getId()));
-		}
-		return resultList;
-	}
-
-	@Override
-	public List<ProjectParticipantRequestDto> findAllByRequestAuthor(User author) {
-		List<ProjectParticipantRequest> requestList = projectPraticipantRequsetRepo.findAllByAuthor(author);
-		List<ProjectParticipantRequestDto> resultList = new ArrayList<>();
-		for(ProjectParticipantRequest request : requestList) {
-			resultList.add(new ProjectParticipantRequestDto(request.getUser().getUserIndex(), request.getProject().getId(), request.getAuthor().getUserIndex()));
-		}
-		return resultList;
 	}
 
 
