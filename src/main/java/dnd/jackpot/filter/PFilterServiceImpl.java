@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
@@ -49,13 +50,12 @@ public class PFilterServiceImpl implements PFilterService {
 	private final ProjStackRepo stackrepo;
 	private final ProjInterestRepo interestrepo;
 
-	
-	
 	@Override 
+	@Transactional
 	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
 		Page<Project> pageProjects;
 
-		if(searchDto.getStackFilter() != null) {
+		if(searchDto.getStackFilter().get(0)!="") {
 			SprojectList = new ArrayList<>();
 			List<String> s = searchDto.getStackFilter();
 			for(String stack : s) {
@@ -63,14 +63,14 @@ public class PFilterServiceImpl implements PFilterService {
 				SprojectList.add(stackProgram);
 			}
 		}
-		if(searchDto.getInterestFilter()!=null) {
+		if(searchDto.getInterestFilter().get(0)!="") {
 			IprojectList = new ArrayList<>();
 			for(String interest : searchDto.getInterestFilter()) {
 				Einterest interests = Einterest.valueOf(interest);
 				IprojectList.add(interests);
 			}
 		}
-		if(searchDto.getRegionFilter()!=null) {
+		if(searchDto.getRegionFilter().get(0)!="") {
 			RprojectList = new ArrayList<>();
 			for(String region : searchDto.getRegionFilter()) {
 				ERegion regions = ERegion.valueOf(region);
@@ -92,7 +92,7 @@ public class PFilterServiceImpl implements PFilterService {
 	public PagingDto<simpleResponse> getAllUsers(UserSearchDto userSearchDto) {
 	//	validateSearchDto(userSearchDto);
 		Page<User> pageUsers;
-		if(userSearchDto.getStackFilter() != null) {
+		if(userSearchDto.getStackFilter().get(0)!="") {
 			SprojectList = new ArrayList<>();
 			List<String> s = userSearchDto.getStackFilter();
 			for(String stack : s) {
@@ -101,9 +101,9 @@ public class PFilterServiceImpl implements PFilterService {
 			}
 		}
 		
-		if(userSearchDto.getRegionFilter()!=null) {
+		if(userSearchDto.getRegionFilter().get(0)!="") {
 			RprojectList = new ArrayList<>();
-			for(String region : userSearchDto.getRegionFilter()) {
+			for(String region : userSearchDto.getRegionFilter()){
 				ERegion regions = ERegion.valueOf(region);
 				RprojectList.add(regions);
 			}

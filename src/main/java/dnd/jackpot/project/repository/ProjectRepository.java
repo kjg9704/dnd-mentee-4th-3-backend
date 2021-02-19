@@ -22,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 //	프로젝트가 잘 업로드 및 불러오나 보기위해 일단 
 	Page<Project> findAll(Pageable pageable);
 
-	@Transactional(readOnly=true)
+//	@Transactional(readOnly=true)
 	@Query("SELECT p FROM Project p "
 			+ "JOIN p.stack s "
 			+ "JOIN p.interest i "
