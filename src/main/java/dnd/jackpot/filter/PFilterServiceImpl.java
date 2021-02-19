@@ -17,7 +17,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
-import dnd.jackpot.project.entity.EstackProgrammer;
+import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
@@ -37,7 +37,7 @@ public class PFilterServiceImpl implements PFilterService {
 	private final UserRepository userRepo;
 //	
 	private List<ERegion> RprojectList;
-	private List<EstackProgrammer> SprojectList;
+	private List<Estack> SprojectList;
 	private List<Einterest> IprojectList;
 	
 	
@@ -49,7 +49,7 @@ public class PFilterServiceImpl implements PFilterService {
 			SprojectList = new ArrayList<>();
 			List<String> s = searchDto.getStackFilter();
 			for(String stack : s) {
-				EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
+				Estack stackProgram = Estack.valueOf(stack);
 				SprojectList.add(stackProgram);
 			}
 		}
