@@ -75,13 +75,14 @@ public class ProjectServiceImpl implements ProjectService {
 		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
 		if(project.isMemberExist()) {
 			projectParticipant = getParticipant(project);
+			System.out.println(projectParticipant);
 		}
 		List<CommentDto.getAll> comments = new ArrayList<>(); 
 		if(project.isCommentExist()) {
 			comments = commentService.getAllByProject(project);
 		}		
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime, stack, interest, position, comments);
+		return ProjectMapper.map(project, createdDateTime, stack, interest, position, comments, projectParticipant);
 	}
 	@Override
 	@Transactional(readOnly = true)
@@ -106,14 +107,16 @@ public class ProjectServiceImpl implements ProjectService {
 	@Override
 	@Transactional
 	public List<simpleResponse> getParticipant(Project project) {
-		List<User> participants = projectParticipantRepo.findAllByProject(project);
+		List<ProjectParticipant> participants = projectParticipantRepo.findAllByProject(project);
 		List<UserDto.simpleResponse> dtos = new ArrayList<>();
-		for(User participant : participants) {
-			Long id = participant.getUserIndex();
-			ERegion region = participant.getRegion();
-			String position = participant.getPosition();
-			String emoticon = participant.getEmoticon();
-			String career = participant.getCareer();
+		
+		for(ProjectParticipant participant : participants) {
+			User Pparticipant = participant.getUser();
+			Long id = Pparticipant.getUserIndex();
+			ERegion region = Pparticipant.getRegion();
+			String position = Pparticipant.getPosition();
+			String emoticon = Pparticipant.getEmoticon();
+			String career = Pparticipant.getCareer();
 			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, region, position, career, emoticon);
 			dtos.add(dto);
 		}
@@ -127,6 +130,7 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.findById(requestId).orElseThrow();
 		Project project = projectParticipantRequest.getProject();
 		User requestUser = userService.loadUserByUserIndex(projectParticipantRequest.getUser().getUserIndex());
+		project.setMemberExist(true);
 		ProjectParticipant projectParticipant = ProjectParticipant.builder()
 				.project(project)
 				.user(requestUser)
