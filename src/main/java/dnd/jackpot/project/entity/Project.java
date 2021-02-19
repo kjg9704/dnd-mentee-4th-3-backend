@@ -52,7 +52,7 @@ public class Project {
 //	projectStack에 넣음
 //	private ProjectStack stack;
 	@Enumerated(EnumType.STRING)
-	@ElementCollection(targetClass = Estack.class)
+	@ElementCollection(targetClass = EstackProgrammer.class)
 	@OneToMany(cascade = CascadeType.ALL,orphanRemoval=true,fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectStack> stack = new ArrayList<>();
 	

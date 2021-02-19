@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import dnd.jackpot.project.entity.Estack;
+import dnd.jackpot.project.entity.EstackProgrammer;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectInterest;
 import dnd.jackpot.project.entity.ProjectStack;
@@ -30,5 +30,5 @@ public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
 
 	@Transactional(readOnly = true)
 	@Query("SELECT p FROM ProjectStack p WHERE p.stack IN (:stacks)")
-	List<ProjectStack> findByStackIn(@Param("stacks") List<Estack> stackFilter);
+	List<ProjectStack> findByStackIn(@Param("stacks") List<EstackProgrammer> stackFilter);
 }

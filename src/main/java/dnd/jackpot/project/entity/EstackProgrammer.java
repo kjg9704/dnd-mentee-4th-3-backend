@@ -12,7 +12,6 @@ import lombok.Getter;
 //@Entity
 //@Table(name = "stack")
 //@AllArgsConstructor
-public enum Estack {
-	java, cplus, javascript, python, html_css, swift, spring, kotlin, djago, reactjs, flask,django
-	,photoshop, illustrator, xd, figma, sketch, principle, protopie, afterEffects, premiere, indesign, c4d, zeplin
+public enum EstackProgrammer {
+	java, cplus, javascript, python, ruby, django
 }

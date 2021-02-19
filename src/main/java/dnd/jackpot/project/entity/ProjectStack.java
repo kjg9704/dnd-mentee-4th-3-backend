@@ -31,9 +31,9 @@ public class ProjectStack {
 	
 	@Enumerated(EnumType.STRING)
 //	@OneToMany(fetch = FetchType.EAGER, mappedBy="stack_user")
-	private Estack stack ;
+	private EstackProgrammer stack ;
 	
-	public static ProjectStack of(Project project, Estack stackProgram) {
+	public static ProjectStack of(Project project, EstackProgrammer stackProgram) {
 		ProjectStack projstack = new ProjectStack();
 		projstack.project = project;
 		projstack.stack=stackProgram;

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import dnd.jackpot.project.entity.Einterest;
-import dnd.jackpot.project.entity.Estack;
+import dnd.jackpot.project.entity.EstackProgrammer;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectInterest;
 

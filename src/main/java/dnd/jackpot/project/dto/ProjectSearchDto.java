@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.ESortType;
 import dnd.jackpot.project.entity.Einterest;
-import dnd.jackpot.project.entity.Estack;
+import dnd.jackpot.project.entity.EstackProgrammer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
