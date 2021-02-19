@@ -179,22 +179,33 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectDto> findAllByAuthor(User Author) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProjectDto> findAllByAuthor(User author) {
+		List<Project> pList = repo.findAllByAuthor(author);
+		List<ProjectDto> resultList = new ArrayList<>();
+		for(Project project : pList) {
+			resultList.add(toDto(project));
+		}
+		return resultList;
 	}
 
 	@Override
 	public List<ProjectDto> findAllByParticipant(User user) {
-		// TODO Auto-generated method stub
-		return null;
+		List<ProjectParticipant> pList = projectParticipantRepo.findAllByUser(user);
+		List<ProjectDto> resultList = new ArrayList<>();
+		for(ProjectParticipant participant : pList) {
+			resultList.add(findById(participant.getProject().getId()));
+		}
+		return resultList;
 	}
 
 	@Override
-	public List<ProjectParticipantRequestDto> findAllByRequestAuthor(User Author) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<ProjectParticipantRequestDto> findAllByRequestAuthor(User author) {
+		List<ProjectParticipantRequest> requestList = projectPraticipantRequsetRepo.findAllByAuthor(author);
+		List<ProjectParticipantRequestDto> resultList = new ArrayList<>();
+		for(ProjectParticipantRequest request : requestList) {
+			resultList.add(new ProjectParticipantRequestDto(request.getUser().getUserIndex(), request.getProject().getId(), request.getAuthor().getUserIndex()));
+		}
+		return resultList;
 	}
-
 
 }
