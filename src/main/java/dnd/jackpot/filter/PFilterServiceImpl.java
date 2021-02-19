@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -19,6 +20,10 @@ import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
+import dnd.jackpot.project.entity.ProjectInterest;
+import dnd.jackpot.project.entity.ProjectStack;
+import dnd.jackpot.project.repository.ProjInterestRepo;
+import dnd.jackpot.project.repository.ProjStackRepo;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
 import dnd.jackpot.project.service.ProjectMapperService;
@@ -38,7 +43,9 @@ public class PFilterServiceImpl implements PFilterService {
 //	
 	private List<ERegion> RprojectList;
 	private List<Estack> SprojectList;
-	private List<Einterest> IprojectList;
+	private List<Einterest> Iprojec	private final ProjStackRepo stackrepo;
+	private final ProjInterestRepo interestrepo;
+tList;
 	
 	
 	@Override 

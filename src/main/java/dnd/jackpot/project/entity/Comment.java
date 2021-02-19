@@ -5,7 +5,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import dnd.jackpot.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,9 +16,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@Table(name = "comment_project")
 public class Comment {
 
 	@Id
@@ -28,18 +31,20 @@ public class Comment {
 	
 	private String date;
 	
-	@JoinColumn(name ="project_id", referencedColumnName = "project_id")
-	private long projectId;
-	 
-	@JoinColumn(name ="user_index", referencedColumnName = "user_index")
-	private long userIndex;
+	@ManyToOne
+	@JoinColumn(name="project")
+	private Project project;
+	
+	@ManyToOne
+	@JoinColumn(name = "user")
+	private User user;
 	
 	@Builder
-	public Comment(String body, boolean privacy, String date, long projectId, long userIndex) {
+	public Comment(String body, boolean privacy, String date, Project project, User user) {
 		this.body = body;
 		this.privacy = privacy;
 		this.date = date;
-		this.projectId = projectId;
-		this.userIndex = userIndex;
+		this.project = project;
+		this.user = user;
 	}
 }

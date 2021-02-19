@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
@@ -12,7 +13,7 @@ import dnd.jackpot.user.User;
 
 public class ProjectMapper {
 	
-	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> interest, List<String> position) {//,List<StackDto> stackDtos
+	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> interest, List<String> position, List<CommentDto.getAll> commentDtos) {//,List<StackDto> stackDtos
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
 		pdto.setTitle(project.getTitle());
@@ -26,17 +27,12 @@ public class ProjectMapper {
 		pdto.setScrapUsers(project.getScrap().size());
 		pdto.setUserIndex(project.getAuthor().getUserIndex());
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
+
 		pdto.setParticipanting(project.getParticipant().size());
-//		if(Objects.nonNull(stackDtos)){
-//			pdto.setStacks(stackDtos);
-//		}
-//		ProjectStackDto sdto = new ProjectStackDto();
-//		pdto.setId(project.getId());
-//		pdto.setAuthor(authorDto);
-//		pdto.setShortDesc(shortDesc);
-//		if(Objects.nonNull(createdDateTime)) {
-//			pdto.setCreatedDateTime(createdDateTime.toString());
-//		}
+
+		if(Objects.nonNull(commentDtos)) {
+			pdto.setComments(commentDtos);
+		}
 		return pdto;
 	}
 	
