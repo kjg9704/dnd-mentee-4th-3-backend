@@ -7,6 +7,6 @@ package dnd.jackpot.project.entity;
 //@Table(name = "stack")
 //@AllArgsConstructor
 public enum Estack {
-	JAVA, Cplus, Javascript, Python, Html_CSS, Swift, Spring, Kotlin, React_js, FLASK, Django
+	JAVA, Cplus, Javascript, Python, Html_CSS, Swift, Spring, Kotlin, React_js, Flask, Django
 	,Photoshop, Illustrator, XD, Figma, Sketch, Principle, Protopie, After_Effects, Premiere, Indesign, C4D, Zeplin
 }

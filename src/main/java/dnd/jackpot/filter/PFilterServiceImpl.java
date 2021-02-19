@@ -43,9 +43,10 @@ public class PFilterServiceImpl implements PFilterService {
 //	
 	private List<ERegion> RprojectList;
 	private List<Estack> SprojectList;
-	private List<Einterest> Iprojec	private final ProjStackRepo stackrepo;
+	private List<Einterest> IprojectList;	
+	private final ProjStackRepo stackrepo;
 	private final ProjInterestRepo interestrepo;
-tList;
+
 	
 	
 	@Override 
@@ -93,7 +94,7 @@ tList;
 			SprojectList = new ArrayList<>();
 			List<String> s = userSearchDto.getStackFilter();
 			for(String stack : s) {
-				EstackProgrammer stackProgram = EstackProgrammer.valueOf(stack);
+				Estack stackProgram = Estack.valueOf(stack);
 				SprojectList.add(stackProgram);
 			}
 		}
