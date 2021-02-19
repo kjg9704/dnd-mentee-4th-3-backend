@@ -25,13 +25,9 @@ public class FilterController {
 		return filterService.getAll(searchDto);
 	}
 	
-	@GetMapping("/users")
-	public PagingDto<UserDto.simpleResponse> getUsers(ProjectSearchDto searchDto){
-		return filterService.getAll(searchDto);
-	}
-	
-//	@GetMapping("/members")
-//	public List<MFilterDto> getAll(){
-//		return filterService.getAll();
+//	@GetMapping("/users")
+//	public PagingDto<UserDto.simpleResponse> getUsers(ProjectSearchDto searchDto){
+//		return filterService.getAll(searchDto);
 //	}
+	
 }
