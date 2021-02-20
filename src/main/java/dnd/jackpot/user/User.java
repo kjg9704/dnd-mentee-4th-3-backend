@@ -9,6 +9,7 @@ import dnd.jackpot.notification.InterestSubscribe;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
+import dnd.jackpot.project.entity.ProjectScrap;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -72,6 +73,12 @@ public class User implements UserDetails {
     @OneToMany(targetEntity = InterestSubscribe.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<InterestSubscribe> subscribes = new ArrayList<>();
     
+    @OneToMany(targetEntity = ProjectScrap.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProjectScrap> scrapProjects = new ArrayList<>();
+    
+    @OneToMany(targetEntity = UserScrap.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<UserScrap> scrapUsers = new ArrayList<>();
+    
     @Column(name = "career")
     private String career;
     
@@ -90,6 +97,10 @@ public class User implements UserDetails {
     @Column(name = "introduction")
     private String introduction;
     
+    private String portfolioLink1;
+    
+    private String portfolioLink2;
+    
     public void addStacks(String stack) {
     	this.stacks.add(UserStacks.builder()
     			.stack(stack)
@@ -98,7 +109,7 @@ public class User implements UserDetails {
     }
     
     @Builder
-    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction) {
+    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction, String portfolioLink1, String portfolioLink2) {
     	this.email = email;
         this.logintype = logintype;
         this.password = password;
@@ -111,6 +122,8 @@ public class User implements UserDetails {
         this.privacy = privacy;
         this.emoticon = emoticon;
         this.introduction = introduction;
+        this.portfolioLink1 = portfolioLink1;
+        this.portfolioLink2 = portfolioLink2;
     }
     
     @Transactional
@@ -125,6 +138,8 @@ public class User implements UserDetails {
     	 this.previousUpdate = date.toString();
     	 this.emoticon = infoDto.getEmoticon();
     	 this.introduction = infoDto.getIntroduction();
+    	 this.portfolioLink1 = infoDto.getPortfolioLink1();
+    	 this.portfolioLink2 = infoDto.getPortfolioLink2();
     	 this.stacks.clear();
      }
      

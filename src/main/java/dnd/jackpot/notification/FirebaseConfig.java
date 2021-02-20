@@ -15,8 +15,8 @@ import com.google.firebase.FirebaseOptions;
 @Configuration
 public class FirebaseConfig {
 
- //   @Value("classpath:firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json")
-    @Value("classpath:firebase/jackpot-d5f0e-firebase-adminsdk-46a97-cc8373fa78.json")
+    @Value("classpath:firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json")
+//    @Value("classpath:firebase/jackpot-d5f0e-firebase-adminsdk-46a97-cc8373fa78.json")
     private Resource resource;
 
     @PostConstruct

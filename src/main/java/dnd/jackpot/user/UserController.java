@@ -11,13 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,11 +24,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +34,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,8 +44,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.TopicManagementResponse;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -61,14 +52,11 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
-import dnd.jackpot.project.entity.Project;
-import dnd.jackpot.project.entity.ProjectParticipant;
-import dnd.jackpot.project.entity.ProjectParticipantRequest;
-import dnd.jackpot.project.entity.Scrap;
+import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
-import dnd.jackpot.project.repository.ScrapRepository;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
 import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.response.BasicResponse;
 import dnd.jackpot.response.CommonResponse;
@@ -78,6 +66,7 @@ import dnd.jackpot.security.JwtRequest;
 import dnd.jackpot.security.JwtResponse;
 import dnd.jackpot.security.JwtTokenUtil;
 import dnd.jackpot.security.JwtUserDetailsService;
+import dnd.jackpot.user.UserDto.otherResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -88,7 +77,7 @@ import io.swagger.annotations.ApiParam;
 public class UserController {
 
 	private final JwtUserDetailsService userService;
-	private final ScrapRepository scrapRepo;
+	private final ProjectScrapRepository projectScrapRepo;
 	private final ProjectService projectService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -373,7 +362,7 @@ public class UserController {
 			for(InterestSubscribe is : interValues) {
 				interests.add(is.getInterest());
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), interests, projects, participantList , requestList);
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
@@ -396,7 +385,7 @@ public class UserController {
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
-			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), projects, participantList);
+			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), projects, participantList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
@@ -454,13 +443,13 @@ public class UserController {
     	return ResponseEntity.ok().body(new Response("success"));
     }
     
-    @ApiOperation(value = "유저 스크랩 목록 조회")
-	@GetMapping("/myscrap")
-	public ResponseEntity<?> getMyScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
+    @ApiOperation(value = "유저 스크랩 게시글 목록 조회")
+	@GetMapping("/myprojectscrap")
+	public ResponseEntity<?> getMyProjectScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		List<ProjectDto> projectList = new ArrayList<>();
 		try {
-			List<Scrap> objlist = scrapRepo.findAllByUser(user);
-			for(Scrap list : objlist) {
+			List<ProjectScrap> objlist = projectScrapRepo.findAllByUser(user);
+			for(ProjectScrap list : objlist) {
 				projectList.add(projectService.findById(list.getProject().getId()));
 			}
 		}catch(Exception e) {
@@ -468,6 +457,43 @@ public class UserController {
 					.body(new ErrorResponse("스크랩 실패", "500"));
 		}
 			return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectList));
+	}
+    
+    @ApiOperation(value = "유저 스크랩 처리")
+	@PostMapping("/userscrap/{id}")
+	public ResponseEntity<?> addUserScrap(@ApiParam(value = "스크랩대상 userIndex, 헤더에 토큰 ") @PathVariable("id") long userIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			userService.addUserScrap(userIndex, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩 실패", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+    
+    @ApiOperation(value = "유저 스크랩 취소")
+	@DeleteMapping("/deleteuserscrap/{id}")
+	public ResponseEntity<?> deleteUserScrap(@ApiParam(value = "취소 대상 userIndex, 헤더에 토큰 ") @PathVariable("id") long userIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			userService.deleteUserScrap(userIndex, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+    
+    @ApiOperation(value = "스크랩한 유저 목록 조회")
+	@GetMapping("/myuserscrap")
+	public ResponseEntity<?> getMyUserScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
+    	List<otherResponse> list;
+		try {
+			list = userService.getScrappingUsers(user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩 실패", "500"));
+		}
+			return ResponseEntity.ok().body(new CommonResponse<otherResponse>(list));
 	}
 	
 	

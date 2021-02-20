@@ -72,7 +72,7 @@ public class Project {
 	private final List<Comment> comment = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
-	private final List<Scrap> scrap = new ArrayList<>();
+	private final List<ProjectScrap> scrap = new ArrayList<>();
 	
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectParticipant> participant = new ArrayList<>();

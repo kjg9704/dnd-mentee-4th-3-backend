@@ -9,18 +9,25 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.project.repository.ScrapRepository;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
+import dnd.jackpot.project.service.ProjectService;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
 import dnd.jackpot.user.DeletedUser;
 import dnd.jackpot.user.DeletedUserRepository;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
+import dnd.jackpot.user.UserDto.otherResponse;
 import dnd.jackpot.user.UserDto.simpleResponse;
 import dnd.jackpot.user.UserModifyDto;
 import dnd.jackpot.user.UserRepository;
+import dnd.jackpot.user.UserScrap;
+import dnd.jackpot.user.UserScrapRepository;
+import dnd.jackpot.user.UserStacks;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,7 +40,9 @@ import javax.transaction.Transactional;
 public class JwtUserDetailsService implements UserDetailsService {
 	private final UserRepository userRepository;
 	private final DeletedUserRepository deletedUserRepository;
-	private final ScrapRepository scrapRepository;
+	private final ProjectScrapRepository projectScrapRepository;
+	private final UserScrapRepository userScrapRepository;
+	private final ProjectService projectService;
 
 
 	public UserDetails loadUserByEmailAndLogintype(String email, String loginType) throws UsernameNotFoundException {
@@ -59,36 +68,48 @@ public class JwtUserDetailsService implements UserDetailsService {
 	 *
 	 * @param infoDto 회원정보가 들어있는 DTO
 	 * @return 회원번호 PK
+	 * @throws Exception 
 	 */
 	@Transactional
-	public Long save(UserDto infoDto) {
+	public Long save(UserDto infoDto) throws Exception {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 		LocalDate date = LocalDate.now();
 		ERegion region = ERegion.valueOf(infoDto.getRegion());
-		User user = userRepository.save(User.builder()
-				.email(infoDto.getEmail())
-				.auth(infoDto.getAuth())
-				.name(infoDto.getName())
-				.region(region)
-				.position(infoDto.getPosition())
-				.logintype(infoDto.getLoginType())
-				.career(infoDto.getCareer())
-				.date(date.toString())
-				.privacy(infoDto.isPrivacy())
-				.emoticon(infoDto.getEmoticon())
-				.introduction(infoDto.getIntroduction())
-				.password(infoDto.getPassword()).build());
-		for(int i = 0; i < infoDto.getStacks().size(); i++) {
-			user.addStacks(infoDto.getStacks().get(i));
+		boolean check = deletedUserRepository.existsByUserEmailAndLoginType(infoDto.getEmail(), infoDto.getLoginType());
+		if(!check) {
+			User user = userRepository.save(User.builder()
+					.email(infoDto.getEmail())
+					.auth(infoDto.getAuth())
+					.name(infoDto.getName())
+					.region(region)
+					.position(infoDto.getPosition())
+					.logintype(infoDto.getLoginType())
+					.career(infoDto.getCareer())
+					.date(date.toString())
+					.privacy(infoDto.isPrivacy())
+					.emoticon(infoDto.getEmoticon())
+					.introduction(infoDto.getIntroduction())
+					.portfolioLink1(infoDto.getPortfolioLink1())
+					.portfolioLink2(infoDto.getPortfolioLink2())
+					.password(infoDto.getPassword()).build());
+			for(int i = 0; i < infoDto.getStacks().size(); i++) {
+				user.addStacks(infoDto.getStacks().get(i));
+			}
+			return user.getUserIndex();
 		}
-		return user.getUserIndex();
+		else {
+			Exception exception = new Exception();
+			throw exception;
+		}
 	}
+		
 	
 	@Transactional
 	public Long modifyUser(UserModifyDto infoDto, User user) {
-			user.update(infoDto);
-			User persistenceUser = userRepository.save(user);
+		User persistenceUser = (User) loadUserByEmailAndLogintype(user.getEmail(), user.getLoginType());
+			persistenceUser.update(infoDto);
+			persistenceUser = userRepository.save(persistenceUser);
 			for(int i = 0; i < infoDto.getStacks().size(); i++) {
 				persistenceUser.addStacks(infoDto.getStacks().get(i));
 			}
@@ -97,10 +118,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 	
 	@Transactional
 	public void deletedSave(String email, String loginType) {
-		DeletedUser user = deletedUserRepository.save(DeletedUser.builder()
+		deletedUserRepository.save(DeletedUser.builder()
 				.userEmail(email)
 				.loginType(loginType)
 				.build());
+		return;
 	}
 	
 	@Transactional
@@ -147,6 +169,37 @@ public class JwtUserDetailsService implements UserDetailsService {
 	@Transactional
 	public void deleteUser(String email, String loginType) {
 		userRepository.deleteByEmailAndLogintype(email, loginType);
+	}
+	
+	@Transactional
+	public void addUserScrap(long userIndex, User user) {
+		userScrapRepository.save(UserScrap.builder()
+				.user(user)
+				.scrapedUser(userIndex)
+				.build());
+	}
+	
+	@Transactional
+	public void deleteUserScrap(long userIndex, User user) {
+		userScrapRepository.deleteByUserAndScrapedUser(user, userIndex);
+	}
+	
+	public List<otherResponse> getScrappingUsers(User user) {
+		User persistenceUser = userRepository.findById(user.getUserIndex()).orElseThrow();
+		List<otherResponse> resultList = new ArrayList<>();
+		List<UserScrap> scrapList = persistenceUser.getScrapUsers();
+		for(UserScrap scrap : scrapList) {
+			User showuser = userRepository.findById(scrap.getScrapedUser()).orElseThrow();
+			List<Estack> stacks = new ArrayList<Estack>();
+			List<ProjectDto> projects = projectService.findAllByAuthor(showuser);
+			List<ProjectDto> participantList = projectService.findAllByParticipant(showuser);
+			for(UserStacks st : showuser.getStacks()) {
+				stacks.add(st.getStack());
+			}
+			resultList.add(new otherResponse(showuser.getName(), showuser.getRegion(), showuser.getPosition(), stacks, showuser.isPrivacy(), showuser.getCareer(), showuser.getAuth(), showuser.getEmoticon(), showuser.getIntroduction(),
+					showuser.getPortfolioLink1(), showuser.getPortfolioLink2(), projects, participantList));
+		}
+		return resultList;
 	}
 	
 }

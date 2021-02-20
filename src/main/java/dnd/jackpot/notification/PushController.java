@@ -10,7 +10,6 @@ import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
-import dnd.jackpot.project.repository.ScrapRepository;
 import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.response.BasicResponse;
 import dnd.jackpot.security.JwtUserDetailsService;
