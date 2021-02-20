@@ -59,33 +59,42 @@ public class JwtUserDetailsService implements UserDetailsService {
 	 *
 	 * @param infoDto 회원정보가 들어있는 DTO
 	 * @return 회원번호 PK
+	 * @throws Exception 
 	 */
 	@Transactional
-	public Long save(UserDto infoDto) {
+	public Long save(UserDto infoDto) throws Exception {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		infoDto.setPassword(encoder.encode(infoDto.getPassword()));
 		LocalDate date = LocalDate.now();
 		ERegion region = ERegion.valueOf(infoDto.getRegion());
-		User user = userRepository.save(User.builder()
-				.email(infoDto.getEmail())
-				.auth(infoDto.getAuth())
-				.name(infoDto.getName())
-				.region(region)
-				.position(infoDto.getPosition())
-				.logintype(infoDto.getLoginType())
-				.career(infoDto.getCareer())
-				.date(date.toString())
-				.privacy(infoDto.isPrivacy())
-				.emoticon(infoDto.getEmoticon())
-				.introduction(infoDto.getIntroduction())
-				.portfolioLink1(infoDto.getPortfolioLink1())
-				.portfolioLink2(infoDto.getPortfolioLink2())
-				.password(infoDto.getPassword()).build());
-		for(int i = 0; i < infoDto.getStacks().size(); i++) {
-			user.addStacks(infoDto.getStacks().get(i));
+		boolean check = deletedUserRepository.existsByUserEmailAndLoginType(infoDto.getEmail(), infoDto.getLoginType());
+		if(!check) {
+			User user = userRepository.save(User.builder()
+					.email(infoDto.getEmail())
+					.auth(infoDto.getAuth())
+					.name(infoDto.getName())
+					.region(region)
+					.position(infoDto.getPosition())
+					.logintype(infoDto.getLoginType())
+					.career(infoDto.getCareer())
+					.date(date.toString())
+					.privacy(infoDto.isPrivacy())
+					.emoticon(infoDto.getEmoticon())
+					.introduction(infoDto.getIntroduction())
+					.portfolioLink1(infoDto.getPortfolioLink1())
+					.portfolioLink2(infoDto.getPortfolioLink2())
+					.password(infoDto.getPassword()).build());
+			for(int i = 0; i < infoDto.getStacks().size(); i++) {
+				user.addStacks(infoDto.getStacks().get(i));
+			}
+			return user.getUserIndex();
 		}
-		return user.getUserIndex();
+		else {
+			Exception exception = new Exception();
+			throw exception;
+		}
 	}
+		
 	
 	@Transactional
 	public Long modifyUser(UserModifyDto infoDto, User user) {
@@ -100,10 +109,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 	
 	@Transactional
 	public void deletedSave(String email, String loginType) {
-		DeletedUser user = deletedUserRepository.save(DeletedUser.builder()
+		deletedUserRepository.save(DeletedUser.builder()
 				.userEmail(email)
 				.loginType(loginType)
 				.build());
+		return;
 	}
 	
 	@Transactional
