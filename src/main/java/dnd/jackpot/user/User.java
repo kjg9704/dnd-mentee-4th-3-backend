@@ -102,7 +102,7 @@ public class User implements UserDetails {
     }
     
     @Builder
-    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction) {
+    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction, String portfolioLink1, String portfolioLink2) {
     	this.email = email;
         this.logintype = logintype;
         this.password = password;
@@ -115,6 +115,8 @@ public class User implements UserDetails {
         this.privacy = privacy;
         this.emoticon = emoticon;
         this.introduction = introduction;
+        this.portfolioLink1 = portfolioLink1;
+        this.portfolioLink2 = portfolioLink2;
     }
     
     @Transactional

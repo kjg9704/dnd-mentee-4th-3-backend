@@ -78,6 +78,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 				.privacy(infoDto.isPrivacy())
 				.emoticon(infoDto.getEmoticon())
 				.introduction(infoDto.getIntroduction())
+				.portfolioLink1(infoDto.getPortfolioLink1())
+				.portfolioLink2(infoDto.getPortfolioLink2())
 				.password(infoDto.getPassword()).build());
 		for(int i = 0; i < infoDto.getStacks().size(); i++) {
 			user.addStacks(infoDto.getStacks().get(i));
