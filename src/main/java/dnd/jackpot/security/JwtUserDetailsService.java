@@ -173,23 +173,24 @@ public class JwtUserDetailsService implements UserDetailsService {
 	
 	@Transactional
 	public void addUserScrap(long userIndex, User user) {
+		User scrapedUser = userRepository.findById(userIndex).orElseThrow();
 		userScrapRepository.save(UserScrap.builder()
-				.user(user)
-				.scrapedUser(userIndex)
+				.scrapedUser(scrapedUser)
+				.scrappingUser(user.getUserIndex())
 				.build());
 	}
 	
 	@Transactional
 	public void deleteUserScrap(long userIndex, User user) {
-		userScrapRepository.deleteByUserAndScrapedUser(user, userIndex);
+		User scrapedUser = userRepository.findById(userIndex).orElseThrow();
+		userScrapRepository.deleteByUserAndScrappingUser(scrapedUser, user.getUserIndex());
 	}
 	
 	public List<otherResponse> getScrappingUsers(User user) {
-		User persistenceUser = userRepository.findById(user.getUserIndex()).orElseThrow();
 		List<otherResponse> resultList = new ArrayList<>();
-		List<UserScrap> scrapList = persistenceUser.getScrapUsers();
+		List<UserScrap> scrapList = userScrapRepository.findAllByScrappingUser(user.getUserIndex());
 		for(UserScrap scrap : scrapList) {
-			User showuser = userRepository.findById(scrap.getScrapedUser()).orElseThrow();
+			User showuser = userRepository.findById(scrap.getUser().getUserIndex()).orElseThrow();
 			List<Estack> stacks = new ArrayList<Estack>();
 			List<ProjectDto> projects = projectService.findAllByAuthor(showuser);
 			List<ProjectDto> participantList = projectService.findAllByParticipant(showuser);
