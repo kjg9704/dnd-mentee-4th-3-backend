@@ -25,6 +25,7 @@ public class ProjectMapperServiceImpl implements ProjectMapperService{
 	
 	@Override
 	public List<ProjectDto> toDto(List<Project>projects){
+		System.out.println(projects);
 		return projects.stream().map(project->toDto(project)).collect(Collectors.toList());
 	}
 	

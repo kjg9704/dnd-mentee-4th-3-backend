@@ -60,10 +60,7 @@ public class Project {
 	private final List<ProjectStack> stack = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)
-	@ElementCollection(targetClass = Einterest.class)
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
-//	@JoinTable(name = "interest_project", joinColumns = @Joincolumn(name=""))
-	private final List<ProjectInterest> interest = new ArrayList<>();
+	private Einterest interest;
 	
 	@Enumerated(EnumType.STRING)
 	@ElementCollection(targetClass = Eposition.class)
@@ -79,7 +76,7 @@ public class Project {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectParticipant> participant = new ArrayList<>();
 	
-	public static Project of(String shortdesc, String title, ERegion region, String online, String duration, User author) {
+	public static Project of(String shortdesc, String title, ERegion region, Einterest interest, String online, String duration, User author) {
 		Project project = new Project();
 		project.title = title;
 		project.shortDesc = shortdesc;
@@ -87,6 +84,7 @@ public class Project {
 		project.duration = duration;
 		project.online = online;
 		project.author = author;
+		project.interest = interest;
 		return project;
 	}
 	public void update(String title, String shortDesc, ERegion region, String online, String duration) {

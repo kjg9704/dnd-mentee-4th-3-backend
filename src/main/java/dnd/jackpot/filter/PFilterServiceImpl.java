@@ -21,9 +21,7 @@ import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
-import dnd.jackpot.project.entity.ProjectInterest;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.project.repository.ProjInterestRepo;
 import dnd.jackpot.project.repository.ProjStackRepo;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.service.PagingMapper;
@@ -48,14 +46,13 @@ public class PFilterServiceImpl implements PFilterService {
 	private List<Estack> SprojectList;
 	private List<Einterest> IprojectList;	
 	private final ProjStackRepo stackrepo;
-	private final ProjInterestRepo interestrepo;
 
 	@Override 
 	@Transactional
 	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
 		Page<Project> pageProjects;
 
-		if(searchDto.getStackFilter().get(0)!="") {
+		if(searchDto.getStackFilter().get(0)!="") {//searchDto.getStackFilter()!=null
 			SprojectList = new ArrayList<>();
 			List<String> s = searchDto.getStackFilter();
 			for(String stack : s) {
@@ -80,6 +77,7 @@ public class PFilterServiceImpl implements PFilterService {
 		validateSearchDto(searchDto);
 		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC,"createdAt");
 		pageProjects = repo.findByRegionInAndInterestInAndStackIn(RprojectList, IprojectList, SprojectList, pageable);
+		System.out.println(pageProjects.getContent());
 		RprojectList=null;
 		IprojectList=null;
 		SprojectList=null;
@@ -123,7 +121,7 @@ public class PFilterServiceImpl implements PFilterService {
 		Integer pageNumber = searchDto.getPageNumber();
 //		if(Objects.isNull(pageSize)||Objects.isNull(pageNumber)) {
 //			throw new CustomException(HttpStatus.BAD_REQUEST, "pageSize 또는 pageNumber이 null입니다.")
-//		}
+//		}s
 //		if(pageSize <= 0) {
 //			throw new CustomException(HttpStatus.BAD_REQUEST, "PageSize는 1이상이어야 합니다.")
 //		}
