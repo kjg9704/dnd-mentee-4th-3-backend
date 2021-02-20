@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import dnd.jackpot.user.User;
@@ -76,6 +77,8 @@ public class Project {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.LAZY, mappedBy="project")
 	private final List<ProjectParticipant> participant = new ArrayList<>();
 	
+	private int scrappedNum = this.scrap.size();
+	
 	public static Project of(String shortdesc, String title, ERegion region, Einterest interest, String online, String duration, User author) {
 		Project project = new Project();
 		project.title = title;
@@ -87,11 +90,13 @@ public class Project {
 		project.interest = interest;
 		return project;
 	}
-	public void update(String title, String shortDesc, ERegion region, String online, String duration) {
+	public void update(String title, String shortDesc, ERegion region, String online, 
+			String duration, Einterest interest) {
 		this.region = region;
 		this.title = title;
 		this.duration = duration;
 		this.online = online;
 		this.shortDesc = shortDesc;
+		this.interest=interest;
 	}
 }

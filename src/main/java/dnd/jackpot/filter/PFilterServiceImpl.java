@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectDto.filterDto;
 import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
@@ -44,15 +45,16 @@ public class PFilterServiceImpl implements PFilterService {
 //	
 	private List<ERegion> RprojectList;
 	private List<Estack> SprojectList;
-	private List<Einterest> IprojectList;	
+	private List<Einterest> IprojectList;
+	private String DprojectList;
 	private final ProjStackRepo stackrepo;
 
 	@Override 
 	@Transactional
-	public PagingDto<ProjectDto> getAll(ProjectSearchDto searchDto){
+	public PagingDto<filterDto> getAll(ProjectSearchDto searchDto){
 		Page<Project> pageProjects;
 
-		if(searchDto.getStackFilter().get(0)!="") {//searchDto.getStackFilter()!=null
+		if(searchDto.getStackFilter().get(0)!="") {
 			SprojectList = new ArrayList<>();
 			List<String> s = searchDto.getStackFilter();
 			for(String stack : s) {
@@ -74,15 +76,18 @@ public class PFilterServiceImpl implements PFilterService {
 				RprojectList.add(regions);
 			}
 		}
+		if(!searchDto.getDuration().isEmpty()) {
+			DprojectList = searchDto.getDuration();
+		}
 		validateSearchDto(searchDto);
-		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC,"createdAt");
-		pageProjects = repo.findByRegionInAndInterestInAndStackIn(RprojectList, IprojectList, SprojectList, pageable);
+		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC, searchDto.getSortType().getName());
+		pageProjects = repo.findByRegionInAndInterestInAndStackIn(RprojectList, IprojectList, SprojectList, DprojectList ,pageable);
 		System.out.println(pageProjects.getContent());
 		RprojectList=null;
 		IprojectList=null;
 		SprojectList=null;
-		List<ProjectDto> projectDtoList = projectMapperService.toDto(pageProjects.getContent());
-		return PagingMapper.map(pageProjects, projectDtoList);
+		List<ProjectDto.filterDto> filterDtoList = projectMapperService.toDto(pageProjects.getContent());
+		return PagingMapper.map(pageProjects, filterDtoList);
 		
 	}
 	
@@ -107,7 +112,7 @@ public class PFilterServiceImpl implements PFilterService {
 			}
 		}
 		
-		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize());
+		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize(),);
 		pageUsers = userRepo.findAllByRegionInAndStackInAndPosition(RprojectList, SprojectList, userSearchDto.getPosition(), pageable);
 		RprojectList=null;
 		IprojectList=null;

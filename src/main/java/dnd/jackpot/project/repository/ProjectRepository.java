@@ -27,9 +27,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 			+ "JOIN p.stack s "
 			+ "WHERE ((:region is null) OR (p.region in :region)) "
 			+ "AND ((:interest is null) OR (p.interest in :interest)) "
-			+ "AND ((:stack is null) OR (s.stack in :stack))")// ORDER BY p.createdAt DESC
+			+ "AND ((:stack is null) OR (s.stack in :stack))"
+			+ "AND ((:duration is null) OR (p.duration = :duration)) ORDER BY p.scrap.size DESC")// ORDER BY p.createdAt DESC
 	Page<Project> findByRegionInAndInterestInAndStackIn(@Param("region")List<ERegion> region, 
-			@Param("interest")List<Einterest> interest, @Param("stack")List<Estack>stack, Pageable pageable);
+			@Param("interest")List<Einterest> interest, @Param("stack")List<Estack>stack, 
+			@Param("duration")String duration, Pageable pageable);
 	
 
 	List<Project> findAllByRegionIn(List<ERegion> region);

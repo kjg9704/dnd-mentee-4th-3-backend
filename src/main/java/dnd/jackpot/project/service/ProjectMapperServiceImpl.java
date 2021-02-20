@@ -16,27 +16,25 @@ import lombok.RequiredArgsConstructor;
 public class ProjectMapperServiceImpl implements ProjectMapperService{
 	//comment 추가하기
 	private final ProjectStackService stackservice;
+	private final ProjectPositionService positionservice;
 	@Override
-	public ProjectDto toDto(Project project) {
+	public ProjectDto.filterDto toDto(Project project) {
 		LocalDateTime createdDateTime = project.getCreatedAt();
 //		String timeDesc = timeDescService.generate(createdDateTime);
 		return buildDto(project,createdDateTime);
 	}
 	
 	@Override
-	public List<ProjectDto> toDto(List<Project>projects){
-		System.out.println(projects);
+	public List<ProjectDto.filterDto> toDto(List<Project>projects){
 		return projects.stream().map(project->toDto(project)).collect(Collectors.toList());
 	}
 	
-	private ProjectDto buildDto(Project project, LocalDateTime createdDateTime) {
-		ProjectDto dto = new ProjectDto();
+	private ProjectDto.filterDto buildDto(Project project, LocalDateTime createdDateTime) {
+		ProjectDto.filterDto dto = new ProjectDto.filterDto();
 		dto.setId(project.getId());
-		dto.setShortDesc(project.getShortDesc());
-//		dto.setCreatedDateTime(project.getCreatedAt());
-//		dto.setPosition();
+		dto.setPosition(positionservice.getAllByProject(project));
 		dto.setStacks(stackservice.getAllByProject(project));
-		dto.setScrapUsers(project.getScrap().size());
+		dto.setScrapped(project.getScrappedNum());
 		dto.setTitle(project.getTitle());
 		return dto;
 	}

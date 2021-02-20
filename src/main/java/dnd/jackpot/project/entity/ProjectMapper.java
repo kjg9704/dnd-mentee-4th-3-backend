@@ -25,11 +25,12 @@ public class ProjectMapper {
 		pdto.setStacks(stack);
 		pdto.setPosition(position);
 		pdto.setInterest(project.getInterest());
-		pdto.setScrapUsers(project.getScrap().size());
+		pdto.setScrapUsers(project.getScrappedNum());
 		pdto.setUserIndex(project.getAuthor().getUserIndex());
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
-
+		pdto.setStatus(project.getStatus());
 		pdto.setParticipanting(project.getParticipant().size());
+		pdto.setUpdatedDateTime(project.getUpdatedAt().toString());
 		
 		if(Objects.nonNull(participantDtos)) {
 			pdto.setParticipants(participantDtos);

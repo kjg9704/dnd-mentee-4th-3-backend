@@ -29,7 +29,10 @@ public class ProjectSearchDto {
 	private List<String> interestFilter;
 
 	private List<String> stackFilter;
-//	private ESortType sortType;
+
+	private ESortType sortType;
+	
+	private String duration;
 	@NotNull
 	private Integer pageNumber;
 	@Size(min=1)
