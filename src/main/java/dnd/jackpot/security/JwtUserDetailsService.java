@@ -89,8 +89,9 @@ public class JwtUserDetailsService implements UserDetailsService {
 	
 	@Transactional
 	public Long modifyUser(UserModifyDto infoDto, User user) {
-			user.update(infoDto);
-			User persistenceUser = userRepository.save(user);
+		User persistenceUser = (User) loadUserByEmailAndLogintype(user.getEmail(), user.getLoginType());
+			persistenceUser.update(infoDto);
+			persistenceUser = userRepository.save(persistenceUser);
 			for(int i = 0; i < infoDto.getStacks().size(); i++) {
 				persistenceUser.addStacks(infoDto.getStacks().get(i));
 			}
