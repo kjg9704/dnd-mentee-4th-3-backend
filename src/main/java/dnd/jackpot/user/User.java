@@ -75,9 +75,9 @@ public class User implements UserDetails {
     
     @OneToMany(targetEntity = ProjectScrap.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProjectScrap> scrapProjects = new ArrayList<>();
-    
+       
     @OneToMany(targetEntity = UserScrap.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<UserScrap> scrapUsers = new ArrayList<>();
+    private List<UserScrap> scrapedUsers = new ArrayList<>();
     
     @Column(name = "career")
     private String career;
