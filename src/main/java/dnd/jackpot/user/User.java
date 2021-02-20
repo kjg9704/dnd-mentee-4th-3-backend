@@ -90,6 +90,10 @@ public class User implements UserDetails {
     @Column(name = "introduction")
     private String introduction;
     
+    private String portfolioLink1;
+    
+    private String portfolioLink2;
+    
     public void addStacks(String stack) {
     	this.stacks.add(UserStacks.builder()
     			.stack(stack)
@@ -125,6 +129,8 @@ public class User implements UserDetails {
     	 this.previousUpdate = date.toString();
     	 this.emoticon = infoDto.getEmoticon();
     	 this.introduction = infoDto.getIntroduction();
+    	 this.portfolioLink1 = infoDto.getPortfolioLink1();
+    	 this.portfolioLink2 = infoDto.getPortfolioLink2();
     	 this.stacks.clear();
      }
      

@@ -373,7 +373,7 @@ public class UserController {
 			for(InterestSubscribe is : interValues) {
 				interests.add(is.getInterest());
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), interests, projects, participantList , requestList);
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
@@ -396,7 +396,7 @@ public class UserController {
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
-			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), projects, participantList);
+			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), projects, participantList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));

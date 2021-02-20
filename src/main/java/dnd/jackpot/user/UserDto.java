@@ -29,6 +29,8 @@ public class UserDto {
   private String auth;
   private String emoticon;
   private String introduction;
+  private String portfolioLink1;
+  private String portfolioLink2;
   
   @Getter
   @AllArgsConstructor
@@ -43,7 +45,8 @@ public class UserDto {
 	  private String auth;
 	  private String emoticon;
 	  private String introduction;
-	  
+	  private String portfolioLink1;
+	  private String portfolioLink2;
 	  private List<Einterest> subscribes = new ArrayList<>();
 	  private List<ProjectDto> myprojects = new ArrayList<>();
 	  private List<ProjectDto> participantProject = new ArrayList<>();
@@ -62,6 +65,8 @@ public class UserDto {
 	  private String auth;
 	  private String emoticon;
 	  private String introduction;
+	  private String portfolioLink1;
+	  private String portfolioLink2;
 	  private List<ProjectDto> projectId = new ArrayList<>();
 	  private List<ProjectDto> participantProject = new ArrayList<>();
   }

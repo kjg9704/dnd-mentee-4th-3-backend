@@ -17,4 +17,6 @@ public class UserModifyDto {
 	private String career;
 	private String emoticon;
 	private String introduction;
+	private String portfolioLink1;
+	private String portfolioLink2;
 }
