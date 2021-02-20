@@ -36,10 +36,10 @@ import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-import dnd.jackpot.project.entity.Scrap;
+import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
-import dnd.jackpot.project.repository.ScrapRepository;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
 
 @Api(description = "프로젝트 게시글 관련 api")
 @RestController
@@ -47,7 +47,7 @@ import dnd.jackpot.project.repository.ScrapRepository;
 public class ProjectController {
 	private final ProjectService service;
 	private final CommentService commentService;
-	private final ScrapRepository scrapRepo;
+	private final ProjectScrapRepository projectScrapRepo;
 	private final ProjectRepository projectRepo;
 	private final PushService pushService;
 	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;

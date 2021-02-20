@@ -22,14 +22,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(
-		name="scrap",
+		name="Projectscrap",
 		uniqueConstraints={
 			@UniqueConstraint(
 				columnNames={"project_id","user_user_index"}
 			)
 		}
 	)
-public class Scrap {
+public class ProjectScrap {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +43,7 @@ public class Scrap {
 	private User user;
 	
 	@Builder
-	public Scrap(Project project, User user) {
+	public ProjectScrap(Project project, User user) {
 		this.project = project;
 		this.user = user;
 	}

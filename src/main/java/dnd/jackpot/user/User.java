@@ -9,6 +9,7 @@ import dnd.jackpot.notification.InterestSubscribe;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
+import dnd.jackpot.project.entity.ProjectScrap;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
@@ -71,6 +72,12 @@ public class User implements UserDetails {
 	@ElementCollection(targetClass = Einterest.class)
     @OneToMany(targetEntity = InterestSubscribe.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<InterestSubscribe> subscribes = new ArrayList<>();
+    
+    @OneToMany(targetEntity = ProjectScrap.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProjectScrap> scrapProjects = new ArrayList<>();
+    
+    @OneToMany(targetEntity = UserScrap.class, mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<UserScrap> scrapUsers = new ArrayList<>();
     
     @Column(name = "career")
     private String career;

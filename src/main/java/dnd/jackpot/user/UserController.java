@@ -52,11 +52,11 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
-import dnd.jackpot.project.entity.Scrap;
+import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
-import dnd.jackpot.project.repository.ScrapRepository;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
 import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.response.BasicResponse;
 import dnd.jackpot.response.CommonResponse;
@@ -66,6 +66,7 @@ import dnd.jackpot.security.JwtRequest;
 import dnd.jackpot.security.JwtResponse;
 import dnd.jackpot.security.JwtTokenUtil;
 import dnd.jackpot.security.JwtUserDetailsService;
+import dnd.jackpot.user.UserDto.otherResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -76,7 +77,7 @@ import io.swagger.annotations.ApiParam;
 public class UserController {
 
 	private final JwtUserDetailsService userService;
-	private final ScrapRepository scrapRepo;
+	private final ProjectScrapRepository projectScrapRepo;
 	private final ProjectService projectService;
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -442,13 +443,13 @@ public class UserController {
     	return ResponseEntity.ok().body(new Response("success"));
     }
     
-    @ApiOperation(value = "유저 스크랩 목록 조회")
-	@GetMapping("/myscrap")
-	public ResponseEntity<?> getMyScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
+    @ApiOperation(value = "유저 스크랩 게시글 목록 조회")
+	@GetMapping("/myprojectscrap")
+	public ResponseEntity<?> getMyProjectScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		List<ProjectDto> projectList = new ArrayList<>();
 		try {
-			List<Scrap> objlist = scrapRepo.findAllByUser(user);
-			for(Scrap list : objlist) {
+			List<ProjectScrap> objlist = projectScrapRepo.findAllByUser(user);
+			for(ProjectScrap list : objlist) {
 				projectList.add(projectService.findById(list.getProject().getId()));
 			}
 		}catch(Exception e) {
@@ -456,6 +457,43 @@ public class UserController {
 					.body(new ErrorResponse("스크랩 실패", "500"));
 		}
 			return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectList));
+	}
+    
+    @ApiOperation(value = "유저 스크랩 처리")
+	@PostMapping("/userscrap/{id}")
+	public ResponseEntity<?> addUserScrap(@ApiParam(value = "스크랩대상 userIndex, 헤더에 토큰 ") @PathVariable("id") long userIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			userService.addUserScrap(userIndex, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩 실패", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+    
+    @ApiOperation(value = "유저 스크랩 취소")
+	@DeleteMapping("/deleteuserscrap/{id}")
+	public ResponseEntity<?> deleteUserScrap(@ApiParam(value = "취소 대상 userIndex, 헤더에 토큰 ") @PathVariable("id") long userIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			userService.deleteUserScrap(userIndex, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+    
+    @ApiOperation(value = "스크랩한 유저 목록 조회")
+	@GetMapping("/myuserscrap")
+	public ResponseEntity<?> getMyUserScrap(@ApiParam(value = "토큰만 넘기면됨 parameter 없음 ") @AuthenticationPrincipal dnd.jackpot.user.User user) {
+    	List<otherResponse> list;
+		try {
+			list = userService.getScrappingUsers(user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩 실패", "500"));
+		}
+			return ResponseEntity.ok().body(new CommonResponse<otherResponse>(list));
 	}
 	
 	

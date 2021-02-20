@@ -26,17 +26,19 @@ import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectParticipant;
 import dnd.jackpot.project.entity.ProjectParticipantRequest;
+import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.entity.ProjectStack;
-import dnd.jackpot.project.entity.Scrap;
 import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
-import dnd.jackpot.project.repository.ScrapRepository;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
+import dnd.jackpot.project.repository.ProjectScrapRepository;
 import dnd.jackpot.response.Response;
 import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
 import dnd.jackpot.user.UserDto.simpleResponse;
+import dnd.jackpot.user.UserRepository;
 //import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
@@ -47,8 +49,8 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectRepository repo;
 	private final ProjectStackService projectStackService;
 	private final ProjectPositionService projectPositionService;
-	private final ScrapRepository scrapRepo;
-	private final JwtUserDetailsService userService;
+	private final ProjectScrapRepository scrapRepo;
+	private final UserRepository userRepo;
 	private final ProjectParticipantRepository projectParticipantRepo;
 	private final ProjectParticipantRequestRepository projectPraticipantRequsetRepo;
 	private final CommentService commentService;
@@ -92,7 +94,7 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional
 	public void addScrap(long projectId, User user) {
 		Project project = repo.findById(projectId).orElseThrow();
-		Scrap scrap = Scrap.builder()
+		ProjectScrap scrap = ProjectScrap.builder()
 				.project(project)
 				.user(user)
 				.build();
@@ -126,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
 	public void addParticipant(long requestId) {
 		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.findById(requestId).orElseThrow();
 		Project project = projectParticipantRequest.getProject();
-		User requestUser = userService.loadUserByUserIndex(projectParticipantRequest.getUser().getUserIndex());
+		User requestUser = userRepo.findById(projectParticipantRequest.getUser().getUserIndex()).orElseThrow();
 		project.setMemberExist(true);
 		ProjectParticipant projectParticipant = ProjectParticipant.builder()
 				.project(project)
