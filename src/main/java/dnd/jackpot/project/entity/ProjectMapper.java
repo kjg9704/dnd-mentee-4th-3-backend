@@ -14,7 +14,7 @@ import dnd.jackpot.user.UserDto;
 
 public class ProjectMapper {
 	
-	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> interest, List<String> position, List<CommentDto.getAll> commentDtos, List<UserDto.simpleResponse>participantDtos) {//,List<StackDto> stackDtos
+	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> position, List<CommentDto.getAll> commentDtos, List<UserDto.simpleResponse>participantDtos) {//,List<StackDto> stackDtos
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
 		pdto.setTitle(project.getTitle());
@@ -24,7 +24,7 @@ public class ProjectMapper {
 		pdto.setDuration(project.getDuration());
 		pdto.setStacks(stack);
 		pdto.setPosition(position);
-		pdto.setInterests(interest);
+		pdto.setInterest(project.getInterest());
 		pdto.setScrapUsers(project.getScrap().size());
 		pdto.setUserIndex(project.getAuthor().getUserIndex());
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
@@ -44,7 +44,8 @@ public class ProjectMapper {
 	
 	public static Project map(ProjectSaveDto saveDto, User user) {
 		ERegion region = ERegion.valueOf(saveDto.getRegion());
-		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region, saveDto.getOnline(),saveDto.getDuration(), user);//add author later on
+		Einterest interest = Einterest.valueOf(saveDto.getInterest());
+		return Project.of(saveDto.getShortDesc(), saveDto.getTitle(), region,interest, saveDto.getOnline(),saveDto.getDuration(), user);
 	}
 	
 }

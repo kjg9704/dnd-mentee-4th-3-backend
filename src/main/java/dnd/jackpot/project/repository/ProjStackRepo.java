@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.entity.Estack;
 import dnd.jackpot.project.entity.Project;
-import dnd.jackpot.project.entity.ProjectInterest;
 import dnd.jackpot.project.entity.ProjectStack;
 
 
@@ -26,7 +25,7 @@ public interface ProjStackRepo extends JpaRepository<ProjectStack, Long>{
 	@Transactional
 	@Modifying
 //	@Query("DELETE m from ProjectStack m where m.project = :project")
-	List<ProjectStack> removeByProject(ProjectInterest project);
+	List<ProjectStack> removeByProject(Project project);
 
 	@Transactional(readOnly = true)
 	@Query("SELECT p FROM ProjectStack p WHERE p.stack IN (:stacks)")

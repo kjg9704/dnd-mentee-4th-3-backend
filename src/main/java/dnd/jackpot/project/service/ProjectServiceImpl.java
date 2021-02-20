@@ -46,7 +46,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 	private final ProjectRepository repo;
 	private final ProjectStackService projectStackService;
-	private final ProjectInterestService projectInterestService;
 	private final ProjectPositionService projectPositionService;
 	private final ScrapRepository scrapRepo;
 	private final JwtUserDetailsService userService;
@@ -59,7 +58,6 @@ public class ProjectServiceImpl implements ProjectService {
 	public ProjectDto save(ProjectSaveDto saveDto, User user) {
 		Project project = ProjectMapper.map(saveDto, user);
 		projectStackService.save(saveDto.getStacks(),project);
-		projectInterestService.save(saveDto.getInterest(),project);
 		projectPositionService.save(saveDto.getPosition(),project);
 		project.getParticipant().add(new ProjectParticipant(project, user));
 		repo.save(project);
@@ -67,9 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	private ProjectDto toDto(Project project) {
-		//		ProjectStack stack = projectStackService.getAllByProject(project);
 		List<String> stack = projectStackService.getAllByProject(project);
-		List<String> interest = projectInterestService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
 		
 		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
@@ -82,8 +78,9 @@ public class ProjectServiceImpl implements ProjectService {
 			comments = commentService.getAllByProject(project);
 		}		
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime, stack, interest, position, comments, projectParticipant);
+		return ProjectMapper.map(project, createdDateTime, stack, position, comments, projectParticipant);
 	}
+	
 	@Override
 	@Transactional(readOnly = true)
 	public ProjectDto findById(Long id) {
@@ -173,10 +170,6 @@ public class ProjectServiceImpl implements ProjectService {
 		if(Objects.nonNull(modifyDto.getStack())) {
 			projectStackService.removeByProject(project);
 			projectStackService.save(modifyDto.getStack(), project);
-		}
-		if(Objects.nonNull(modifyDto.getInterest())) {
-			projectInterestService.removeByProject(project);
-			projectInterestService.save(modifyDto.getInterest(), project);
 		}
 		repo.save(project);
 		return toDto(project);

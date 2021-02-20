@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import dnd.jackpot.project.dto.ProjectPositionDto;
 import dnd.jackpot.project.entity.Eposition;
 import dnd.jackpot.project.entity.Project;
-import dnd.jackpot.project.entity.ProjectInterest;
 import dnd.jackpot.project.entity.ProjectPosition;
 import dnd.jackpot.project.repository.ProjectPositionRepo;
 import dnd.jackpot.project.repository.ProjectRepository;
