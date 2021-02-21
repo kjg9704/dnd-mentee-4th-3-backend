@@ -55,7 +55,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private final ProjectParticipantRepository projectParticipantRepo;
 	private final ProjectParticipantRequestRepository projectPraticipantRequsetRepo;
 	private final CommentService commentService;
-
+	
 	@Override
 	@Transactional
 	public ProjectDto save(ProjectSaveDto saveDto, User user) {
@@ -72,18 +72,22 @@ public class ProjectServiceImpl implements ProjectService {
 	private ProjectDto toDto(Project project) {
 		List<String> stack = projectStackService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
+
 		
 		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
 		if(project.isMemberExist()) {
 			projectParticipant = getParticipant(project);
-			System.out.println(projectParticipant);
 		}
 		List<CommentDto.getAll> comments = new ArrayList<>(); 
 		if(project.isCommentExist()) {
 			comments = commentService.getAllByProject(project);
-		}		
+		}
+		List<UserDto.simpleResponse> projectRequest = new ArrayList<>();
+		if(!project.getRequest().isEmpty()) {
+			projectRequest = getRequest(project);
+		}
 		LocalDateTime createdDateTime = project.getCreatedAt();
-		return ProjectMapper.map(project, createdDateTime, stack, position, comments, projectParticipant);
+		return ProjectMapper.map(project, createdDateTime, stack, position, comments, projectParticipant,projectRequest);
 	}
 
 	
@@ -102,11 +106,29 @@ public class ProjectServiceImpl implements ProjectService {
 				.project(project)
 				.user(user)
 				.build();
-//		int num = project.getScrappedNum()+1;
-	
 		scrapRepo.save(scrap);
 		project.getScrap().add(scrap);
 		repo.save(project);
+	}
+	
+	
+	@Override
+	@Transactional
+	public List<simpleResponse> getRequest (Project project) {
+		List<ProjectParticipantRequest> requests = projectPraticipantRequsetRepo.findAllByProject(project);
+		List<UserDto.simpleResponse> dtos = new ArrayList<>();
+		
+		for(ProjectParticipantRequest request : requests) {
+			User Pparticipant = request.getUser();
+			Long id = Pparticipant.getUserIndex();
+			ERegion region = Pparticipant.getRegion();
+			String position = Pparticipant.getPosition();
+			String emoticon = Pparticipant.getEmoticon();
+			String career = Pparticipant.getCareer();
+			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, region, position, career, emoticon);
+			dtos.add(dto);
+		}
+		return dtos;
 	}
 
 	@Override

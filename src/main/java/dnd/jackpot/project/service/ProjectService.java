@@ -35,5 +35,7 @@ public interface ProjectService {
 	void participantRequest(long projectId, User user);
 
 	List<simpleResponse> getParticipant(Project project);
+
+	List<simpleResponse> getRequest(Project project);
 	
 }
