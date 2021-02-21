@@ -25,7 +25,10 @@ public class FirebaseConfig {
     @PostConstruct
     public void initFirebase(){
         try {
-            FileInputStream serviceAccount = new FileInputStream(new ClassPathResource("/firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json").getFile());
+        	String path = new ClassPathResource("/firebase").getFile().getAbsolutePath();
+        	System.out.println(path);
+        	File file = new ClassPathResource("/firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json").getFile();
+            FileInputStream serviceAccount = new FileInputStream(file);
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
   //                  .setDatabaseUrl("https://{사용자마다 다름}.firebaseio.com")
