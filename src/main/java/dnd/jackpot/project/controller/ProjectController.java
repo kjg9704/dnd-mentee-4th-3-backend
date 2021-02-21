@@ -61,7 +61,7 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		try {
 			service.save(saveDto, user);
-//			pushService.sendInterestSubscribe(saveDto.getInterest());
+			pushService.sendInterestSubscribe(saveDto.getInterest());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("게시글 작성 실패", "500"));
