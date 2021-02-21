@@ -116,10 +116,10 @@ public class PFilterServiceImpl implements PFilterService {
 		}
 		
 		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize());
-		if(userSearchDto.getSortType().getName()=="scrappedNum") {
+		if(userSearchDto.getSortType().getName().equals("scrappedNum")) {
 			pageUsers = userRepo.findAllByRegionInAndStackInAndPositionORDERBYsize(RprojectList, SprojectList, PprojectList ,pageable);
 		} 
-		if(userSearchDto.getSortType().getName()=="createdAt") {
+		if(userSearchDto.getSortType().getName().equals("createdAt")) {
 			pageUsers = userRepo.findAllByRegionInAndStackInAndPositionORDERBYcreated(RprojectList, SprojectList, PprojectList ,pageable);
 		}
 		RprojectList=null;

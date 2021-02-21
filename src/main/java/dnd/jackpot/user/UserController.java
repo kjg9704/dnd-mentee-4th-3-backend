@@ -57,6 +57,7 @@ import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ProjectScrapRepository;
+import dnd.jackpot.project.service.CommentService;
 import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.response.BasicResponse;
 import dnd.jackpot.response.CommonResponse;
@@ -86,6 +87,7 @@ public class UserController {
 	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
 	private final ProjectRepository projectRepo;
 	private final UserRepository userRepo;
+	private final CommentService commentService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -351,18 +353,18 @@ public class UserController {
 			stacks = new ArrayList<Estack>();
 			dnd.jackpot.user.User persistenceUser = userRepo.getOne(user.getUserIndex());
 			values = persistenceUser.getStacks();
-			List<ProjectDto> projects = projectService.findAllByAuthor(user);
-			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
-			List<ProjectParticipantRequestDto> requestList = projectService.findAllByRequestAuthor(user);
-			interValues = user.getSubscribes();
-			
+			List<ProjectDto> projects = projectService.findAllByAuthor(persistenceUser);
+			List<ProjectDto> participantList = projectService.findAllByParticipant(persistenceUser);
+			List<ProjectParticipantRequestDto> requestList = projectService.findAllByRequestAuthor(persistenceUser);
+			List<ProjectDto> commentList = commentService.getAllProjectsByUser(persistenceUser);
+			interValues = persistenceUser.getSubscribes();
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
 			for(InterestSubscribe is : interValues) {
 				interests.add(is.getInterest());
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestList);
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestList, commentList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
@@ -380,12 +382,10 @@ public class UserController {
 			dnd.jackpot.user.User user = userService.loadUserByUserIndex(id);
 			values = user.getStacks();
 			stacks = new ArrayList<Estack>();
-			List<ProjectDto> projects = projectService.findAllByAuthor(user);
-			List<ProjectDto> participantList = projectService.findAllByParticipant(user);
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
-			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), projects, participantList);
+			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2());
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
