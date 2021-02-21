@@ -24,12 +24,15 @@ import lombok.NoArgsConstructor;
 public class ProjectSearchDto {
 
 
-	private List<String> regionFilter;
+	private String regionFilter;
 
 	private List<String> interestFilter;
 
 	private List<String> stackFilter;
-//	private ESortType sortType;
+
+	private ESortType sortType;
+	
+	private List<String> duration;
 	@NotNull
 	private Integer pageNumber;
 	@Size(min=1)

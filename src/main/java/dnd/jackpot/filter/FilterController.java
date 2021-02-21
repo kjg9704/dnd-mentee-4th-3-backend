@@ -24,7 +24,7 @@ public class FilterController {
 	private final PFilterService filterService;
 	
 	@PostMapping("/projects")
-	public PagingDto<ProjectDto> getAll(@RequestBody ProjectSearchDto searchDto){
+	public PagingDto<ProjectDto.filterDto> getAll(@RequestBody ProjectSearchDto searchDto){
 		return filterService.getAll(searchDto);
 	}
 	

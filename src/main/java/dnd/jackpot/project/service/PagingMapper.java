@@ -6,17 +6,18 @@ import org.springframework.data.domain.Page;
 
 import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
+import dnd.jackpot.project.dto.ProjectDto.filterDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto.simpleResponse;
 
 public class PagingMapper {
-	public static PagingDto<ProjectDto> map(Page<Project> pageProjects, List<ProjectDto> projectDtos){
-		PagingDto<ProjectDto> dto = new PagingDto<>();
+	public static PagingDto<filterDto> map(Page<Project> pageProjects, List<filterDto> filterDtos){
+		PagingDto<filterDto> dto = new PagingDto<>();
 		dto.setPageNumber(pageProjects.getNumber());
 		dto.setPageSize(pageProjects.getSize());
 		dto.setTotalPages(pageProjects.getTotalPages());
-		dto.setContents(projectDtos);
+		dto.setContents(filterDtos);
 		//last,first,content 나중에 추가
 		return dto;
 	}

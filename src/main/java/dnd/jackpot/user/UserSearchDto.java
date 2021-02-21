@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.ESortType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +16,12 @@ public class UserSearchDto {
 
 	private String position;
 	
-	private List<String> regionFilter;
+	private String regionFilter;
 
 	private List<String> stackFilter;
-//	private ESortType sortType;
+	
+	private ESortType sortType;
+	
 	@NotNull
 	private Integer pageNumber;
 	@Size(min=1)

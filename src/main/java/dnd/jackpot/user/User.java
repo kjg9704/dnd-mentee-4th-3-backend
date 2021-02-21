@@ -1,6 +1,9 @@
 package dnd.jackpot.user;
 
 import lombok.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +18,7 @@ import javax.persistence.*;
 import javax.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -82,11 +86,13 @@ public class User implements UserDetails {
     @Column(name = "career")
     private String career;
     
-    @Column(name = "date")
-    private String date;
+    @Column(name = "createdAt")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
     
     @Column(name = "previousUpdate")
-    private String previousUpdate;
+    @UpdateTimestamp
+    private LocalDateTime previousUpdate;
     
     @Column(name = "registrationToken")
     private String registrationToken;
@@ -109,7 +115,7 @@ public class User implements UserDetails {
     }
     
     @Builder
-    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, String date, boolean privacy, String emoticon, String introduction, String portfolioLink1, String portfolioLink2) {
+    public User(String email, String password, String auth, String name, ERegion region, String logintype, String position, String career, LocalDateTime date, boolean privacy, String emoticon, String introduction, String portfolioLink1, String portfolioLink2) {
     	this.email = email;
         this.logintype = logintype;
         this.password = password;
@@ -118,7 +124,7 @@ public class User implements UserDetails {
         this.region = region;
         this.position = position;
         this.career = career;
-        this.date = date;
+        this.createdAt = date;
         this.privacy = privacy;
         this.emoticon = emoticon;
         this.introduction = introduction;
@@ -129,13 +135,11 @@ public class User implements UserDetails {
     @Transactional
      public void update(UserModifyDto infoDto) {
     	ERegion region = ERegion.valueOf(infoDto.getRegion());
-    	 LocalDate date = LocalDate.now();
     	 this.career = infoDto.getCareer();
     	 this.position = infoDto.getPosition();
     	 this.name = infoDto.getName();
     	 this.region = region;
     	 this.privacy = infoDto.isPrivacy();
-    	 this.previousUpdate = date.toString();
     	 this.emoticon = infoDto.getEmoticon();
     	 this.introduction = infoDto.getIntroduction();
     	 this.portfolioLink1 = infoDto.getPortfolioLink1();

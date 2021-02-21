@@ -2,6 +2,8 @@ package dnd.jackpot.project.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import dnd.jackpot.project.dto.ProjectDto.filterDto;
 import lombok.Data;
 
 @Data

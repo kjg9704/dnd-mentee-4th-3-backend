@@ -22,6 +22,7 @@ import dnd.jackpot.project.dto.ProjectSearchDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.project.entity.Comment;
 import dnd.jackpot.project.entity.ERegion;
+import dnd.jackpot.project.entity.EprojectStatus;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectParticipant;
@@ -61,6 +62,8 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = ProjectMapper.map(saveDto, user);
 		projectStackService.save(saveDto.getStacks(),project);
 		projectPositionService.save(saveDto.getPosition(),project);
+		EprojectStatus status = EprojectStatus.valueOf("모집중");
+		project.setStatus(status);
 		project.getParticipant().add(new ProjectParticipant(project, user));
 		repo.save(project);
 		return toDto(project);
@@ -82,6 +85,7 @@ public class ProjectServiceImpl implements ProjectService {
 		LocalDateTime createdDateTime = project.getCreatedAt();
 		return ProjectMapper.map(project, createdDateTime, stack, position, comments, projectParticipant);
 	}
+
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -98,6 +102,8 @@ public class ProjectServiceImpl implements ProjectService {
 				.project(project)
 				.user(user)
 				.build();
+//		int num = project.getScrappedNum()+1;
+	
 		scrapRepo.save(scrap);
 		project.getScrap().add(scrap);
 		repo.save(project);
@@ -168,11 +174,16 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional
 	public ProjectDto modify(Long id, ProjectModifyDto modifyDto) {
 		Project project = repo.findById(id).orElseThrow();
-		//project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion(),modifyDto.getStack());
+		project.update(modifyDto.getTitle(), modifyDto.getShortdesc(),modifyDto.getRegion(),modifyDto.getOnline(), modifyDto.getDuration(), modifyDto.getInterest());
 		if(Objects.nonNull(modifyDto.getStack())) {
 			projectStackService.removeByProject(project);
 			projectStackService.save(modifyDto.getStack(), project);
 		}
+		if(Objects.nonNull(modifyDto.getPosition())) {
+			projectPositionService.removeByProject(project);
+			projectPositionService.save(modifyDto.getPosition(), project);
+		}
+		
 		repo.save(project);
 		return toDto(project);
 
