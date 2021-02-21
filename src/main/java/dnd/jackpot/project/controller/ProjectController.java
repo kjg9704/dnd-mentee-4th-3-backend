@@ -4,14 +4,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.firebase.messaging.FirebaseMessagingException;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import dnd.jackpot.project.service.CommentService;
 import dnd.jackpot.project.service.ProjectService;
@@ -32,13 +27,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.notification.PushService;
 import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ProjectScrapRepository;
@@ -59,13 +52,13 @@ public class ProjectController {
 	@PostMapping("/api/projects")
 	@Transactional
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) throws FirebaseMessagingException {
-//		try {
+		try {
 			service.save(saveDto, user);
 			pushService.sendInterestSubscribe(saveDto.getInterest());
-//		}catch(Exception e) {
-	//		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	//				.body(new ErrorResponse("게시글 작성 실패", "500"));
-//		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("게시글 작성 실패", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 

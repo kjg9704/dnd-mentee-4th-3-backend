@@ -7,14 +7,9 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.TopicManagementResponse;
 
 import dnd.jackpot.project.entity.Einterest;
-import dnd.jackpot.project.repository.ProjectParticipantRepository;
-import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
-import dnd.jackpot.project.repository.ProjectRepository;
-import dnd.jackpot.project.service.ProjectService;
-import dnd.jackpot.response.BasicResponse;
-import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserRepository;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -26,16 +21,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -47,6 +39,7 @@ public class PushController {
 	
 	private final UserRepository userRepo;
 	private final InterestSubscribeRepository interestSubscribeRepo;
+	private final PushService pushService;
 
     @GetMapping("/test")
     public String sendToToken() throws FirebaseMessagingException {
@@ -109,16 +102,17 @@ public class PushController {
         }
     }
     
+    @ApiOperation(value = "관심사 알림 추가")
     @Transactional
     @PostMapping("/addSubscribe/{interest}")
 	public void interestSubscribe(@PathVariable("interest") String interest, @AuthenticationPrincipal User user) throws FirebaseMessagingException{
-    		
+    	String Topic = pushService.interestMapper(interest);
     	List<String> registrationTokens = Arrays.asList(
     			user.getRegistrationToken()
     		);
 
     		TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(
-    		    registrationTokens, interest);
+    		    registrationTokens, Topic);
     		Einterest inter = Einterest.valueOf(interest);
     		User persistenceUser = userRepo.save(user);
     		persistenceUser.getSubscribes().add(InterestSubscribe.builder()
@@ -129,14 +123,16 @@ public class PushController {
     		System.out.println(response.getSuccessCount() + " tokens were subscribed successfully");
 	}
     
+    @ApiOperation(value = "관심사 알림 삭제")
     @Transactional
     @DeleteMapping("/deleteSubscribe/{interest}")
 	public void interestUnSubscribe(@PathVariable("interest") String interest, @AuthenticationPrincipal User user ) throws FirebaseMessagingException{
+    	String Topic = pushService.interestMapper(interest);
     	List<String> registrationTokens = Arrays.asList(
     			user.getRegistrationToken()
     		);
     	TopicManagementResponse response = FirebaseMessaging.getInstance().unsubscribeFromTopic(
-    	    registrationTokens, interest);
+    	    registrationTokens, Topic);
     	Einterest inter = Einterest.valueOf(interest);
     	User persistenceUser = userRepo.save(user);
     	InterestSubscribe interSub = interestSubscribeRepo.findByInterestAndUser(inter, user).orElseThrow();
@@ -144,23 +140,6 @@ public class PushController {
     	System.out.println(response.getSuccessCount() + " tokens were unsubscribed successfully");
     }
     
-    @PostMapping("/sendtoSubscribe/{interest}")
-	public void sendToSubscribe(@PathVariable("interest") String interest ) throws FirebaseMessagingException{
-    	// The topic name can be optionally prefixed with "/topics/".
-    	String topic = "IT";
-
-    	// See documentation on defining a message payload.
-    	Message message = Message.builder()
-    	    .putData("title", "JackPot 알림")
-    	    .putData("content", topic + "에 새로운 게시글이 작성되었습니다")
-    	    .setTopic(topic)
-    	    .build();
-
-    	// Send a message to the devices subscribed to the provided topic.
-    	String response = FirebaseMessaging.getInstance().send(message);
-    	// Response is a message ID string.
-    	System.out.println("Successfully sent message: " + response);
-    }
     
     private static String getAccessToken() throws IOException {
         ClassPathResource resource = new ClassPathResource("firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json");
