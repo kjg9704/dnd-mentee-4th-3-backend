@@ -43,16 +43,17 @@ public class PFilterServiceImpl implements PFilterService {
 	private final UserRepository userRepo;
 	private final JwtUserDetailsService userService;
 //	
-	private List<ERegion> RprojectList;
+	private ERegion RprojectList;
 	private List<Estack> SprojectList;
 	private List<Einterest> IprojectList;
-	private String DprojectList;
+	private List<String> DprojectList;
+	private String PprojectList;
 	private final ProjStackRepo stackrepo;
 
 	@Override 
 	@Transactional
 	public PagingDto<filterDto> getAll(ProjectSearchDto searchDto){
-		Page<Project> pageProjects;
+		Page<Project> pageProjects = null;
 
 		if(searchDto.getStackFilter().get(0)!="") {
 			SprojectList = new ArrayList<>();
@@ -69,20 +70,23 @@ public class PFilterServiceImpl implements PFilterService {
 				IprojectList.add(interests);
 			}
 		}
-		if(searchDto.getRegionFilter().get(0)!="") {
-			RprojectList = new ArrayList<>();
-			for(String region : searchDto.getRegionFilter()) {
-				ERegion regions = ERegion.valueOf(region);
-				RprojectList.add(regions);
-			}
+		if(!searchDto.getRegionFilter().isEmpty()) {
+			RprojectList = ERegion.valueOf(searchDto.getRegionFilter());
 		}
-		if(!searchDto.getDuration().isEmpty()) {
-			DprojectList = searchDto.getDuration();
+		if(searchDto.getDuration().get(0)!="") {
+			DprojectList = new ArrayList<>();
+			for(String duration : searchDto.getDuration()) {
+				DprojectList.add(duration);
+			}
 		}
 		validateSearchDto(searchDto);
 		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC, searchDto.getSortType().getName());
-		pageProjects = repo.findByRegionInAndInterestInAndStackIn(RprojectList, IprojectList, SprojectList, DprojectList ,pageable);
-		System.out.println(pageProjects.getContent());
+		if(searchDto.getSortType().getName()=="createdAt") {
+			pageProjects = repo.findByRegionInAndInterestInAndStackInORDERBYdate(RprojectList, IprojectList, SprojectList, DprojectList ,pageable);
+		}
+		if(searchDto.getSortType().getName()=="scrappedNum") {
+			pageProjects = repo.findByRegionInAndInterestInAndStackInORDERBYpopular(RprojectList, IprojectList, SprojectList, DprojectList ,pageable);
+		} 
 		RprojectList=null;
 		IprojectList=null;
 		SprojectList=null;
@@ -94,7 +98,7 @@ public class PFilterServiceImpl implements PFilterService {
 	@Override
 	public PagingDto<simpleResponse> getAllUsers(UserSearchDto userSearchDto) {
 	//	validateSearchDto(userSearchDto);
-		Page<User> pageUsers;
+		Page<User> pageUsers = null;
 		if(userSearchDto.getStackFilter().get(0)!="") {
 			SprojectList = new ArrayList<>();
 			List<String> s = userSearchDto.getStackFilter();
@@ -104,18 +108,22 @@ public class PFilterServiceImpl implements PFilterService {
 			}
 		}
 		
-		if(userSearchDto.getRegionFilter().get(0)!="") {
-			RprojectList = new ArrayList<>();
-			for(String region : userSearchDto.getRegionFilter()){
-				ERegion regions = ERegion.valueOf(region);
-				RprojectList.add(regions);
-			}
+		if(!userSearchDto.getRegionFilter().isEmpty()) {
+			RprojectList = ERegion.valueOf(userSearchDto.getRegionFilter());
+		}
+		if(!userSearchDto.getPosition().isEmpty()) {
+			PprojectList = userSearchDto.getPosition();
 		}
 		
-		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize(),);
-		pageUsers = userRepo.findAllByRegionInAndStackInAndPosition(RprojectList, SprojectList, userSearchDto.getPosition(), pageable);
+		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize());
+		if(userSearchDto.getSortType().getName()=="scrappedNum") {
+			pageUsers = userRepo.findAllByRegionInAndStackInAndPositionORDERBYsize(RprojectList, SprojectList, PprojectList ,pageable);
+		} 
+		if(userSearchDto.getSortType().getName()=="createdAt") {
+			pageUsers = userRepo.findAllByRegionInAndStackInAndPositionORDERBYcreated(RprojectList, SprojectList, PprojectList ,pageable);
+		}
 		RprojectList=null;
-		IprojectList=null;
+		PprojectList=null;
 		SprojectList=null;
 		List<simpleResponse> userDtoList = userService.userListMapper(pageUsers.getContent());
 		return PagingMapper.mapUser(pageUsers, userDtoList);

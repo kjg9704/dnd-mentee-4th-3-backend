@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class ProjectSearchDto {
 
 
-	private List<String> regionFilter;
+	private String regionFilter;
 
 	private List<String> interestFilter;
 
@@ -32,7 +32,7 @@ public class ProjectSearchDto {
 
 	private ESortType sortType;
 	
-	private String duration;
+	private List<String> duration;
 	@NotNull
 	private Integer pageNumber;
 	@Size(min=1)

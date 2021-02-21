@@ -74,7 +74,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public Long save(UserDto infoDto) throws Exception {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		infoDto.setPassword(encoder.encode(infoDto.getPassword()));
-		LocalDate date = LocalDate.now();
 		ERegion region = ERegion.valueOf(infoDto.getRegion());
 		boolean check = deletedUserRepository.existsByUserEmailAndLoginType(infoDto.getEmail(), infoDto.getLoginType());
 		if(!check) {
@@ -86,7 +85,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 					.position(infoDto.getPosition())
 					.logintype(infoDto.getLoginType())
 					.career(infoDto.getCareer())
-					.date(date.toString())
 					.privacy(infoDto.isPrivacy())
 					.emoticon(infoDto.getEmoticon())
 					.introduction(infoDto.getIntroduction())

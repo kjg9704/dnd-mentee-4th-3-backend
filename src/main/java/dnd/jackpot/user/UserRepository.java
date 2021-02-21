@@ -19,12 +19,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
   Boolean existsByName(String email);
   void deleteByEmailAndLogintype(String email, String loginType);
   Optional<User> findByEmail(String email);
-  @Query("SELECT p FROM User p "
+  @Query(value = "SELECT p FROM User p "
 			+ "JOIN p.stacks s "
 			+ "WHERE ((:region is null) OR (p.region in :region)) "
-			+ "AND ((:stack is null) OR (s.stack in :stack))"
-			+ "AND ((:position is null) OR (p.position = :position)) ")
-	Page<User> findAllByRegionInAndStackInAndPosition(@Param("region")List<ERegion> region,
-			@Param("stack")List<Estack>stack, 
-			@Param("position") String position, Pageable pageable);
+			+ "AND ((:stack is null) OR (s.stack in :stack)) "
+  			+ "AND ((:position is null) OR (p.position = :position)) ORDER BY p.scrapedUsers.size DESC")
+	Page<User> findAllByRegionInAndStackInAndPositionORDERBYsize(@Param("region")ERegion region,
+			@Param("stack")List<Estack>stack, @Param("position") String position ,Pageable pageable);
+  @Query(value = "SELECT p FROM User p "
+			+ "JOIN p.stacks s "
+			+ "WHERE ((:region is null) OR (p.region in :region)) "
+			+ "AND ((:stack is null) OR (s.stack in :stack)) "
+			+ "AND ((:position is null) OR (p.position = :position)) ORDER BY p.createdAt DESC")
+	Page<User> findAllByRegionInAndStackInAndPositionORDERBYcreated(@Param("region")ERegion region,
+			@Param("stack")List<Estack>stack, @Param("position") String position ,Pageable pageable);
 }
