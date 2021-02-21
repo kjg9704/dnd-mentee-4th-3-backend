@@ -5,22 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import dnd.jackpot.project.dto.CommentDto;
-import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
-import dnd.jackpot.project.dto.ProjectSearchDto;
-import dnd.jackpot.project.dto.ProjectStackDto;
-import dnd.jackpot.project.entity.Comment;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.EprojectStatus;
 import dnd.jackpot.project.entity.Project;
@@ -33,14 +26,10 @@ import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ProjectScrapRepository;
-import dnd.jackpot.project.repository.ProjectScrapRepository;
-import dnd.jackpot.response.Response;
-import dnd.jackpot.security.JwtUserDetailsService;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
 import dnd.jackpot.user.UserDto.simpleResponse;
 import dnd.jackpot.user.UserRepository;
-//import dnd.jackpot.user.User;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -125,7 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
 			String position = Pparticipant.getPosition();
 			String emoticon = Pparticipant.getEmoticon();
 			String career = Pparticipant.getCareer();
-			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, region, position, career, emoticon);
+			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, Pparticipant.getName(), region, position, career, emoticon);
 			dtos.add(dto);
 		}
 		return dtos;
