@@ -1,12 +1,17 @@
 package dnd.jackpot.notification;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
@@ -17,20 +22,10 @@ import com.google.firebase.FirebaseOptions;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("classpath:firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json")
-//    @Value("classpath:firebase/jackpot-d5f0e-firebase-adminsdk-46a97-cc8373fa78.json")
-    private Resource resource;
-    @Autowired
-    private ResourceLoader resourceLoader;
-    
- //   final Resource fileResource = resourceLoader.getResource("classpath:firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json");
-
-
     @PostConstruct
-    public void initFirebase() {
+    public void initFirebase(){
         try {
-      //  	getClass().getResourceAsStream(String path);
-            FileInputStream serviceAccount = new FileInputStream(resource.getFile());
+            FileInputStream serviceAccount = new FileInputStream(new ClassPathResource("/firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json").getFile());
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
   //                  .setDatabaseUrl("https://{사용자마다 다름}.firebaseio.com")
