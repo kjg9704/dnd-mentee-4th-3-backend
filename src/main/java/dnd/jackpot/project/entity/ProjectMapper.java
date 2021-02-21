@@ -32,6 +32,7 @@ public class ProjectMapper {
 		pdto.setStatus(project.getStatus());
 		pdto.setParticipanting(project.getParticipant().size());
 		pdto.setUpdatedDateTime(project.getUpdatedAt().toString());
+		pdto.setScrapUsers(project.getScrap().size());
 		if(Objects.nonNull(participantDtos)) {
 			pdto.setParticipants(participantDtos);
 		}

@@ -80,13 +80,14 @@ public class CommentServiceImpl implements CommentService {
 			List<String> position = projectPositionService.getAllByProject(project);
 			List<getAll> comments = new ArrayList<>();
 			List<simpleResponse> participants = new ArrayList<>();
+			List<simpleResponse> requests = new ArrayList<>();
 			for(Comment comm : project.getComment()) {
 				comments.add(new getAll(comm.getCommentId(), comm.getBody(), comm.getDate(), comm.getUser().getName(), comm.getUser().getPosition()));
 			}
 			for(ProjectParticipant users : project.getParticipant()) {
 				participants.add(new simpleResponse(users.getUser().getUserIndex(), users.getUser().getName(), users.getUser().getRegion(), users.getUser().getPosition(), users.getUser().getCareer(), users.getUser().getEmoticon()));
 			}
-			resultList.add(ProjectMapper.map(project, project.getCreatedAt(), stack, position, comments, participants));
+			resultList.add(ProjectMapper.map(project, project.getCreatedAt(), stack, position, comments, participants, requests));
 		}
 		return resultList;
 	}

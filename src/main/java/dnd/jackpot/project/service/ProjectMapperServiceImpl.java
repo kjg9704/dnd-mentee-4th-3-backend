@@ -32,9 +32,9 @@ public class ProjectMapperServiceImpl implements ProjectMapperService{
 	private ProjectDto.filterDto buildDto(Project project, LocalDateTime createdDateTime) {
 		ProjectDto.filterDto dto = new ProjectDto.filterDto();
 		dto.setId(project.getId());
+		dto.setScrapped(project.getScrap().size());
 		dto.setPosition(positionservice.getAllByProject(project));
 		dto.setStacks(stackservice.getAllByProject(project));
-		dto.setScrapped(project.getScrappedNum());
 		dto.setTitle(project.getTitle());
 		return dto;
 	}
