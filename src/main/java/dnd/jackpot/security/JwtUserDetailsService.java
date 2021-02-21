@@ -159,7 +159,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public List<simpleResponse> userListMapper(List<User> users){
 		List<simpleResponse> simpleList = new ArrayList<>();
 		for(User user : users) {
-			simpleList.add(new simpleResponse(user.getUserIndex(), user.getRegion(), user.getPosition(), user.getCareer(), user.getEmoticon()));
+			simpleList.add(new simpleResponse(user.getUserIndex(), user.getName(), user.getRegion(), user.getPosition(), user.getCareer(), user.getEmoticon()));
 		}
 		return simpleList;
 	}
@@ -190,13 +190,11 @@ public class JwtUserDetailsService implements UserDetailsService {
 		for(UserScrap scrap : scrapList) {
 			User showuser = userRepository.findById(scrap.getUser().getUserIndex()).orElseThrow();
 			List<Estack> stacks = new ArrayList<Estack>();
-			List<ProjectDto> projects = projectService.findAllByAuthor(showuser);
-			List<ProjectDto> participantList = projectService.findAllByParticipant(showuser);
 			for(UserStacks st : showuser.getStacks()) {
 				stacks.add(st.getStack());
 			}
 			resultList.add(new otherResponse(showuser.getName(), showuser.getRegion(), showuser.getPosition(), stacks, showuser.isPrivacy(), showuser.getCareer(), showuser.getAuth(), showuser.getEmoticon(), showuser.getIntroduction(),
-					showuser.getPortfolioLink1(), showuser.getPortfolioLink2(), projects, participantList));
+					showuser.getPortfolioLink1(), showuser.getPortfolioLink2()));
 		}
 		return resultList;
 	}

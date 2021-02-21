@@ -122,7 +122,7 @@ public class ProjectServiceImpl implements ProjectService {
 			String position = Pparticipant.getPosition();
 			String emoticon = Pparticipant.getEmoticon();
 			String career = Pparticipant.getCareer();
-			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, region, position, career, emoticon);
+			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, Pparticipant.getName(), region, position, career, emoticon);
 			dtos.add(dto);
 		}
 		return dtos;

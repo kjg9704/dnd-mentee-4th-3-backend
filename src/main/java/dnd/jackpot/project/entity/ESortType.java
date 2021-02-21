@@ -3,7 +3,7 @@ package dnd.jackpot.project.entity;
 
 public enum ESortType {
 	최신순("createdAt"), 
-	조회순("scrappedNum");
+	인기순("scrappedNum");
 	
 	final private String name;
 	

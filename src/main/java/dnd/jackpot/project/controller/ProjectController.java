@@ -56,13 +56,13 @@ public class ProjectController {
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
-//		try {
+		try {
 			service.save(saveDto, user);
-	//		pushService.sendInterestSubscribe(saveDto.getInterest());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("게시글 작성 실패", "500"));
-//		}
+			pushService.sendInterestSubscribe(saveDto.getInterest());
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("게시글 작성 실패", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 
@@ -81,13 +81,13 @@ public class ProjectController {
 	@ApiOperation(value = "게시글 댓글달기")
 	@PostMapping("/comment")
 	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-//		try {
+		try {
 			commentService.save(commentDto, user);
-//			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("댓글 추가 실패", "500"));
-//		}
+			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("댓글 추가 실패", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
@@ -95,26 +95,26 @@ public class ProjectController {
 	@ApiOperation(value = "프로젝트 참가 요청")
 	@PostMapping("/participant/{projectid}")
 	public ResponseEntity<? extends BasicResponse> participantRequest(@ApiParam(value = "") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-//		try {
+		try {
 			service.participantRequest(projectId, user);
-//			pushService.sendParticipantRequestToToken(projectRepo.findById(projectId).orElseThrow().getAuthor().getRegistrationToken());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("failed", "500"));
-//		}
+			pushService.sendParticipantRequestToToken(projectRepo.findById(projectId).orElseThrow().getAuthor().getRegistrationToken());
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
 	@ApiOperation(value = "프로젝트 참가 수락")
 	@GetMapping("/participant/accept/{requestid}")
 	public ResponseEntity<? extends BasicResponse> participantAccept(@ApiParam(value = "") @PathVariable("requestid") long requestId, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-//		try {
+		try {
 			service.addParticipant(requestId);
-//			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("failed", "500"));
-//		}
+			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
@@ -124,12 +124,12 @@ public class ProjectController {
 	@GetMapping("/api/projects/get/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		ProjectDto projectPost;
-//		try {
+		try {
 			projectPost = service.findById(id);
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-//		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+		}
 		return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectPost));
 	}
 	
@@ -137,24 +137,24 @@ public class ProjectController {
 	@ApiOperation(value = "게시물 삭제")
 	@DeleteMapping("/api/projects/delete/{id}")
 	public ResponseEntity<? extends BasicResponse> delete(@PathVariable("id") Long id) {
-//		try {
+		try {
 			service.delete(id);
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-//		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
 	@ApiOperation(value = "게시물 업데이트")
 	@PutMapping("/api/projects/modify/{id}")
 	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") Long id,  @RequestBody ProjectModifyDto modifyDto) {
-//		try {
+		try {
 			service.modify(id, modifyDto);
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-//		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	

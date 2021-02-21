@@ -51,6 +51,7 @@ public class UserDto {
 	  private List<ProjectDto> myprojects = new ArrayList<>();
 	  private List<ProjectDto> participantProject = new ArrayList<>();
 	  private List<ProjectParticipantRequestDto> participantRequest = new ArrayList<>();
+	  private List<ProjectDto> commentProjects = new ArrayList<>();
   }
   
   @Getter
@@ -67,14 +68,13 @@ public class UserDto {
 	  private String introduction;
 	  private String portfolioLink1;
 	  private String portfolioLink2;
-	  private List<ProjectDto> projectId = new ArrayList<>();
-	  private List<ProjectDto> participantProject = new ArrayList<>();
   }
   
   @Getter
   @AllArgsConstructor
   public static class simpleResponse {
 	  private long userIndex;
+	  private String name;
 	  private ERegion region;
 	  private String position;
 	  private String career;

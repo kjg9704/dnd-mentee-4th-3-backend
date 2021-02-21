@@ -37,7 +37,7 @@ public class UserScrap {
 	
 	@ManyToOne
 	private User user;
-	
+
 	private long scrappingUser;
 	
 	
