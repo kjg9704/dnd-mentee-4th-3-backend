@@ -91,6 +91,19 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
+//	@ApiOperation(value = "댓글 삭제")
+//	@PostMapping("/comment/delete")
+//	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @RequestBody commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+////		try {
+//			commentService.save(commentDto, user);
+////			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+////		}catch(Exception e) {
+////			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+////					.body(new ErrorResponse("댓글 추가 실패", "500"));
+////		}
+//		return ResponseEntity.ok().body(new Response("success"));
+//	}
+	
 	
 	@ApiOperation(value = "프로젝트 참가 요청")
 	@PostMapping("/participant/{projectid}")

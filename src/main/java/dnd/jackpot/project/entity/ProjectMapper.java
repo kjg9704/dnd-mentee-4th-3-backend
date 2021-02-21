@@ -11,10 +11,12 @@ import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.ProjectStackDto;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
+import dnd.jackpot.user.UserDto.simpleResponse;
 
 public class ProjectMapper {
 	
-	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> position, List<CommentDto.getAll> commentDtos, List<UserDto.simpleResponse>participantDtos) {//,List<StackDto> stackDtos
+	public static ProjectDto map(Project project, LocalDateTime time, List<String> stack, List<String> position, List<CommentDto.getAll> commentDtos,
+			List<UserDto.simpleResponse>participantDtos, List<simpleResponse> requestDtos) {
 		ProjectDto pdto = new ProjectDto();
 		pdto.setId(project.getId());
 		pdto.setTitle(project.getTitle());
@@ -25,7 +27,6 @@ public class ProjectMapper {
 		pdto.setStacks(stack);
 		pdto.setPosition(position);
 		pdto.setInterest(project.getInterest());
-		pdto.setScrapUsers(project.getScrappedNum());
 		pdto.setUserIndex(project.getAuthor().getUserIndex());
 		pdto.setCreatedDateTime(project.getCreatedAt().toString());
 		pdto.setStatus(project.getStatus());
@@ -33,11 +34,12 @@ public class ProjectMapper {
 		pdto.setUpdatedDateTime(project.getUpdatedAt().toString());
 		if(Objects.nonNull(participantDtos)) {
 			pdto.setParticipants(participantDtos);
-			System.out.println(participantDtos);
 		}
-
 		if(Objects.nonNull(commentDtos)) {
 			pdto.setComments(commentDtos);
+		}
+		if(Objects.nonNull(requestDtos)) {
+			pdto.setRequests(requestDtos);
 		}
 		return pdto;
 	}

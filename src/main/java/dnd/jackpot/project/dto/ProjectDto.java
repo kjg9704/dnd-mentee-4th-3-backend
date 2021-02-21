@@ -33,6 +33,7 @@ public class ProjectDto {
 	private String updatedDateTime;
 	private List<UserDto.simpleResponse> participants = new ArrayList<>();
 	private List<CommentDto.getAll> comments = new ArrayList<>();
+	private List<UserDto.simpleResponse> requests = new ArrayList<>();
 
 	@Data
 	public static class filterDto{
