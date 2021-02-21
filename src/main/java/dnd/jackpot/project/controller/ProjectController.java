@@ -7,6 +7,8 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -55,6 +57,7 @@ public class ProjectController {
 //	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
+	@Transactional
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		try {
 			service.save(saveDto, user);
