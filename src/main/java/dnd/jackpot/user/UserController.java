@@ -51,8 +51,10 @@ import dnd.jackpot.notification.InterestSubscribe;
 import dnd.jackpot.notification.PushService;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
+import dnd.jackpot.project.dto.ProjectParticipantRequestDto.RequestResponse;
 import dnd.jackpot.project.entity.Einterest;
 import dnd.jackpot.project.entity.Estack;
+import dnd.jackpot.project.entity.ProjectParticipantRequest;
 import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
@@ -86,6 +88,7 @@ public class UserController {
 	
 	private final UserRepository userRepo;
 	private final CommentService commentService;
+	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -346,6 +349,7 @@ public class UserController {
 		List<Estack> stacks;
 		List<Einterest> interests = new ArrayList<>();
 		List<InterestSubscribe> interValues;
+		List<ProjectDto> scrapList = new ArrayList<>();
 		UserDto.profileResponse userDto;
 		try {
 			stacks = new ArrayList<Estack>();
@@ -353,8 +357,13 @@ public class UserController {
 			values = persistenceUser.getStacks();
 			List<ProjectDto> projects = projectService.findAllByAuthor(persistenceUser);
 			List<ProjectDto> participantList = projectService.findAllByParticipant(persistenceUser);
-			List<ProjectParticipantRequestDto> requestList = projectService.findAllByRequestAuthor(persistenceUser);
+			List<ProjectParticipantRequest> requestList = projectParticipantRequestRepo.findAllByAuthor(persistenceUser);
 			List<ProjectDto> commentList = commentService.getAllProjectsByUser(persistenceUser);
+			List<ProjectScrap> objlist = projectScrapRepo.findAllByUser(persistenceUser);
+			List<ProjectParticipantRequestDto.RequestResponse> requestResult = new ArrayList<>();
+			for(ProjectScrap list : objlist) {
+				scrapList.add(projectService.findById(list.getProject().getId()));
+			}
 			interValues = persistenceUser.getSubscribes();
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
@@ -362,7 +371,11 @@ public class UserController {
 			for(InterestSubscribe is : interValues) {
 				interests.add(is.getInterest());
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestList, commentList);
+			
+			for(ProjectParticipantRequest list : requestList) {
+				requestResult.add(new RequestResponse(list.getId(), list.getUser().getUserIndex(), list.getProject().getId(), list.getAuthor().getUserIndex()));
+			}
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestResult, commentList, scrapList);
 		}catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
