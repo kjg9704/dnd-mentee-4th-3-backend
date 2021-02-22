@@ -159,7 +159,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "게시물 업데이트")
 	@PutMapping("/api/projects/modify/{id}")
-	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") Long id,  @RequestBody ProjectModifyDto modifyDto) {
+	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") long id,  @RequestBody ProjectModifyDto modifyDto) {
 		try {
 			service.modify(id, modifyDto);
 		}catch(Exception e) {
@@ -171,7 +171,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "프로젝트 상태변경")
 	@PostMapping("/api/projects/change/{id}")
-	public ResponseEntity<? extends BasicResponse> changeStatus(@PathVariable("id") Long id, @RequestParam("status") @ApiParam(value = "status") String status) {
+	public ResponseEntity<? extends BasicResponse> changeStatus(@PathVariable("id") long id, @RequestParam("status") @ApiParam(value = "status") String status) {
 		try {
 			service.changeStatus(id,status);
 		}catch(Exception e) {
