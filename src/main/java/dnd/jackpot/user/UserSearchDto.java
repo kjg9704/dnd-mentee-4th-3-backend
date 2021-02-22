@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class UserSearchDto {
 
-	private String position;
+	private List<String> position;
 	
 	private String regionFilter;
 

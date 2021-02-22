@@ -91,15 +91,14 @@ public class ProjectController {
 	}
 	
 	@ApiOperation(value = "댓글 삭제")
-	@PostMapping("/comment/delete")
-	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("commentid")long commentid) throws FirebaseMessagingException {
-//		try {
+	@PostMapping("/comment/delete/{id}")
+	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long commentid){
+		try {
 			commentService.delete(commentid);
-//			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("댓글 추가 실패", "500"));
-//		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("댓글 삭제 실패", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	

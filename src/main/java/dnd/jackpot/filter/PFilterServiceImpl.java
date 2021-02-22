@@ -47,7 +47,7 @@ public class PFilterServiceImpl implements PFilterService {
 	private List<Estack> SprojectList;
 	private List<Einterest> IprojectList;
 	private List<String> DprojectList;
-	private String PprojectList;
+	private List<String> PprojectList;
 	private final ProjStackRepo stackrepo;
 
 	@Override 
@@ -111,10 +111,13 @@ public class PFilterServiceImpl implements PFilterService {
 		if(!userSearchDto.getRegionFilter().isEmpty()) {
 			RprojectList = ERegion.valueOf(userSearchDto.getRegionFilter());
 		}
-		if(!userSearchDto.getPosition().isEmpty()) {
-			PprojectList = userSearchDto.getPosition();
+		if(userSearchDto.getPosition().get(0)!="") {
+			PprojectList = new ArrayList<>();
+			List<String> p = userSearchDto.getPosition();
+			for(String position : p) {
+				PprojectList.add(position);
+			}
 		}
-		
 		Pageable pageable = PageRequest.of(userSearchDto.getPageNumber(), userSearchDto.getPageSize());
 		if(userSearchDto.getSortType().getName().equals("scrappedNum")) {
 			pageUsers = userRepo.findAllByRegionInAndStackInAndPositionORDERBYsize(RprojectList, SprojectList, PprojectList ,pageable);
