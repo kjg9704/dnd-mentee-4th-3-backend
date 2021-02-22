@@ -91,7 +91,7 @@ public class ProjectController {
 	}
 	
 	@ApiOperation(value = "댓글 삭제")
-	@DeleteMapping("/comment/delete")
+	@DeleteMapping("/comment/delete/{id}")
 	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long commentid){
 		try {
 			commentService.delete(commentid);
