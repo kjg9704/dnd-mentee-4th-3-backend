@@ -23,14 +23,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			+ "JOIN p.stacks s "
 			+ "WHERE ((:region is null) OR (p.region in :region)) "
 			+ "AND ((:stack is null) OR (s.stack in :stack)) "
-  			+ "AND ((:position is null) OR (p.position = :position)) ORDER BY p.scrapedUsers.size DESC")
+  			+ "AND ((:position is null) OR (p.position in :position)) GROUP BY p ORDER BY p.scrapedUsers.size DESC")
 	Page<User> findAllByRegionInAndStackInAndPositionORDERBYsize(@Param("region")ERegion region,
 			@Param("stack")List<Estack>stack, @Param("position") String position ,Pageable pageable);
   @Query(value = "SELECT p FROM User p "
 			+ "JOIN p.stacks s "
 			+ "WHERE ((:region is null) OR (p.region in :region)) "
 			+ "AND ((:stack is null) OR (s.stack in :stack)) "
-			+ "AND ((:position is null) OR (p.position = :position)) ORDER BY p.createdAt DESC")
+			+ "AND ((:position is null) OR (p.position in :position)) GROUP BY p ORDER BY p.createdAt DESC")
 	Page<User> findAllByRegionInAndStackInAndPositionORDERBYcreated(@Param("region")ERegion region,
 			@Param("stack")List<Estack>stack, @Param("position") String position ,Pageable pageable);
 }
