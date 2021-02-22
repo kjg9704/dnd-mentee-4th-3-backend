@@ -91,18 +91,18 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
-//	@ApiOperation(value = "댓글 삭제")
-//	@PostMapping("/comment/delete")
-//	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @RequestBody commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-////		try {
-//			commentService.save(commentDto, user);
-////			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
-////		}catch(Exception e) {
-////			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-////					.body(new ErrorResponse("댓글 추가 실패", "500"));
-////		}
-//		return ResponseEntity.ok().body(new Response("success"));
-//	}
+	@ApiOperation(value = "댓글 삭제")
+	@PostMapping("/comment/delete")
+	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("commentid")long commentid) throws FirebaseMessagingException {
+//		try {
+			commentService.delete(commentid);
+//			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//					.body(new ErrorResponse("댓글 추가 실패", "500"));
+//		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
 	
 	
 	@ApiOperation(value = "프로젝트 참가 요청")
@@ -121,13 +121,13 @@ public class ProjectController {
 	@ApiOperation(value = "프로젝트 참가 수락")
 	@GetMapping("/participant/accept/{requestid}")
 	public ResponseEntity<? extends BasicResponse> participantAccept(@ApiParam(value = "") @PathVariable("requestid") long requestId, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-		try {
+//		try {
 			service.addParticipant(requestId);
-			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("failed", "500"));
-		}
+//			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//					.body(new ErrorResponse("failed", "500"));
+//		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	

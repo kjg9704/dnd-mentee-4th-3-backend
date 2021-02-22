@@ -47,10 +47,6 @@ public class Project {
 
 	private String duration;
 	
-	private boolean  commentExist = false;
-	
-	private boolean memberExist = false;
-	
 	@Enumerated(EnumType.STRING)
 	private EprojectStatus status;
 
