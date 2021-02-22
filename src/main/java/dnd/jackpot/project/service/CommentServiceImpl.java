@@ -67,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
 		String date = comment.getDate();
 		String authorName = comment.getUser().getName();
 		String authorPosition = comment.getUser().getPosition();
-		return CommentMapper.map(comment, date, authorName, authorPosition );
+		return CommentMapper.map(comment, date, comment.isPrivacy(), comment.getUser().getEmoticon(), authorName, authorPosition );
 	}
 
 	@Override
