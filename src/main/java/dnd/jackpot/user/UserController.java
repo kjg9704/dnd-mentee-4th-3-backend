@@ -48,6 +48,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import dnd.jackpot.notification.InterestSubscribe;
+import dnd.jackpot.notification.PushService;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.entity.Einterest;
@@ -83,9 +84,6 @@ public class UserController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
-	private final ProjectParticipantRepository projectParticipantRepo;
-	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
-	private final ProjectRepository projectRepo;
 	private final UserRepository userRepo;
 	private final CommentService commentService;
 
@@ -393,55 +391,6 @@ public class UserController {
 		return ResponseEntity.ok().body(new CommonResponse<UserDto.otherResponse>(userDto));
 	}
 	
-	@PostMapping("/user/addsubscribe/{interest}")
-	public ResponseEntity<? extends BasicResponse> interestSubscribe(@PathVariable("interest") String interest, @AuthenticationPrincipal dnd.jackpot.user.User user) throws FirebaseMessagingException{
-		
-		try {
-			List<String> registrationTokens = Arrays.asList(
-	    			user.getRegistrationToken()
-	    		);
-	    		TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(
-	    		    registrationTokens, interest);
-	    		System.out.println(response.getSuccessCount() + " tokens were subscribed successfully");
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("failed", "500"));
-		}
-		return ResponseEntity.ok().body(new Response("success"));
-	}
-	
-	@PostMapping("/user/deletesubscribe/{interest}")
-	public ResponseEntity<? extends BasicResponse> interestUnSubscribe(@PathVariable("interest") String interest, @AuthenticationPrincipal dnd.jackpot.user.User user) throws FirebaseMessagingException{
-    	try {
-    		List<String> registrationTokens = Arrays.asList(
-        			user.getRegistrationToken()
-        		);
-        	TopicManagementResponse response = FirebaseMessaging.getInstance().unsubscribeFromTopic(
-        	    registrationTokens, interest);
-        	System.out.println(response.getSuccessCount() + " tokens were unsubscribed successfully");
-    	}catch (Exception e) {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("faied", "500"));
-    	}
-    	return ResponseEntity.ok().body(new Response("success"));
-    }
-    
-    @PostMapping("/sendtosubscribe/{interest}")
-	public ResponseEntity<? extends BasicResponse> sendToSubscribe(@PathVariable("interest") String interest) throws FirebaseMessagingException{
-    	try {
-    		Message message = Message.builder()
-    	    	    .putData("title", "JackPot 알림")
-    	    	    .putData("content", interest + "에 새로운 게시글이 작성되었습니다")
-    	    	    .setTopic(interest)
-    	    	    .build();
-    	    	String response = FirebaseMessaging.getInstance().send(message);
-    	    	System.out.println("Successfully sent message: " + response);
-    	}catch (Exception e) {
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("faied", "500"));
-    	}
-    	return ResponseEntity.ok().body(new Response("success"));
-    }
     
     @ApiOperation(value = "유저 스크랩 게시글 목록 조회")
 	@GetMapping("/myprojectscrap")

@@ -37,6 +37,7 @@ public class ProjectMapperServiceImpl implements ProjectMapperService{
 		dto.setInterest(project.getInterest());
 		dto.setStacks(stackservice.getAllByProject(project));
 		dto.setTitle(project.getTitle());
+		dto.setInterest(project.getInterest());
 		return dto;
 	}
 }

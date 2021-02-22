@@ -6,7 +6,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 
-import dnd.jackpot.project.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,11 +28,11 @@ public class PushServiceImpl implements PushService {
 
 	@Override
 	public String sendInterestSubscribe(String interest) throws FirebaseMessagingException {
-
+		String pushTopic = interestMapper(interest);
     	Message message = Message.builder()
     		.putData("title", "관심분야 게시글 알림")
             .putData("content", "관심분야의 새로운 게시글이 등록되었습니다")
-    	    .setTopic(interest)
+    	    .setTopic(pushTopic)
     	    .build();
 
     	String response = FirebaseMessaging.getInstance().send(message);
@@ -67,6 +66,38 @@ public class PushServiceImpl implements PushService {
         System.out.println("Successfully sent message: " + response);
 
         return response;
+	}
+
+	@Override
+	public String interestMapper(String interest) {
+		String convert = "";
+		switch(interest) {
+		case "IT":
+			convert = "IT";
+			break;
+		case "예술_창작":
+			convert = "Art";
+			break;
+		case "건강":
+			convert = "Health";
+			break;
+		case "요리":
+			convert = "Cook";
+			break;
+		case "취미":
+			convert = "Hobby";
+			break;
+		case "자기계발":
+			convert = "SelfDevelopment";
+			break;
+		case "경제":
+			convert = "Economy";
+			break;
+		case "휴식":
+			convert = "Rest";
+			break;
+		}
+		return convert;
 	}
 	
 }

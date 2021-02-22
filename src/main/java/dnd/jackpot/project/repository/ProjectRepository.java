@@ -28,13 +28,13 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 			+ "AND ((:interest is null) OR (p.interest in :interest)) "
 			+ "AND ((:stack is null) OR (s.stack in :stack))"
 			+ "AND ((:duration is null) OR (p.duration in :duration)) ORDER BY p.scrap.size DESC")
-	Page<Project> findByRegionInAndInterestInAndStackInORDERBYpopular(@Param("region")ERegion rprojectList, 
+	Page<Project> findByRegionInAndInterestInAndStackInORDERBYpopular(@Param("region")ERegion region, 
 			@Param("interest")List<Einterest> interest, @Param("stack")List<Estack>stack, 
-			@Param("duration")List<String> dprojectList, Pageable pageable);
+			@Param("duration")List<String> duration, Pageable pageable);
 
 	@Query(value ="SELECT distinct p FROM Project p "
 			+ "JOIN p.stack s "
-			+ "WHERE ((:region is null) OR (p.region in :region)) "
+			+ "WHERE ((:region is null) OR (p.region = :region)) "
 			+ "AND ((:interest is null) OR (p.interest in :interest)) "
 			+ "AND ((:stack is null) OR (s.stack in :stack))"
 			+ "AND ((:duration is null) OR (p.duration in :duration)) ORDER BY p.createdAt DESC")

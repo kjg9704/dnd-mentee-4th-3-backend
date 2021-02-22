@@ -80,7 +80,7 @@ public class PFilterServiceImpl implements PFilterService {
 			}
 		}
 		validateSearchDto(searchDto);
-		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize(),Direction.DESC, searchDto.getSortType().getName());
+		Pageable pageable = PageRequest.of(searchDto.getPageNumber(), searchDto.getPageSize());
 		if(searchDto.getSortType().getName()=="createdAt") {
 			pageProjects = repo.findByRegionInAndInterestInAndStackInORDERBYdate(RprojectList, IprojectList, SprojectList, DprojectList ,pageable);
 		}
