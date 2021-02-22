@@ -37,5 +37,7 @@ public interface ProjectService {
 	List<simpleResponse> getParticipant(Project project);
 
 	List<simpleResponse> getRequest(Project project);
+
+	void changeStatus(long id, String status);
 	
 }

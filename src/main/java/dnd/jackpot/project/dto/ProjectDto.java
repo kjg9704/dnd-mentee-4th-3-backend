@@ -41,7 +41,7 @@ public class ProjectDto {
 		private String title;
 		private List<String> stacks = new ArrayList();
 		private List<String> position = new ArrayList();
-		private String interest;
+		private Einterest interest;
 		private int scrapped;
 	}
 }

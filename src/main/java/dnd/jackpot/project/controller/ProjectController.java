@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import dnd.jackpot.project.service.CommentService;
 import dnd.jackpot.project.service.ProjectService;
@@ -171,18 +172,17 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
-//	@ApiOperation(value = "프로젝트 상태변경")
-//	@GetMapping("/api/projects/change/{id}")
-//	public ResponseEntity<? extends BasicResponse> changeStatus(@ApiParam(value = "") @PathVariable("id") long id, @AuthenticationPrincipal User user) {
-//		ProjectDto projectPost;
-////		try {
-//			projectPost = service.changeStatus(id);
-////		}catch(Exception e) {
-////			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-////					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-////		}
-//		
-//		return ResponseEntity.ok().body(new Response("success"));
-//	}
+	@ApiOperation(value = "프로젝트 상태변경")
+	@PostMapping("/api/projects/change/{id}")
+	public ResponseEntity<? extends BasicResponse> changeStatus(@PathVariable("id") Long id, @RequestParam("status") @ApiParam(value = "status") String status) {
+//		try {
+			service.changeStatus(id,status);
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+//		}
+		
+		return ResponseEntity.ok().body(new Response("success"));
+	}
 	
 }

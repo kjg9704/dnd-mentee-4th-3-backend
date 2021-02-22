@@ -22,7 +22,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 	Page<Project> findAll(Pageable pageable);
 
 //	@Transactional(readOnly=true)
-	@Query(value ="SELECT p FROM Project p "
+	@Query(value ="SELECT distinct p FROM Project p "
 			+ "JOIN p.stack s "
 			+ "WHERE ((:region is null) OR (p.region = :region)) "
 			+ "AND ((:interest is null) OR (p.interest in :interest)) "
@@ -32,7 +32,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpec
 			@Param("interest")List<Einterest> interest, @Param("stack")List<Estack>stack, 
 			@Param("duration")List<String> dprojectList, Pageable pageable);
 
-	@Query(value ="SELECT p FROM Project p "
+	@Query(value ="SELECT distinct p FROM Project p "
 			+ "JOIN p.stack s "
 			+ "WHERE ((:region is null) OR (p.region in :region)) "
 			+ "AND ((:interest is null) OR (p.interest in :interest)) "
