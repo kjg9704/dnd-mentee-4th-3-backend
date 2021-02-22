@@ -65,11 +65,11 @@ public class ProjectServiceImpl implements ProjectService {
 
 		
 		List <UserDto.simpleResponse> projectParticipant = new ArrayList<>();
-		if(project.isMemberExist()) {
+		if(!project.getParticipant().isEmpty()) {
 			projectParticipant = getParticipant(project);
 		}
 		List<CommentDto.getAll> comments = new ArrayList<>(); 
-		if(project.isCommentExist()) {
+		if(!project.getComment().isEmpty()) {
 			comments = commentService.getAllByProject(project);
 		}
 		List<UserDto.simpleResponse> projectRequest = new ArrayList<>();
@@ -167,7 +167,6 @@ public class ProjectServiceImpl implements ProjectService {
 		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.findById(requestId).orElseThrow();
 		Project project = projectParticipantRequest.getProject();
 		User requestUser = userRepo.findById(projectParticipantRequest.getUser().getUserIndex()).orElseThrow();
-		project.setMemberExist(true);
 		ProjectParticipant projectParticipant = ProjectParticipant.builder()
 				.project(project)
 				.user(requestUser)

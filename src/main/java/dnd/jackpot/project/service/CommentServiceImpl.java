@@ -40,7 +40,6 @@ public class CommentServiceImpl implements CommentService {
 	public void save(CommentDto.save commentDto, User author) {
 		LocalDate date = LocalDate.now();
 		Project project = projectDao.findById(commentDto.getProjectId());
-		project.setCommentExist(true);
 		commentRepo.save(Comment.builder()
 				.body(commentDto.getBody())
 				.privacy(commentDto.isPrivacy())
@@ -48,6 +47,9 @@ public class CommentServiceImpl implements CommentService {
 				.project(project)
 				.user(author)
 				.build());
+	}
+	public void delete(long id) {
+		commentRepo.deleteById(id);
 	}
 	
 	@Override 

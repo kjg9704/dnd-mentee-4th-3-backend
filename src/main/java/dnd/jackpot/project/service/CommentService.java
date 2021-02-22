@@ -20,4 +20,6 @@ public interface CommentService {
 	
 	List<ProjectDto> getAllProjectsByUser(User user);
 
+	void delete(long commentid);
+
 }
