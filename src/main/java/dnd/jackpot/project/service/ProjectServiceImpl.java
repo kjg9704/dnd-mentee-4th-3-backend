@@ -58,6 +58,7 @@ public class ProjectServiceImpl implements ProjectService {
 		return toDto(project);
 	}
 
+	@Transactional
 	private ProjectDto toDto(Project project) {
 		List<String> stack = projectStackService.getAllByProject(project);
 		List<String> position = projectPositionService.getAllByProject(project);
@@ -75,6 +76,12 @@ public class ProjectServiceImpl implements ProjectService {
 		if(!project.getRequest().isEmpty()) {
 			projectRequest = getRequest(project);
 		}
+		System.out.println("------테스트111");
+		for(simpleResponse index : projectParticipant) {
+			System.out.println(index.getName());
+		}
+		
+		System.out.println("------테스트끝111");
 		LocalDateTime createdDateTime = project.getCreatedAt();
 		return ProjectMapper.map(project, createdDateTime, stack, position, comments, projectParticipant,projectRequest);
 	}
@@ -144,6 +151,12 @@ public class ProjectServiceImpl implements ProjectService {
 			UserDto.simpleResponse dto = new UserDto.simpleResponse(id, Pparticipant.getName(), region, position, career, emoticon);
 			dtos.add(dto);
 		}
+		System.out.println("------테스트");
+		for(simpleResponse index : dtos) {
+			System.out.println(index.getName());
+		}
+		
+		System.out.println("------테스트끝");
 		return dtos;
 	}
 
