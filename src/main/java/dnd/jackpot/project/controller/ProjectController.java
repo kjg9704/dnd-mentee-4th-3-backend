@@ -52,13 +52,12 @@ public class ProjectController {
 	private final PushService pushService;
 	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
 
-//	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		try {
 			service.save(saveDto, user);
-//			pushService.sendInterestSubscribe(saveDto.getInterest());
+			pushService.sendInterestSubscribe(saveDto.getInterest());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("게시글 작성 실패", "500"));
@@ -121,13 +120,13 @@ public class ProjectController {
 	@ApiOperation(value = "프로젝트 참가 수락")
 	@GetMapping("/participant/accept/{requestid}")
 	public ResponseEntity<? extends BasicResponse> participantAccept(@ApiParam(value = "") @PathVariable("requestid") long requestId, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-//		try {
+		try {
 			service.addParticipant(requestId);
-//			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("failed", "500"));
-//		}
+			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
@@ -174,12 +173,12 @@ public class ProjectController {
 	@ApiOperation(value = "프로젝트 상태변경")
 	@PostMapping("/api/projects/change/{id}")
 	public ResponseEntity<? extends BasicResponse> changeStatus(@PathVariable("id") Long id, @RequestParam("status") @ApiParam(value = "status") String status) {
-//		try {
+		try {
 			service.changeStatus(id,status);
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-//		}
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+		}
 		
 		return ResponseEntity.ok().body(new Response("success"));
 	}
