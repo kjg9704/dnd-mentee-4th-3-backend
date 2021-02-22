@@ -50,7 +50,7 @@ public class UserDto {
 	  private List<Einterest> subscribes = new ArrayList<>();
 	  private List<ProjectDto> myprojects = new ArrayList<>();
 	  private List<ProjectDto> participantProject = new ArrayList<>();
-	  private List<ProjectParticipantRequestDto.RequestResponse> participantRequest = new ArrayList<>();
+	  private List<ProjectDto> participantRequest = new ArrayList<>();
 	  private List<ProjectDto> commentProjects = new ArrayList<>();
 	  private List<ProjectDto> scrapProjects = new ArrayList<>();
   }

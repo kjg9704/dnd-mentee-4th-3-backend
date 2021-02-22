@@ -12,6 +12,8 @@ import dnd.jackpot.user.User;
 public interface ProjectParticipantRequestRepository extends JpaRepository<ProjectParticipantRequest, Long> {
 
 	List<ProjectParticipantRequest> findAllByAuthor(User author);
+	
+	List<ProjectParticipantRequest> findAllByUser(User user);
 
 	List<ProjectParticipantRequest> findAllByProject(Project project);
 	

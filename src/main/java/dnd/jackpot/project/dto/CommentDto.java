@@ -26,6 +26,8 @@ public class CommentDto {
 		private long id;
 		private String body;
 		private String date;
+		private boolean privacy;
+		private String emoticon;
 		private String authorName;
 		private String authorPosition;
 		
