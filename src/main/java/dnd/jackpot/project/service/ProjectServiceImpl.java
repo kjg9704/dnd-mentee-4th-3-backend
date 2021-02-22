@@ -86,6 +86,14 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = repo.findById(id).orElseThrow();
 		return toDto(project);
 	}
+	
+	@Override
+	@Transactional
+	public void changeStatus(long projectId, String status) {
+		Project project = repo.findById(projectId).orElseThrow();
+		EprojectStatus changeStatus = EprojectStatus.valueOf(status);
+		project.setStatus(changeStatus);
+	}
 
 	@Override
 	@Transactional

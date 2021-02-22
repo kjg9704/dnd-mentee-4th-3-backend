@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import dnd.jackpot.project.service.CommentService;
 import dnd.jackpot.project.service.ProjectService;
@@ -27,11 +30,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.notification.PushService;
 import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
 import dnd.jackpot.project.repository.ProjectScrapRepository;
@@ -50,11 +55,10 @@ public class ProjectController {
 //	@Secured("ROLE_USER")
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
-	@Transactional
-	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) throws FirebaseMessagingException {
+	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
 		try {
 			service.save(saveDto, user);
-			pushService.sendInterestSubscribe(saveDto.getInterest());
+//			pushService.sendInterestSubscribe(saveDto.getInterest());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("게시글 작성 실패", "500"));
@@ -167,18 +171,17 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
-//	@ApiOperation(value = "프로젝트 상태변경")
-//	@GetMapping("/api/projects/change/{id}")
-//	public ResponseEntity<? extends BasicResponse> changeStatus(@ApiParam(value = "") @PathVariable("id") long id, @AuthenticationPrincipal User user) {
-//		ProjectDto projectPost;
-////		try {
-//			projectPost = service.changeStatus(id);
-////		}catch(Exception e) {
-////			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-////					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-////		}
-//		
-//		return ResponseEntity.ok().body(new Response("success"));
-//	}
+	@ApiOperation(value = "프로젝트 상태변경")
+	@PostMapping("/api/projects/change/{id}")
+	public ResponseEntity<? extends BasicResponse> changeStatus(@PathVariable("id") Long id, @RequestParam("status") @ApiParam(value = "status") String status) {
+//		try {
+			service.changeStatus(id,status);
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+//		}
+		
+		return ResponseEntity.ok().body(new Response("success"));
+	}
 	
 }
