@@ -18,7 +18,7 @@ public interface ProjectParticipantRequestRepository extends JpaRepository<Proje
 	
 	Optional<ProjectParticipantRequest> findByUserAndProject(User user, Project project);
 	
-	Optional<ProjectParticipantRequest> deleteByUserAndProject(User user, Project project);
+	void deleteByUserAndProject(User user, Project project);
 
 	List<ProjectParticipantRequest> findAllByProject(Project project);
 	

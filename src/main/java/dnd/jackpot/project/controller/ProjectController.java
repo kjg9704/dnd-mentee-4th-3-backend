@@ -146,7 +146,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "프로젝트 참가 요청 취소")
 	@DeleteMapping("/participant/{projectid}")
-	public ResponseEntity<? extends BasicResponse> participantRequestCancel(@ApiParam(value = "프로젝트 id") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+	public ResponseEntity<? extends BasicResponse> participantRequestCancel(@ApiParam(value = "프로젝트 id") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) {
 		try {
 			service.participantRequestCancel(projectId, user);
 		}catch(Exception e) {

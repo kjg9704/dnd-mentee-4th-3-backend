@@ -201,7 +201,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Transactional
 	public void participantRequestCancel(long projectId, User user) {
 		Project project = repo.findById(projectId).orElseThrow();
-		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.deleteByUserAndProject(user, project).orElseThrow();
+		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.findByUserAndProject(user, project).orElseThrow();
+		projectPraticipantRequsetRepo.deleteByUserAndProject(user, project);
 		project.getRequest().remove(projectParticipantRequest);
 		repo.save(project);
 	}
