@@ -380,7 +380,7 @@ public class UserController {
 			for(ProjectParticipantRequest list : requestList) {
 				requestResult.add(projectService.findById(list.getProject().getId()));
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestResult, commentList, scrapList);
+			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), user.isCommentPush(), user.isRequestPush(), user.isRequestAcceptPush(), interests, projects, participantList , requestResult, commentList, scrapList);
 		}catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -468,6 +468,19 @@ public class UserController {
 		}
 			return ResponseEntity.ok().body(new CommonResponse<otherResponse>(list));
 	}
+    
+    @ApiOperation(value = "알림설정 수정")
+	@PutMapping("/myuserscrap")
+    public ResponseEntity<?> setPush(@RequestBody PushSetDto pushSet, @AuthenticationPrincipal dnd.jackpot.user.User user){
+    	try {
+    		userService.setPush(pushSet, user);
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+    	}
+    	return ResponseEntity.ok().body(new Response("success"));
+    }
 	
 	
 }

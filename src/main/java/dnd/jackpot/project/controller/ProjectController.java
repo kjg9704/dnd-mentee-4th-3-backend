@@ -38,6 +38,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
 import dnd.jackpot.project.dto.RequestAcceptDto;
+import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
@@ -100,7 +101,10 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 		try {
 			commentService.save(commentDto, user);
-			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+			Project push = projectRepo.findById(commentDto.getProjectId()).orElseThrow();
+			if(push.getAuthor().isCommentPush()) {
+				pushService.sendCommentToToken(push.getAuthor().getRegistrationToken());
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -128,7 +132,10 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> participantRequest(@ApiParam(value = "프로젝트 id") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 		try {
 			service.participantRequest(projectId, user);
-			pushService.sendParticipantRequestToToken(projectRepo.findById(projectId).orElseThrow().getAuthor().getRegistrationToken());
+			Project push = projectRepo.findById(projectId).orElseThrow();
+			if(push.getAuthor().isRequestPush()) {
+				pushService.sendParticipantRequestToToken(push.getAuthor().getRegistrationToken());
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -155,7 +162,10 @@ public class ProjectController {
 	public ResponseEntity<? extends BasicResponse> participantAccept(@RequestBody RequestAcceptDto accept) throws FirebaseMessagingException {
 		try {
 			service.addParticipant(accept);
-			pushService.sendParticipantAcceptToToken(userRepo.findById(accept.getUserIndex()).orElseThrow().getRegistrationToken());
+			User user = userRepo.findById(accept.getUserIndex()).orElseThrow();
+			if(user.isRequestAcceptPush()) {
+				pushService.sendParticipantAcceptToToken(user.getRegistrationToken());
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

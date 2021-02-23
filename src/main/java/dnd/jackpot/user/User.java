@@ -107,6 +107,12 @@ public class User implements UserDetails {
     
     private String portfolioLink2;
     
+    private boolean commentPush;
+    
+    private boolean requestPush;
+    
+    private boolean requestAcceptPush;
+    
     public void addStacks(String stack) {
     	this.stacks.add(UserStacks.builder()
     			.stack(stack)
@@ -130,6 +136,9 @@ public class User implements UserDetails {
         this.introduction = introduction;
         this.portfolioLink1 = portfolioLink1;
         this.portfolioLink2 = portfolioLink2;
+        this.commentPush = true;
+        this.requestPush = true;
+        this.requestAcceptPush = true;
     }
     
     @Transactional

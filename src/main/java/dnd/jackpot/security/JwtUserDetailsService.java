@@ -19,6 +19,7 @@ import dnd.jackpot.project.service.ProjectService;
 import dnd.jackpot.project.repository.ProjectScrapRepository;
 import dnd.jackpot.user.DeletedUser;
 import dnd.jackpot.user.DeletedUserRepository;
+import dnd.jackpot.user.PushSetDto;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto;
 import dnd.jackpot.user.UserDto.otherResponse;
@@ -197,6 +198,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 					showuser.getPortfolioLink1(), showuser.getPortfolioLink2()));
 		}
 		return resultList;
+	}
+	
+	@Transactional
+	public void setPush(PushSetDto pushSet, User user) {
+		User persistenceUser = userRepository.findById(user.getUserIndex()).orElseThrow();
+		persistenceUser.setCommentPush(pushSet.isCommentPush());
+		persistenceUser.setCommentPush(pushSet.isRequestPush());
+		persistenceUser.setCommentPush(pushSet.isRequestAcceptPush());
+		userRepository.save(persistenceUser);
 	}
 	
 }

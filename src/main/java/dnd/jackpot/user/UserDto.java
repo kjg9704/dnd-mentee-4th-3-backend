@@ -47,6 +47,9 @@ public class UserDto {
 	  private String introduction;
 	  private String portfolioLink1;
 	  private String portfolioLink2;
+	  private boolean commentPush;
+	  private boolean requestPush;
+	  private boolean requestAcceptPush;
 	  private List<Einterest> subscribes = new ArrayList<>();
 	  private List<ProjectDto> myprojects = new ArrayList<>();
 	  private List<ProjectDto> participantProject = new ArrayList<>();
