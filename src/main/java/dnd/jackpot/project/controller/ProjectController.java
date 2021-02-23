@@ -58,13 +58,13 @@ public class ProjectController {
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
-		try {
+//		try {
 			service.save(saveDto, user);
-			pushService.sendInterestSubscribe(saveDto.getInterest());
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("게시글 작성 실패", "500"));
-		}
+//			pushService.sendInterestSubscribe(saveDto.getInterest());
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//					.body(new ErrorResponse("게시글 작성 실패", "500"));
+//		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 
@@ -76,6 +76,18 @@ public class ProjectController {
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("스크랩 실패", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
+	@ApiOperation(value = "스크랩 취소")
+	@DeleteMapping("/scrap/{projectindex}")
+	public ResponseEntity<?> deleteScrap(@ApiParam(value = "게시글id만 path로 넘겨주시면 됩니다!! user정보는 토큰에서 가져옴") @PathVariable("projectindex") long projectIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			service.deleteScrap(projectIndex, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩취소 실패", "500"));
 		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
@@ -138,12 +150,12 @@ public class ProjectController {
 	@GetMapping("/api/projects/get/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		ProjectDto projectPost;
-		try {
+//		try {
 			projectPost = service.findById(id);
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-		}
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+//		}
 		return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectPost));
 	}
 	
