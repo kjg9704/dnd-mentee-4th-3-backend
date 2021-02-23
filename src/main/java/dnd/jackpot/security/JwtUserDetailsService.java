@@ -194,7 +194,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 			for(UserStacks st : showuser.getStacks()) {
 				stacks.add(st.getStack());
 			}
-			resultList.add(new otherResponse(showuser.getName(), showuser.getRegion(), showuser.getPosition(), stacks, showuser.isPrivacy(), showuser.getCareer(), showuser.getAuth(), showuser.getEmoticon(), showuser.getIntroduction(),
+			resultList.add(new otherResponse(showuser.getUserIndex(), showuser.getName(), showuser.getRegion(), showuser.getPosition(), stacks, showuser.isPrivacy(), showuser.getCareer(), showuser.getAuth(), showuser.getEmoticon(), showuser.getIntroduction(),
 					showuser.getPortfolioLink1(), showuser.getPortfolioLink2()));
 		}
 		return resultList;
