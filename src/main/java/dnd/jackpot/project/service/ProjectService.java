@@ -40,5 +40,7 @@ public interface ProjectService {
 	List<simpleResponse> getRequest(Project project);
 
 	void changeStatus(long id, String status);
+
+	void deleteScrap(long projectIndex, User user);
 	
 }

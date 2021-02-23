@@ -80,6 +80,18 @@ public class ProjectController {
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
+	@ApiOperation(value = "스크랩 취소")
+	@DeleteMapping("/scrap/{projectindex}")
+	public ResponseEntity<?> deleteScrap(@ApiParam(value = "게시글id만 path로 넘겨주시면 됩니다!! user정보는 토큰에서 가져옴") @PathVariable("projectindex") long projectIndex, @AuthenticationPrincipal dnd.jackpot.user.User user) {
+		try {
+			service.deleteScrap(projectIndex, user);
+		}catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("스크랩취소 실패", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
 	@ApiOperation(value = "게시글 댓글달기")
 	@PostMapping("/comment")
 	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {

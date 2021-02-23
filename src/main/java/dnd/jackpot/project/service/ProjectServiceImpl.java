@@ -116,6 +116,12 @@ public class ProjectServiceImpl implements ProjectService {
 		repo.save(project);
 	}
 	
+	@Transactional
+	public void deleteScrap(long id, User user) {
+		Project project = repo.findById(id).orElseThrow();
+		scrapRepo.deleteByProjectAndUser(project, user);
+	}
+	
 	
 	@Override
 	@Transactional
