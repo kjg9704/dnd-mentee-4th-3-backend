@@ -95,21 +95,21 @@ public class ProjectController {
 	@ApiOperation(value = "게시글 댓글달기")
 	@PostMapping("/comment")
 	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-		try {
+//		try {
 			commentService.save(commentDto, user);
-			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
-		}catch(Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("댓글 추가 실패", "500"));
-		}
+//			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+//		}catch(Exception e) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//					.body(new ErrorResponse("댓글 추가 실패", "500"));
+//		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
 	@ApiOperation(value = "댓글 삭제")
-	@DeleteMapping("/comment/delete/{id}")
-	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long commentid){
+	@DeleteMapping("/comment/delete")
+	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long projectid){
 		try {
-			commentService.delete(commentid);
+			commentService.delete(projectid);
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
