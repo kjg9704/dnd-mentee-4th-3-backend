@@ -2,7 +2,6 @@ package dnd.jackpot.project.service;
 
 import java.util.List;
 
-import dnd.jackpot.project.dto.PagingDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
@@ -34,6 +33,8 @@ public interface ProjectService {
 	void addParticipant(RequestAcceptDto accept);
 	
 	void participantRequest(long projectId, User user);
+	
+	void participantRequestCancel(long projectId, User user);
 
 	List<simpleResponse> getParticipant(Project project);
 

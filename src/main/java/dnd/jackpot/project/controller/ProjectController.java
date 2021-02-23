@@ -58,13 +58,14 @@ public class ProjectController {
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
 	public ResponseEntity<? extends BasicResponse> save(@ApiParam(value = "RequestBody에 json형식") @RequestBody ProjectSaveDto saveDto, @AuthenticationPrincipal dnd.jackpot.user.User user) {
-//		try {
+		try {
 			service.save(saveDto, user);
-//			pushService.sendInterestSubscribe(saveDto.getInterest());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("게시글 작성 실패", "500"));
-//		}
+			pushService.sendInterestSubscribe(saveDto.getInterest());
+		}catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("게시글 작성 실패", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 
@@ -74,6 +75,7 @@ public class ProjectController {
 		try {
 			service.addScrap(projectIndex, user);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("스크랩 실패", "500"));
 		}
@@ -86,6 +88,7 @@ public class ProjectController {
 		try {
 			service.deleteScrap(projectIndex, user);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("스크랩취소 실패", "500"));
 		}
@@ -95,22 +98,24 @@ public class ProjectController {
 	@ApiOperation(value = "게시글 댓글달기")
 	@PostMapping("/comment")
 	public ResponseEntity<? extends BasicResponse> Comment(@ApiParam(value = "RequestBody에 json형식으로 코맨트정보만 넘기면됨. user정보는 토큰에서 가져옴") @RequestBody CommentDto.save commentDto, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
-//		try {
+		try {
 			commentService.save(commentDto, user);
-//			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//					.body(new ErrorResponse("댓글 추가 실패", "500"));
-//		}
+			pushService.sendCommentToToken(projectRepo.findById(commentDto.getProjectId()).orElseThrow().getAuthor().getRegistrationToken());
+		}catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("댓글 추가 실패", "500"));
+		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
 	
 	@ApiOperation(value = "댓글 삭제")
-	@DeleteMapping("/comment/delete")
-	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long projectid){
+	@DeleteMapping("/comment/delete/{id}")
+	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long commentId){
 		try {
-			commentService.delete(projectid);
+			commentService.delete(commentId);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
 		}
@@ -125,6 +130,20 @@ public class ProjectController {
 			service.participantRequest(projectId, user);
 			pushService.sendParticipantRequestToToken(projectRepo.findById(projectId).orElseThrow().getAuthor().getRegistrationToken());
 		}catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("failed", "500"));
+		}
+		return ResponseEntity.ok().body(new Response("success"));
+	}
+	
+	@ApiOperation(value = "프로젝트 참가 요청 취소")
+	@DeleteMapping("/participant/{projectid}")
+	public ResponseEntity<? extends BasicResponse> participantRequestCancel(@ApiParam(value = "프로젝트 id") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+		try {
+			service.participantRequest(projectId, user);
+		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
 		}
@@ -138,6 +157,7 @@ public class ProjectController {
 			service.addParticipant(accept);
 			pushService.sendParticipantAcceptToToken(userRepo.findById(accept.getUserIndex()).orElseThrow().getRegistrationToken());
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
 		}
@@ -150,12 +170,13 @@ public class ProjectController {
 	@GetMapping("/api/projects/get/{id}")
 	public ResponseEntity<? extends BasicResponse> getOne(@PathVariable("id") Long id) {
 		ProjectDto projectPost;
-//		try {
+		try {
 			projectPost = service.findById(id);
-//		}catch(Exception e) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
-//		}
+		}catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
+		}
 		return ResponseEntity.ok().body(new CommonResponse<ProjectDto>(projectPost));
 	}
 	
@@ -166,6 +187,7 @@ public class ProjectController {
 		try {
 			service.delete(id);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
 		}
@@ -178,6 +200,7 @@ public class ProjectController {
 		try {
 			service.modify(id, modifyDto);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
 		}
@@ -190,6 +213,7 @@ public class ProjectController {
 		try {
 			service.changeStatus(id,status);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 게시글 정보가 없습니다"));
 		}

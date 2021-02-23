@@ -22,7 +22,6 @@ import dnd.jackpot.project.entity.ProjectMapper;
 import dnd.jackpot.project.entity.ProjectParticipant;
 import dnd.jackpot.project.entity.ProjectParticipantRequest;
 import dnd.jackpot.project.entity.ProjectScrap;
-import dnd.jackpot.project.entity.ProjectStack;
 import dnd.jackpot.project.repository.ProjectParticipantRepository;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
@@ -197,6 +196,17 @@ public class ProjectServiceImpl implements ProjectService {
 				.build();
 		projectPraticipantRequsetRepo.save(projectParticipantRequest);
 	}
+	
+	@Override
+	@Transactional
+	public void participantRequestCancel(long projectId, User user) {
+		Project project = repo.findById(projectId).orElseThrow();
+		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.deleteByUserAndProject(user, project).orElseThrow();
+		project.getRequest().remove(projectParticipantRequest);
+		repo.save(project);
+	}
+	
+	
 
 	@Override
 	@Transactional

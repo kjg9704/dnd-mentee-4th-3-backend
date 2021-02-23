@@ -40,10 +40,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
-import com.google.firebase.messaging.TopicManagementResponse;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -105,6 +101,7 @@ public class UserController {
 				userService.modifyRegistrationToken(authenticationRequest.getRegistrationToken(), userDetails);
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다."));
 		}
@@ -139,6 +136,7 @@ public class UserController {
 				userService.modifyRegistrationToken(request.getRegistrationToken(), userDetails);
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
 		}
@@ -193,6 +191,7 @@ public class UserController {
 			}
 			System.out.println(token);
 		} catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
 		}
@@ -225,6 +224,7 @@ public class UserController {
 				userService.modifyRegistrationToken(request.getRegistrationToken(), userDetails);
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("일치하는 유저가 없습니다. 회원가입이 필요합니다.", "404"));
 		}
@@ -249,6 +249,7 @@ public class UserController {
 			userService.deleteUser(userEmail, loginType);
 			userService.deletedSave(userEmail, loginType);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("탈퇴 처리 실패"));
 		}
@@ -262,6 +263,7 @@ public class UserController {
 		try {
 			userService.save(infoDto);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("회원가입 실패", "500"));
 		}
@@ -274,6 +276,7 @@ public class UserController {
 		try {
 			userService.modifyUser(infoDto, user);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("업데이트 실패", "500"));
 		}
@@ -286,6 +289,7 @@ public class UserController {
 		try {
 			userService.modifyPassword(email, password);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
 		}
@@ -307,6 +311,7 @@ public class UserController {
 						.body(new ErrorResponse("failed", "404"));
 			}
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
 		}
@@ -377,6 +382,7 @@ public class UserController {
 			}
 			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestResult, commentList, scrapList);
 		}catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
 		}
@@ -398,6 +404,7 @@ public class UserController {
 			}
 			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2());
 		}catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
 					.body(new ErrorResponse("failed", "404"));
 		}
@@ -415,6 +422,7 @@ public class UserController {
 				projectList.add(projectService.findById(list.getProject().getId()));
 			}
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("스크랩 실패", "500"));
 		}
@@ -427,6 +435,7 @@ public class UserController {
 		try {
 			userService.addUserScrap(userIndex, user);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("스크랩 실패", "500"));
 		}
@@ -439,6 +448,7 @@ public class UserController {
 		try {
 			userService.deleteUserScrap(userIndex, user);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
 		}
@@ -452,6 +462,7 @@ public class UserController {
 		try {
 			list = userService.getScrappingUsers(user);
 		}catch(Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("스크랩 실패", "500"));
 		}

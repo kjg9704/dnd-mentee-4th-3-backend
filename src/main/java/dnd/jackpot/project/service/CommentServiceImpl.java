@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
 	private final ProjectRepository projectRepo;
 	private final ProjectStackService projectStackService;
 	private final ProjectPositionService projectPositionService;
-	
+
 	@Override
 	public void save(CommentDto.save commentDto, User author) {
 		LocalDate date = LocalDate.now();
@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
 	public void delete(long id) {
 		commentRepo.deleteById(id);
 	}
-	
+
 	@Override 
 	@Transactional(readOnly=true)
 	public List<CommentDto.getAll> getAllByProject(Project project){
@@ -62,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
 		}
 		return dtos;
 	}
-	
+
 	private CommentDto.getAll toDto(Comment comment) {
 		String date = comment.getDate();
 		String authorName = comment.getUser().getName();
@@ -77,18 +77,27 @@ public class CommentServiceImpl implements CommentService {
 		List<ProjectDto> resultList = new ArrayList<>();
 		for(Comment com : commentList) {
 			Project project = projectRepo.findById(com.getProject().getId()).orElseThrow();
-			List<String> stack = projectStackService.getAllByProject(project);
-			List<String> position = projectPositionService.getAllByProject(project);
-			List<getAll> comments = new ArrayList<>();
-			List<simpleResponse> participants = new ArrayList<>();
-			List<simpleResponse> requests = new ArrayList<>();
-			for(Comment comm : project.getComment()) {
-				comments.add(new getAll(comm.getCommentId(), comm.getBody(), comm.getDate(), comm.isPrivacy(), comm.getUser().getEmoticon(), comm.getUser().getName(), comm.getUser().getPosition()));
+			boolean check = false;
+			for(ProjectDto temp : resultList) {
+				if(temp.getId() == project.getId()) {
+					check = true;
+					break;
+				}
 			}
-			for(ProjectParticipant users : project.getParticipant()) {
-				participants.add(new simpleResponse(users.getUser().getUserIndex(), users.getUser().getName(), users.getUser().getRegion(), users.getUser().getPosition(), users.getUser().getCareer(), users.getUser().getEmoticon()));
+			if(!check) {
+				List<String> stack = projectStackService.getAllByProject(project);
+				List<String> position = projectPositionService.getAllByProject(project);
+				List<getAll> comments = new ArrayList<>();
+				List<simpleResponse> participants = new ArrayList<>();
+				List<simpleResponse> requests = new ArrayList<>();
+				for(Comment comm : project.getComment()) {
+					comments.add(new getAll(comm.getCommentId(), comm.getBody(), comm.getDate(), comm.isPrivacy(), comm.getUser().getEmoticon(), comm.getUser().getName(), comm.getUser().getPosition()));
+				}
+				for(ProjectParticipant users : project.getParticipant()) {
+					participants.add(new simpleResponse(users.getUser().getUserIndex(), users.getUser().getName(), users.getUser().getRegion(), users.getUser().getPosition(), users.getUser().getCareer(), users.getUser().getEmoticon()));
+				}
+				resultList.add(ProjectMapper.map(project, project.getCreatedAt(), stack, position, comments, participants, requests));
 			}
-			resultList.add(ProjectMapper.map(project, project.getCreatedAt(), stack, position, comments, participants, requests));
 		}
 		return resultList;
 	}
