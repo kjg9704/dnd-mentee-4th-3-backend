@@ -7,6 +7,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.RequestAcceptDto;
 import dnd.jackpot.project.entity.Project;
 import dnd.jackpot.user.User;
 import dnd.jackpot.user.UserDto.simpleResponse;
@@ -30,7 +31,7 @@ public interface ProjectService {
 	
 	void addScrap(long postId, User user);
 	
-	void addParticipant(long requestId);
+	void addParticipant(RequestAcceptDto accept);
 	
 	void participantRequest(long projectId, User user);
 

@@ -1,6 +1,7 @@
 package dnd.jackpot.project.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,6 +15,8 @@ public interface ProjectParticipantRequestRepository extends JpaRepository<Proje
 	List<ProjectParticipantRequest> findAllByAuthor(User author);
 	
 	List<ProjectParticipantRequest> findAllByUser(User user);
+	
+	Optional<ProjectParticipantRequest> findByUserAndProject(User user, Project project);
 
 	List<ProjectParticipantRequest> findAllByProject(Project project);
 	
