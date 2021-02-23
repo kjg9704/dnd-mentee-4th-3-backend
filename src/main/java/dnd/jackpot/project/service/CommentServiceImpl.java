@@ -65,10 +65,9 @@ public class CommentServiceImpl implements CommentService {
 	
 	private CommentDto.getAll toDto(Comment comment) {
 		String date = comment.getDate();
-		String body = comment.getBody();
 		String authorName = comment.getUser().getName();
 		String authorPosition = comment.getUser().getPosition();
-		return CommentMapper.map(comment, date, authorName, authorPosition );
+		return CommentMapper.map(comment, date, comment.isPrivacy(), comment.getUser().getEmoticon(), authorName, authorPosition );
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class CommentServiceImpl implements CommentService {
 			List<simpleResponse> participants = new ArrayList<>();
 			List<simpleResponse> requests = new ArrayList<>();
 			for(Comment comm : project.getComment()) {
-				comments.add(new getAll(comm.getCommentId(), comm.getBody(), comm.getDate(), comm.getUser().getName(), comm.getUser().getPosition()));
+				comments.add(new getAll(comm.getCommentId(), comm.getBody(), comm.getDate(), comm.isPrivacy(), comm.getUser().getEmoticon(), comm.getUser().getName(), comm.getUser().getPosition()));
 			}
 			for(ProjectParticipant users : project.getParticipant()) {
 				participants.add(new simpleResponse(users.getUser().getUserIndex(), users.getUser().getName(), users.getUser().getRegion(), users.getUser().getPosition(), users.getUser().getCareer(), users.getUser().getEmoticon()));

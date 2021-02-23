@@ -26,6 +26,7 @@ import dnd.jackpot.response.CommonResponse;
 import dnd.jackpot.response.ErrorResponse;
 import dnd.jackpot.response.Response;
 import dnd.jackpot.user.User;
+import dnd.jackpot.user.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,6 +37,7 @@ import dnd.jackpot.project.dto.CommentDto;
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.RequestAcceptDto;
 import dnd.jackpot.project.entity.ProjectScrap;
 import dnd.jackpot.project.repository.ProjectParticipantRequestRepository;
 import dnd.jackpot.project.repository.ProjectRepository;
@@ -51,6 +53,7 @@ public class ProjectController {
 	private final ProjectRepository projectRepo;
 	private final PushService pushService;
 	private final ProjectParticipantRequestRepository projectParticipantRequestRepo;
+	private final UserRepository userRepo;
 
 	@ApiOperation(value = "게시글 작성")
 	@PostMapping("/api/projects")
@@ -91,13 +94,13 @@ public class ProjectController {
 	}
 	
 	@ApiOperation(value = "댓글 삭제")
-	@PostMapping("/comment/delete/{id}")
+	@DeleteMapping("/comment/delete/{id}")
 	public ResponseEntity<? extends BasicResponse> deleteComment(@ApiParam(value = "") @PathVariable("id")long commentid){
 		try {
 			commentService.delete(commentid);
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(new ErrorResponse("댓글 삭제 실패", "500"));
+					.body(new ErrorResponse("failed", "500"));
 		}
 		return ResponseEntity.ok().body(new Response("success"));
 	}
@@ -105,7 +108,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "프로젝트 참가 요청")
 	@PostMapping("/participant/{projectid}")
-	public ResponseEntity<? extends BasicResponse> participantRequest(@ApiParam(value = "") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+	public ResponseEntity<? extends BasicResponse> participantRequest(@ApiParam(value = "프로젝트 id") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 		try {
 			service.participantRequest(projectId, user);
 			pushService.sendParticipantRequestToToken(projectRepo.findById(projectId).orElseThrow().getAuthor().getRegistrationToken());
@@ -117,11 +120,11 @@ public class ProjectController {
 	}
 	
 	@ApiOperation(value = "프로젝트 참가 수락")
-	@GetMapping("/participant/accept/{requestid}")
-	public ResponseEntity<? extends BasicResponse> participantAccept(@ApiParam(value = "") @PathVariable("requestid") long requestId, @AuthenticationPrincipal User user) throws FirebaseMessagingException {
+	@PostMapping("/participant/accept")
+	public ResponseEntity<? extends BasicResponse> participantAccept(@RequestBody RequestAcceptDto accept) throws FirebaseMessagingException {
 		try {
-			service.addParticipant(requestId);
-			pushService.sendParticipantAcceptToToken(projectParticipantRequestRepo.findById(requestId).orElseThrow().getUser().getRegistrationToken());
+			service.addParticipant(accept);
+			pushService.sendParticipantAcceptToToken(userRepo.findById(accept.getUserIndex()).orElseThrow().getRegistrationToken());
 		}catch(Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 					.body(new ErrorResponse("failed", "500"));
@@ -159,7 +162,7 @@ public class ProjectController {
 	
 	@ApiOperation(value = "게시물 업데이트")
 	@PutMapping("/api/projects/modify/{id}")
-	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") Long id,  @RequestBody ProjectModifyDto modifyDto) {
+	public ResponseEntity<? extends BasicResponse> modify(@PathVariable("id") long id,  @RequestBody ProjectModifyDto modifyDto) {
 		try {
 			service.modify(id, modifyDto);
 		}catch(Exception e) {

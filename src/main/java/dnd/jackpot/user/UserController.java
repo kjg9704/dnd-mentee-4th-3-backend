@@ -357,10 +357,10 @@ public class UserController {
 			values = persistenceUser.getStacks();
 			List<ProjectDto> projects = projectService.findAllByAuthor(persistenceUser);
 			List<ProjectDto> participantList = projectService.findAllByParticipant(persistenceUser);
-			List<ProjectParticipantRequest> requestList = projectParticipantRequestRepo.findAllByAuthor(persistenceUser);
+			List<ProjectParticipantRequest> requestList = projectParticipantRequestRepo.findAllByUser(persistenceUser);
 			List<ProjectDto> commentList = commentService.getAllProjectsByUser(persistenceUser);
 			List<ProjectScrap> objlist = projectScrapRepo.findAllByUser(persistenceUser);
-			List<ProjectParticipantRequestDto.RequestResponse> requestResult = new ArrayList<>();
+			List<ProjectDto> requestResult = new ArrayList<>();
 			for(ProjectScrap list : objlist) {
 				scrapList.add(projectService.findById(list.getProject().getId()));
 			}
@@ -373,7 +373,7 @@ public class UserController {
 			}
 			
 			for(ProjectParticipantRequest list : requestList) {
-				requestResult.add(new RequestResponse(list.getId(), list.getUser().getUserIndex(), list.getProject().getId(), list.getAuthor().getUserIndex()));
+				requestResult.add(projectService.findById(list.getProject().getId()));
 			}
 			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), interests, projects, participantList , requestResult, commentList, scrapList);
 		}catch (Exception e) {

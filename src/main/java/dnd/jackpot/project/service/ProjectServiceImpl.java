@@ -14,6 +14,7 @@ import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.dto.ProjectModifyDto;
 import dnd.jackpot.project.dto.ProjectParticipantRequestDto;
 import dnd.jackpot.project.dto.ProjectSaveDto;
+import dnd.jackpot.project.dto.RequestAcceptDto;
 import dnd.jackpot.project.entity.ERegion;
 import dnd.jackpot.project.entity.EprojectStatus;
 import dnd.jackpot.project.entity.Project;
@@ -163,10 +164,10 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Override
 	@Transactional
-	public void addParticipant(long requestId) {
-		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.findById(requestId).orElseThrow();
-		Project project = projectParticipantRequest.getProject();
-		User requestUser = userRepo.findById(projectParticipantRequest.getUser().getUserIndex()).orElseThrow();
+	public void addParticipant(RequestAcceptDto accept) {
+		User requestUser = userRepo.findById(accept.getUserIndex()).orElseThrow();
+		Project project = repo.findById(accept.getProjectId()).orElseThrow();
+		ProjectParticipantRequest projectParticipantRequest = projectPraticipantRequsetRepo.findByUserAndProject(requestUser, project).orElseThrow();
 		ProjectParticipant projectParticipant = ProjectParticipant.builder()
 				.project(project)
 				.user(requestUser)
