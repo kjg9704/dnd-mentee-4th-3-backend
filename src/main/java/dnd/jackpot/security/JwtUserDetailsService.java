@@ -204,8 +204,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public void setPush(PushSetDto pushSet, User user) {
 		User persistenceUser = userRepository.findById(user.getUserIndex()).orElseThrow();
 		persistenceUser.setCommentPush(pushSet.isCommentPush());
-		persistenceUser.setCommentPush(pushSet.isRequestPush());
-		persistenceUser.setCommentPush(pushSet.isRequestAcceptPush());
+		persistenceUser.setRequestPush(pushSet.isRequestPush());
+		persistenceUser.setRequestAcceptPush(pushSet.isRequestAcceptPush());
 		userRepository.save(persistenceUser);
 	}
 	

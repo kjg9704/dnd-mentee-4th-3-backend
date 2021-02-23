@@ -470,7 +470,7 @@ public class UserController {
 	}
     
     @ApiOperation(value = "알림설정 수정")
-	@PutMapping("/myuserscrap")
+	@PutMapping("/update-push")
     public ResponseEntity<?> setPush(@RequestBody PushSetDto pushSet, @AuthenticationPrincipal dnd.jackpot.user.User user){
     	try {
     		userService.setPush(pushSet, user);
