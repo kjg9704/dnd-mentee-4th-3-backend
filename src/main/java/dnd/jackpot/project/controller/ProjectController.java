@@ -148,7 +148,7 @@ public class ProjectController {
 	@DeleteMapping("/participant/{projectid}")
 	public ResponseEntity<? extends BasicResponse> participantRequestCancel(@ApiParam(value = "프로젝트 id") @PathVariable("projectid") long projectId , @AuthenticationPrincipal User user) throws FirebaseMessagingException {
 		try {
-			service.participantRequest(projectId, user);
+			service.participantRequestCancel(projectId, user);
 		}catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
