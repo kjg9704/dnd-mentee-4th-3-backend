@@ -55,12 +55,14 @@ public class PFilterServiceImpl implements PFilterService {
 	public PagingDto<filterDto> getAll(ProjectSearchDto searchDto){
 		Page<Project> pageProjects = null;
 
+		
 		if(searchDto.getStackFilter().get(0)!="") {
 			SprojectList = new ArrayList<>();
 			List<String> s = searchDto.getStackFilter();
 			for(String stack : s) {
 				Estack stackProgram = Estack.valueOf(stack);
 				SprojectList.add(stackProgram);
+				System.out.println("stack");
 			}
 		}
 		if(searchDto.getInterestFilter().get(0)!="") {
@@ -90,6 +92,7 @@ public class PFilterServiceImpl implements PFilterService {
 		RprojectList=null;
 		IprojectList=null;
 		SprojectList=null;
+		DprojectList = null;
 		List<ProjectDto.filterDto> filterDtoList = projectMapperService.toDto(pageProjects.getContent());
 		return PagingMapper.map(pageProjects, filterDtoList);
 		
