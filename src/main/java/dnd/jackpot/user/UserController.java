@@ -380,7 +380,7 @@ public class UserController {
 			for(ProjectParticipantRequest list : requestList) {
 				requestResult.add(projectService.findById(list.getProject().getId()));
 			}
-			userDto = new UserDto.profileResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), user.isCommentPush(), user.isRequestPush(), user.isRequestAcceptPush(), interests, projects, participantList , requestResult, commentList, scrapList);
+			userDto = new UserDto.profileResponse(user.getUserIndex(), user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getLoginType(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2(), user.isCommentPush(), user.isRequestPush(), user.isRequestAcceptPush(), interests, projects, participantList , requestResult, commentList, scrapList);
 		}catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -402,7 +402,7 @@ public class UserController {
 			for(UserStacks st : values) {
 				stacks.add(st.getStack());
 			}
-			userDto = new UserDto.otherResponse(user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2());
+			userDto = new UserDto.otherResponse(user.getUserIndex(), user.getName(), user.getRegion(), user.getPosition(), stacks, user.isPrivacy(), user.getCareer(), user.getAuth(), user.getEmoticon(), user.getIntroduction(), user.getPortfolioLink1(), user.getPortfolioLink2());
 		}catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.NOT_FOUND)

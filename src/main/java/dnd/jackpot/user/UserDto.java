@@ -35,6 +35,7 @@ public class UserDto {
   @Getter
   @AllArgsConstructor
   public static class profileResponse {
+	  private long userIndex;
 	  private String name;
 	  private ERegion region;
 	  private String position;
@@ -61,6 +62,7 @@ public class UserDto {
   @Getter
   @AllArgsConstructor
   public static class otherResponse {
+	  private long userIndex;
 	  private String name;
 	  private ERegion region;
 	  private String position;
