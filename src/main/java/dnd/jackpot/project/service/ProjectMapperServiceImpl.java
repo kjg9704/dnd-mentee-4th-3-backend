@@ -6,17 +6,20 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import dnd.jackpot.project.dto.ProjectDto;
 import dnd.jackpot.project.entity.Project;
 import lombok.RequiredArgsConstructor;
 
 @Component
+@Service
 @RequiredArgsConstructor
 public class ProjectMapperServiceImpl implements ProjectMapperService{
 	//comment 추가하기
 	private final ProjectStackService stackservice;
 	private final ProjectPositionService positionservice;
+	private final TimeFormatter time;
 	@Override
 	public ProjectDto.filterDto toDto(Project project) {
 		LocalDateTime createdDateTime = project.getCreatedAt();
@@ -31,6 +34,8 @@ public class ProjectMapperServiceImpl implements ProjectMapperService{
 	
 	private ProjectDto.filterDto buildDto(Project project, LocalDateTime createdDateTime) {
 		ProjectDto.filterDto dto = new ProjectDto.filterDto();
+		String duration = time.calculateTime(createdDateTime);
+		dto.setDuration(duration);
 		dto.setId(project.getId());
 		dto.setScrapped(project.getScrap().size());
 		dto.setPosition(positionservice.getAllByProject(project));

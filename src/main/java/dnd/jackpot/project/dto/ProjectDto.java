@@ -37,6 +37,7 @@ public class ProjectDto {
 
 	@Data
 	public static class filterDto{
+		private String duration;
 		private Long id;
 		private String title;
 		private List<String> stacks = new ArrayList();
