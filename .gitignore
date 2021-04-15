@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+src/main/resources/firebase/jackpot-d5f0e-firebase-adminsdk-46a97-cc8373fa78.json
+src/main/resources/firebase/jackpot-1611239774705-firebase-adminsdk-xlp80-fa2c872b91.json
+src/main/java/dnd/jackpot/notification/FirebaseConfig.java
